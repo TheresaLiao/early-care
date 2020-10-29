@@ -1,0 +1,20 @@
+<zk xmlns:n="native">
+	<menupopup id="floors">
+			<menuitem label="B2" />
+			<menuitem label="B1" />
+			<menuitem label="1F" />
+			<menuitem label="2F" />
+			<menuitem label="3F" />
+			<menuitem label="4F" />
+			<menuitem label="5F" />
+			<menuitem label="6F" />
+			<menuitem label="7F" />
+			<menuitem label="8F" />
+		</menupopup>
+		<div class="btn-group">
+			<button dir="reverse" sclass="p-3" class="btn-default btn-sm dropdown-toggle"
+					popup="floors, after_start" iconSclass="caret">
+					2F
+			</button>
+		</div>
+</zk>

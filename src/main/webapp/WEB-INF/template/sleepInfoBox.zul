@@ -1,0 +1,36 @@
+<zk xmlns="native">
+    <div class="infoBox rounded p-1 ${color}">
+        <!-- Title -->
+        <div class="row mx-1">
+            <span class="z-label text-black-50">${each.title}</span>
+        </div>
+        
+        <div class="row">
+        
+        	<!-- Value -->
+        	<div class="col-7 row mx-1 my-2">
+            	<div class="col-12 h3 text-center">
+                	${each.persent} %
+            	</div>
+            	
+        	</div>
+        	
+        	<!-- Icon -->
+        	<h2>
+        		icon
+        	</h2>
+        </div>
+        
+        
+        
+        
+      
+        <!-- 
+        <div class="row mx-1 ">
+            <div class="col-12 text-center border-top">
+                <span class="z-label text-black-50">completed: ${each.completed}</span>
+            </div>
+        </div>
+         -->
+    </div>
+</zk>

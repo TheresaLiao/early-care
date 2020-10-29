@@ -1,0 +1,49 @@
+<language-addon>
+	<addon-name>admin-addon</addon-name>
+	<version>1.0</version>
+	<language-name>xul/html</language-name>
+
+	<depends>zuti</depends>
+
+	<!-- https://www.zkoss.org/wiki/ZK_Client-side_Reference/Language_Definition/component -->
+	<!--bootstrap row-->
+	<component>
+		<component-name>bs-row</component-name>
+		<extends>div</extends>
+		<property>
+			<property-name>sclass</property-name>
+			<property-value>row py-1</property-value>
+		</property>
+	</component>
+	
+	<component>
+		<component-name>state-box</component-name>
+		<template-uri>/WEB-INF/template/stateBox.zul</template-uri>
+	</component>
+	<stylesheet href="/resources/css/state-box.css" type="text/css"/>
+	
+	<component>
+		<component-name>person-info</component-name>
+		<template-uri>/WEB-INF/template/personInfoBox.zul</template-uri>
+	</component>
+	<stylesheet href="/resources/css/person-info.css" type="text/css"/>
+	
+	<component>
+		<component-name>person-info-detail</component-name>
+		<template-uri>/WEB-INF/template/personInfoBoxDetail.zul</template-uri>
+	</component>
+	<stylesheet href="/resources/css/person-info.css" type="text/css"/>
+	
+	<component>
+		<component-name>info-box</component-name>
+		<template-uri>/WEB-INF/template/infoBox.zul</template-uri>
+	</component>
+	<stylesheet href="/resources/css/info-box.css" type="text/css"/>
+	
+	<component>
+		<component-name>sleep-info-box</component-name>
+		<template-uri>/WEB-INF/template/sleepInfoBox.zul</template-uri>
+	</component>
+	<stylesheet href="/resources/css/info-box.css" type="text/css"/>
+	
+</language-addon>

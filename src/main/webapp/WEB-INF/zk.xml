@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk>
+    <library-property>
+        <name>org.zkoss.theme.preferred</name>
+        <!--  <value>iceblue_c</value> -->
+        <value>montana_c</value> 
+    </library-property>
+</zk>

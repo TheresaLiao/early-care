@@ -1,0 +1,13 @@
+<?link rel="stylesheet" type="text/css" href="/style.css"?>
+<!-- protect page by the authentication init  -->
+<?init class="org.itri.view.login.AuthenticationInit"?>
+
+<zk>
+	<div height="100%">
+		<apply template="layout" />
+		<template name="center">
+			<apply id="content" templateURI="/humanCare.zul"
+				dynamicValue="true" />
+		</template>
+	</div>
+</zk>

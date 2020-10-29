@@ -1,0 +1,24 @@
+<zk xmlns:n="native" xmlns="http://www.zkoss.org/2005/zul">
+	<div sclass="sidebar"
+		viewModel="@id('vm')@init('org.itri.view.admin.longBarView')" width="100%">
+		<navbar orient="horizontal" collapsed="@load(vm.collapsed)">
+			<apply template="iterate" menuItems="@load(vm.menuList)" />
+		</navbar>
+	</div>
+
+	<template name="iterate">
+		<forEach items="@load(menuItems)">
+			<apply
+				template="@load(empty each.subMenus?'menuitem':'menu')"
+				menuItem="@init(each)" />
+		</forEach>
+	</template>
+
+	<template name="menuitem">
+		<navitem label="@init(menuItem.label)"
+			iconSclass="@init(menuItem.icon)"
+			onClick="@command('navigate', menu=each)"
+			selected="@load(vm.navigationModel.contentUrl eq menuItem.path)" />
+	</template>
+
+</zk>

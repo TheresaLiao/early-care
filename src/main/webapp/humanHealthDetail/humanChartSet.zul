@@ -1,0 +1,312 @@
+<zk xmlns:n="native" xmlns:z="zul">
+	<zscript><![CDATA[
+	String selectedPosition = "before_start";
+]]></zscript>
+	<nodom
+		viewModel="@id('vm')@init('org.itri.view.humanhealth.detail.PersonInfo')">
+		<vlayout children="@bind(vm.personStateList)" spacing="0">
+			<template name="children">
+
+				<!-- one person -->
+				<n:div sclass="row rounded col-lg-4" vflex="1">
+
+					<style>
+						.titleStyle { font-size: 20px; text-align:
+						center;}
+					</style>
+					<panel title="${each.bedRoom} ${each.name}"
+						border="normal" width="100%">
+						<caption sclass="titleStyle">
+							<label value="" />
+							<button
+								image="resources/image/icon-edit-w.png"
+								onClick="@command('modifyClick', item=each)" />
+							<button
+								image="resources/image/icon-download-w.png" />
+						</caption>
+
+						<panelchildren>
+							<!-- HeartBeat -->
+							<bs-row class="row py-0">
+								<!-- Chart -->
+								<style>
+									.z-window-content { padding:0px;}
+								</style>
+								<window
+									style="padding: 0px; z-window-content"
+									apply="org.itri.view.humanhealth.detail.HeartBeatView">
+									<charts id="chart" type="spline"
+										height="100" width="310" style="padding: 0px;" title="" />
+									<textbox id="textboxId"
+										visible="false" value="${each.id}" />
+									<textbox id="textboxSpecH"
+										visible="false" value="${each.heartRateThreshold.specHigh}" />
+									<textbox id="textboxSpecL"
+										visible="false" value="${each.heartRateThreshold.specLow}" />
+									<timer id="timer" delay="1000"
+										running="true" repeats="true" />
+								</window>
+
+								<!-- Current Status -->
+								<n:div sclass="col p-1"
+									style="min-width: 150px">
+									<window style="padding: 0px"
+										apply="org.itri.view.humanhealth.detail.HeartBeatCurrentView">
+										<timer id="timer" delay="100"
+											running="true" repeats="true" />
+										<bs-row class="row col px-1 ">
+											<hbox class="col"
+												pack="center" align="center">
+												<!-- left spec -->
+												<vbox
+													class="text-right px-3" width="60px" pack="center"
+													align="end" height="92px">
+													<label id="hrLabel"
+														class=" h7">
+														/min
+													</label>
+													<label
+														id="heightLabel" class=" h7"
+														value="${each.heartRateThreshold.specHigh}" />
+													<label id="lowLabel"
+														class=" h7" value="${each.heartRateThreshold.specLow}" />
+												</vbox>
+
+												<!-- right value -->
+												<label class="h2 px-2" />
+												<textbox visible="false"
+													value="${each.id}" />
+											</hbox>
+										</bs-row>
+									</window>
+								</n:div>
+							</bs-row>
+
+
+							<!-- oximeter -->
+							<bs-row class="row py-0">
+								<!-- Chart -->
+								<window style="padding: 0px;"
+									apply="org.itri.view.humanhealth.detail.OximeterView">
+									<charts id="chart" type="spline"
+										title="" height="100" width="310" />
+									<textbox id="textboxId"
+										visible="false" value="${each.id}" />
+									<textbox id="textboxSpecH"
+										visible="false" value="${each.oximeterThreshold.specHigh}" />
+									<textbox id="textboxSpecL"
+										visible="false" value="${each.oximeterThreshold.specLow}" />
+									<timer id="timer" delay="1000"
+										running="true" repeats="true" />
+								</window>
+
+								<!-- Current Status -->
+								<n:div sclass="col p-1"
+									style="min-width: 150px">
+									<window style="padding: 0px;"
+										apply="org.itri.view.humanhealth.detail.OximeterCurrentView">
+										<timer id="timer" delay="100"
+											running="true" repeats="true" />
+										<bs-row class="row col px-1">
+											<hbox class="col"
+												pack="center" align="center">
+												<!-- left spec -->
+												<vbox
+													class="text-right px-3" width="60px" pack="center"
+													align="end" height="92px">
+													<label id="hrLabel"
+														class=" h7">
+														SpO2 %
+													</label>
+													<label
+														id="heightLabel" class=" h7"
+														value="${each.oximeterThreshold.specHigh}" />
+													<label id="lowLabel"
+														class=" h7" value="${each.oximeterThreshold.specLow}" />
+												</vbox>
+
+												<!-- right value -->
+												<label class="h2 px-2" />
+												<textbox visible="false"
+													value="${each.id}" />
+											</hbox>
+										</bs-row>
+
+									</window>
+								</n:div>
+							</bs-row>
+
+
+							<!-- BreathRate -->
+							<bs-row class="row py-0">
+								<!-- Chart -->
+								<window style="padding: 0px;"
+									apply="org.itri.view.humanhealth.detail.BreathRateView">
+									<charts id="chart" type="spline"
+										title="" height="100" width="310" />
+									<textbox id="textboxId"
+										visible="false" value="${each.id}" />
+									<textbox id="textboxSpecH"
+										visible="false" value="${each.breathRateThreshold.specHigh}" />
+									<textbox id="textboxSpecL"
+										visible="false" value="${each.breathRateThreshold.specLow}" />
+									<timer id="timer" delay="1000"
+										running="true" repeats="true" />
+								</window>
+
+								<!-- Current Status -->
+								<n:div sclass="col p-1"
+									style="min-width: 150px">
+									<window style="padding: 0px;"
+										apply="org.itri.view.humanhealth.detail.BreathRateCurrentView">
+										<timer id="timer" delay="1000"
+											running="true" repeats="true" />
+										<bs-row class="row col px-1">
+											<hbox class="col"
+												pack="center" align="center">
+												<!-- left spec -->
+												<vbox
+													class="text-right px-3" width="60px" pack="center"
+													align="end" height="92px">
+													<label id="hrLabel"
+														class=" h7">
+														/min
+													</label>
+													<label
+														id="heightLabel" class=" h7"
+														value="${each.breathRateThreshold.specHigh}" />
+													<label id="lowLabel"
+														class=" h7" value="${each.breathRateThreshold.specLow}" />
+												</vbox>
+
+												<!-- right value -->
+												<label class="h2 px-2" />
+												<textbox visible="false"
+													value="${each.id}" />
+											</hbox>
+										</bs-row>
+
+									</window>
+								</n:div>
+							</bs-row>
+
+							<!-- Temperature -->
+							<bs-row class="row py-0">
+								<!-- Chart -->
+								<window style="padding: 0px;"
+									apply="org.itri.view.humanhealth.detail.TemperatureView">
+									<charts id="chart" type="spline"
+										title="" height="100" width="310" />
+									<textbox id="textboxId"
+										visible="false" value="${each.id}" />
+									<textbox id="textboxSpecH"
+										visible="false" value="${each.bodyTempThreshold.specHigh}" />
+									<textbox id="textboxSpecL"
+										visible="false" value="${each.bodyTempThreshold.specLow}" />
+									<timer id="timer" delay="1000"
+										running="true" repeats="true" />
+								</window>
+
+								<!-- Current Status -->
+								<n:div sclass="col p-1"
+									style="min-width: 150px">
+									<window style="padding: 0px;"
+										apply="org.itri.view.humanhealth.detail.TemperatureCurrentView">
+										<timer id="timer" delay="100"
+											running="true" repeats="true" />
+										<bs-row class="row col px-1">
+											<hbox class="col"
+												pack="center" align="center">
+												<!-- left spec -->
+												<vbox
+													class="text-right px-3" width="60px" pack="center"
+													align="end" height="92px">
+													<label
+														id="tempLabel" class=" h7">
+														T °C
+													</label>
+													<label
+														id="heightLabel" class=" h7"
+														value="${each.bodyTempThreshold.specHigh}" />
+													<label id="lowLabel"
+														class=" h7" value="${each.bodyTempThreshold.specLow}" />
+												</vbox>
+
+												<!-- right value -->
+												<label
+													class="h2 px-2">
+												</label>
+												<textbox visible="false"
+													value="${each.id}" />
+											</hbox>
+										</bs-row>
+									</window>
+								</n:div>
+							</bs-row>
+
+							<!-- EWS -->
+							<bs-row class="row py-0">
+								<!-- Chart -->
+								<style>
+									.z-window-content { padding:0px;}
+								</style>
+								<window
+									style="padding: 0px; z-window-content"
+									apply="org.itri.view.humanhealth.detail.EwsView">
+									<charts id="chart" type="spline"
+										title="" height="100" width="310" />
+									<textbox id="textboxId"
+										visible="false" value="${each.id}" />
+									<textbox id="textboxHisDate"
+										visible="false" value="${each.historyDate}" />
+									<timer id="timer" delay="1000"
+										running="true" repeats="true" />
+								</window>
+
+								<!-- Current Status -->
+								<n:div sclass="col p-1"
+									style="min-width: 150px">
+									<window style="padding: 0px"
+										apply="org.itri.view.humanhealth.detail.EwsCurrentView">
+										<timer id="timer" delay="100"
+											running="true" repeats="true" />
+										<bs-row class="row col px-1 ">
+											<hbox class="col"
+												id="curHbox" pack="center" align="center">
+												<!-- left spec -->
+												<vbox
+													class="text-right px-3" width="60px" pack="center"
+													align="end" height="92px">
+													<label
+														id="tempLabel" class=" h7">
+														EWS
+													</label>
+													<label
+														id="heightLabel" class=" h7" value="${each.ewsLow}" />
+												</vbox>
+
+												<!-- right value -->
+												<label class="h2 px-2" />
+												<textbox visible="false"
+													value="${each.id}" />
+											</hbox>
+										</bs-row>
+									</window>
+								</n:div>
+							</bs-row>
+
+						</panelchildren>
+					</panel>
+
+				</n:div>
+
+			</template>
+		</vlayout>
+
+		<!-- Every 30s refresh person -->
+		<!-- 
+			<timer id="timer1234" delay="30000" running="true"
+			repeats="true" onTimer="@command('refreshPatientInfo')" />
+		-->
+	</nodom>
+</zk>

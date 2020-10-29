@@ -1,0 +1,35 @@
+<zk xmlns:n="native" xmlns:z="zul">
+	<style>body { background-color: #000000; }</style>
+	<hbox vflex="1" hflex="1" align="center" pack="center"
+		spacing="20px">
+		<vlayout>
+
+			<window id="loginWin" title="Login" border="normal"
+				apply="org.itri.view.admin.LoginController" hflex="min"
+				width="40%">
+				<vbox hflex="min" align="center">
+					<grid sclass="loginGrid">
+						<rows>
+							<row>
+								<label class=" h3">Account :</label>
+								<textbox id="account" />
+							</row>
+							<row>
+								<label class=" h3">Password:</label>
+								<textbox id="password" type="password" />
+							</row>
+						</rows>
+					</grid>
+
+					<hbox>
+						<button id="login" label="Login" />
+						<label id="errorLbl" style="color:white" />
+					</hbox>
+
+				</vbox>
+			</window>
+
+		</vlayout>
+	</hbox>
+
+</zk>

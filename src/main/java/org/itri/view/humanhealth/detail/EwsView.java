@@ -7,7 +7,6 @@ import java.util.List;
 import org.itri.view.humanhealth.hibernate.NewsRecord;
 import org.itri.view.humanhealth.hibernate.Patient;
 import org.itri.view.humanhealth.personal.chart.Imp.EwsViewDaoHibernateImpl;
-import org.itri.view.humanhealth.personal.chart.Imp.PersonInfosDaoHibernateImpl;
 import org.zkoss.chart.Charts;
 import org.zkoss.chart.Options;
 import org.zkoss.chart.PlotLine;
@@ -110,7 +109,7 @@ public class EwsView extends SelectorComposer<Window> {
 
 	// Get real time data
 	private Point getRtHeartRhythmRecordList(long patientId) {
-		PersonInfosDaoHibernateImpl hqe = new PersonInfosDaoHibernateImpl();
+		EwsViewDaoHibernateImpl hqe = new EwsViewDaoHibernateImpl();
 		Patient patient = hqe.getPatientById(patientId);
 		return new Point(patient.getLastUpdated().getTime(), Double.valueOf(patient.getTotalNewsScore()));
 	}

@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +29,7 @@ public class Users implements java.io.Serializable {
 	private boolean isDeleted;
 	private Set<PatientInfo> patientInfos = new HashSet<PatientInfo>(0);
 	private Set<Room> rooms = new HashSet<Room>(0);
-	private Set<PatientThreshold> patientThresholds = new HashSet<PatientThreshold>(0);
+	private Set<SensorThreshold> sensorThresholds = new HashSet<SensorThreshold>(0);
 
 	public Users() {
 	}
@@ -46,8 +46,7 @@ public class Users implements java.io.Serializable {
 	}
 
 	public Users(long usersId, String username, String password, Date timeCreated, Date lastUpdated, Date lastLogin,
-			boolean isDeleted, Set<PatientInfo> patientInfos, Set<Room> rooms,
-			Set<PatientThreshold> patientThresholds) {
+			boolean isDeleted, Set<PatientInfo> patientInfos, Set<Room> rooms, Set<SensorThreshold> sensorThresholds) {
 		this.usersId = usersId;
 		this.username = username;
 		this.password = password;
@@ -57,10 +56,10 @@ public class Users implements java.io.Serializable {
 		this.isDeleted = isDeleted;
 		this.patientInfos = patientInfos;
 		this.rooms = rooms;
-		this.patientThresholds = patientThresholds;
+		this.sensorThresholds = sensorThresholds;
 	}
 
-	@SequenceGenerator(name="users_seq", sequenceName="users_users_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="users_seq")	@Id
+	@SequenceGenerator(name="users_seq", sequenceName="users_users_id_seq")	@GeneratedValue(generator="users_seq")	@Id
 
 	@Column(name = "users_id", unique = true, nullable = false)
 	public long getUsersId() {
@@ -147,12 +146,12 @@ public class Users implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
-	public Set<PatientThreshold> getPatientThresholds() {
-		return this.patientThresholds;
+	public Set<SensorThreshold> getSensorThresholds() {
+		return this.sensorThresholds;
 	}
 
-	public void setPatientThresholds(Set<PatientThreshold> patientThresholds) {
-		this.patientThresholds = patientThresholds;
+	public void setSensorThresholds(Set<SensorThreshold> sensorThresholds) {
+		this.sensorThresholds = sensorThresholds;
 	}
 
 }

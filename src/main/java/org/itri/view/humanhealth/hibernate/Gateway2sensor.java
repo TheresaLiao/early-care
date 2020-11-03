@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:59:27 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,13 +23,18 @@ public class Gateway2sensor implements java.io.Serializable {
 	public Gateway2sensor() {
 	}
 
+	public Gateway2sensor(Gateway gateway, Sensor sensor) {
+		this.gateway = gateway;
+		this.sensor = sensor;
+	}
+	
 	public Gateway2sensor(long gateway2sensorId, Gateway gateway, Sensor sensor) {
 		this.gateway2sensorId = gateway2sensorId;
 		this.gateway = gateway;
 		this.sensor = sensor;
 	}
 
-	@SequenceGenerator(name="gateway2sensor_seq", sequenceName="gateway2sensor_gateway2sensor_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gateway2sensor_seq")	@Id
+	@SequenceGenerator(name="gateway2sensor_seq", sequenceName="gateway2sensor_gateway2sensor_id_seq")	@GeneratedValue(generator="gateway2sensor_seq")	@Id
 
 	@Column(name = "gateway2sensor_id", unique = true, nullable = false)
 	public long getGateway2sensorId() {

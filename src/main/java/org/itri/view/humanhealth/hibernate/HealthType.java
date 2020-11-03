@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:59:27 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -20,7 +20,8 @@ public class HealthType implements java.io.Serializable {
 	private long healthTypeId;
 	private String typeName;
 	private boolean isDeleted;
-	private Set<PatientThreshold> patientThresholds = new HashSet<PatientThreshold>(0);
+	private Set<Sensor2healthType> sensor2healthTypes = new HashSet<Sensor2healthType>(0);
+	private Set<SensorThreshold> sensorThresholds = new HashSet<SensorThreshold>(0);
 
 	public HealthType() {
 	}
@@ -31,14 +32,16 @@ public class HealthType implements java.io.Serializable {
 		this.isDeleted = isDeleted;
 	}
 
-	public HealthType(long healthTypeId, String typeName, boolean isDeleted, Set<PatientThreshold> patientThresholds) {
+	public HealthType(long healthTypeId, String typeName, boolean isDeleted, Set<Sensor2healthType> sensor2healthTypes,
+			Set<SensorThreshold> sensorThresholds) {
 		this.healthTypeId = healthTypeId;
 		this.typeName = typeName;
 		this.isDeleted = isDeleted;
-		this.patientThresholds = patientThresholds;
+		this.sensor2healthTypes = sensor2healthTypes;
+		this.sensorThresholds = sensorThresholds;
 	}
 
-	@SequenceGenerator(name="health_type_seq", sequenceName="health_type_health_type_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="health_type_seq")	@Id
+	@SequenceGenerator(name="health_type_seq", sequenceName="health_type_health_type_id_seq")	@GeneratedValue(generator="health_type_seq")	@Id
 
 	@Column(name = "health_type_id", unique = true, nullable = false)
 	public long getHealthTypeId() {
@@ -68,12 +71,21 @@ public class HealthType implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "healthType")
-	public Set<PatientThreshold> getPatientThresholds() {
-		return this.patientThresholds;
+	public Set<Sensor2healthType> getSensor2healthTypes() {
+		return this.sensor2healthTypes;
 	}
 
-	public void setPatientThresholds(Set<PatientThreshold> patientThresholds) {
-		this.patientThresholds = patientThresholds;
+	public void setSensor2healthTypes(Set<Sensor2healthType> sensor2healthTypes) {
+		this.sensor2healthTypes = sensor2healthTypes;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "healthType")
+	public Set<SensorThreshold> getSensorThresholds() {
+		return this.sensorThresholds;
+	}
+
+	public void setSensorThresholds(Set<SensorThreshold> sensorThresholds) {
+		this.sensorThresholds = sensorThresholds;
 	}
 
 }

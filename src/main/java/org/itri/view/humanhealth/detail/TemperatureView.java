@@ -20,7 +20,7 @@ import org.zkoss.zul.Textbox;
 
 public class TemperatureView extends SelectorComposer<Component> {
 
-	private long patientId = 0;
+	private long sensortId = 0;
 	private double specHigh = 0;
 	private double specLow = 0;
 
@@ -46,7 +46,7 @@ public class TemperatureView extends SelectorComposer<Component> {
 		super.doAfterCompose(comp);
 
 		// set PatientId
-		setPatientId(textboxId.getValue());
+		setSensortId(textboxId.getValue());
 
 		// Get Spec
 		setSpecHigh(textboxSpecH.getValue());
@@ -88,7 +88,7 @@ public class TemperatureView extends SelectorComposer<Component> {
 		chart.getXAxis().setLineColor(BLACK_HASH);
 
 		// init point
-		List<Point> histData = getTempPadRecordList(getPatientId());
+		List<Point> histData = getTempPadRecordList(getSensortId());
 		for (Point p : histData) {
 			series.addPoint(p);
 
@@ -100,7 +100,7 @@ public class TemperatureView extends SelectorComposer<Component> {
 		if (histData.size() == 0) {
 			System.out.println("no history data in temp");
 			for (int i = -19; i <= 0; i++) {
-				Point nowPoint = getRtTempPadRecordList(getPatientId());
+				Point nowPoint = getRtTempPadRecordList(getSensortId());
 				nowPoint.setX(new Date().getTime() + i * 1000);
 				nowPoint.setColor(GREEN_HASH);
 				series.addPoint(nowPoint);
@@ -115,8 +115,8 @@ public class TemperatureView extends SelectorComposer<Component> {
 
 	@Listen("onTimer = #timer")
 	public void updateData() {
-		setPatientId(textboxId.getValue());
-		Point nowPoint = getRtTempPadRecordList(getPatientId());
+		setSensortId(textboxId.getValue());
+		Point nowPoint = getRtTempPadRecordList(getSensortId());
 		chart.getSeries(0).addPoint(nowPoint, true, true, true);
 
 //		Point hPoint = getHighPoint(nowPoint.getX());
@@ -128,7 +128,7 @@ public class TemperatureView extends SelectorComposer<Component> {
 	// Get history data
 	private List<Point> getTempPadRecordList(long patientId) {
 		TemperatureViewDaoHibernateImpl hqe = new TemperatureViewDaoHibernateImpl();
-		List<TempPadRecord> tempPadRecordList = hqe.getTempPadRecordList(patientId);
+		List<TempPadRecord> tempPadRecordList = hqe.getTempPadRecordList(sensortId);
 
 		int i = tempPadRecordList.size() * (-1);
 		List<Point> resp = new ArrayList<Point>();
@@ -139,27 +139,27 @@ public class TemperatureView extends SelectorComposer<Component> {
 	}
 
 	// Get real time data
-	private Point getRtTempPadRecordList(long patientId) {
+	private Point getRtTempPadRecordList(long sensortId) {
 
 		TemperatureViewDaoHibernateImpl hqe = new TemperatureViewDaoHibernateImpl();
-		List<RtTempPadRecord> rtTempPadRecordList = hqe.getRtTempPadRecordList(patientId);
+		RtTempPadRecord rtTempPadRecord = hqe.getRtTempPadRecord(sensortId);
 
-		for (RtTempPadRecord tt : rtTempPadRecordList) {
-			String data = tt.getBodyTempData();
-			Date time = tt.getLastUpdated();
+		if (rtTempPadRecord != null) {
+			String data = rtTempPadRecord.getBodyTempData();
+			Date time = rtTempPadRecord.getLastUpdated();
 			return new Point(time.getTime(), Double.valueOf(data));
 
 		}
 		return new Point(new Date().getTime(), 0);
 	}
 
-	public long getPatientId() {
-		return patientId;
+	public long getSensortId() {
+		return sensortId;
 	}
 
-	public void setPatientId(String patientIdStr) {
-		patientId = Long.parseLong(patientIdStr);
-		this.patientId = patientId;
+	public void setSensortId(String sensortIdStr) {
+		sensortId = Long.parseLong(sensortIdStr);
+		this.sensortId = sensortId;
 	}
 
 	private Point getHighPoint(Number xValue) {

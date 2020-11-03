@@ -1,10 +1,13 @@
 package org.itri.view.humanhealth.personal.chart.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.itri.view.admin.dao.Type;
 
 public class PersonState {
 
-	private long id;
+	private long patientId;
 	private String name;
 	private String bedRoom;
 	private String heartBeat;
@@ -16,11 +19,12 @@ public class PersonState {
 	private String totalStatusImgPath;
 	private String historyDate;
 
-	private String heartRateStatus;
-	private String oximeterStatus;
-	private String bodyTempStatus;
-	private String breathStatus;
+//	private String heartRateStatus;
+//	private String oximeterStatus;
+//	private String bodyTempStatus;
+//	private String breathStatus;
 
+	private List<Long> sensorIdList = new ArrayList<Long>();
 	private ThresholdDao heartRateThreshold;
 	private ThresholdDao oximeterThreshold;
 	private ThresholdDao bodyTempThreshold;
@@ -28,37 +32,37 @@ public class PersonState {
 
 	private String ewsLow;
 
-	public String getHeartRateStatus() {
-		return heartRateStatus;
-	}
-
-	public void setHeartRateStatus(String heartRateStatus) {
-		this.heartRateStatus = heartRateStatus;
-	}
-
-	public String getOximeterStatus() {
-		return oximeterStatus;
-	}
-
-	public void setOximeterStatus(String oximeterStatus) {
-		this.oximeterStatus = oximeterStatus;
-	}
-
-	public String getBodyTempStatus() {
-		return bodyTempStatus;
-	}
-
-	public void setBodyTempStatus(String bodyTempStatus) {
-		this.bodyTempStatus = bodyTempStatus;
-	}
-
-	public String getBreathStatus() {
-		return breathStatus;
-	}
-
-	public void setBreathStatus(String breathStatus) {
-		this.breathStatus = breathStatus;
-	}
+//	public String getHeartRateStatus() {
+//		return heartRateStatus;
+//	}
+//
+//	public void setHeartRateStatus(String heartRateStatus) {
+//		this.heartRateStatus = heartRateStatus;
+//	}
+//
+//	public String getOximeterStatus() {
+//		return oximeterStatus;
+//	}
+//
+//	public void setOximeterStatus(String oximeterStatus) {
+//		this.oximeterStatus = oximeterStatus;
+//	}
+//
+//	public String getBodyTempStatus() {
+//		return bodyTempStatus;
+//	}
+//
+//	public void setBodyTempStatus(String bodyTempStatus) {
+//		this.bodyTempStatus = bodyTempStatus;
+//	}
+//
+//	public String getBreathStatus() {
+//		return breathStatus;
+//	}
+//
+//	public void setBreathStatus(String breathStatus) {
+//		this.breathStatus = breathStatus;
+//	}
 
 	public Integer getTotalNewsScore() {
 		return totalNewsScore;
@@ -66,14 +70,6 @@ public class PersonState {
 
 	public void setTotalNewsScore(Integer totalNewsScore) {
 		this.totalNewsScore = totalNewsScore;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public String getTotalStatusImgPath() {
@@ -186,6 +182,22 @@ public class PersonState {
 
 	public void setBreathRateThreshold(ThresholdDao breathRateThreshold) {
 		this.breathRateThreshold = breathRateThreshold;
+	}
+
+	public List<Long> getSensorIdList() {
+		return sensorIdList;
+	}
+
+	public void setSensorIdList(List<Long> sensorIdList) {
+		this.sensorIdList = sensorIdList;
+	}
+
+	public long getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(long patientId) {
+		this.patientId = patientId;
 	}
 
 }

@@ -1,18 +1,14 @@
 package org.itri.view.humanhealth.detail;
 
-import org.itri.view.humanhealth.hibernate.Patient;
-import org.itri.view.humanhealth.personal.chart.Imp.PersonInfosDaoHibernateImpl;
+import org.itri.view.humanhealth.hibernate.RtHeartRhythmRecord;
+import org.itri.view.humanhealth.personal.chart.Imp.BreathRateViewDaoHibernateImpl;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
-import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Hlayout;
-import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Vbox;
-import org.zkoss.zul.Vlayout;
 import org.zkoss.zul.Window;
 
 public class BreathRateCurrentView extends SelectorComposer<Window> {
@@ -40,13 +36,13 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 
 	private String GRAY_HASH = "#2F2F2F";
 	private String BLACK_HASH = "#000000";
-	private String YELLOW_HASH = "#F8FF70";
+//	private String YELLOW_HASH = "#F8FF70";
 	private String WHITE_HASH = "#FFFFFF";
 
 	private Double breathRateHigh;
 	private Double breathRateLow;
 
-	private long patientId = 0;
+	private long sensortId = 0;
 
 	@Override
 	public void doAfterCompose(Window comp) throws Exception {
@@ -55,8 +51,8 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 		super.doAfterCompose(comp);
 
 		// get PatientId & find data by PatientId
-		setPatientId(textboxId.getValue());
-		String dataStr = getBreathRateValueById(getPatientId());
+		setSensortId(textboxId.getValue());
+		String dataStr = getBreathRateValueById(getSensortId());
 		breathRateLabel.setValue(dataStr);
 
 		// Set spec
@@ -71,8 +67,8 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 	public void updateData() {
 
 		// get PatientId & find data by PatientId
-		setPatientId(textboxId.getValue());
-		String dataStr = getBreathRateValueById(getPatientId());
+		setSensortId(textboxId.getValue());
+		String dataStr = getBreathRateValueById(getSensortId());
 		breathRateLabel.setValue(dataStr);
 
 		hightLightLabel(dataStr);
@@ -104,24 +100,25 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 		}
 	}
 
-	private String getBreathRateValueById(long patientId) {
+	private String getBreathRateValueById(long sensorId) {
 
-		PersonInfosDaoHibernateImpl hqe = new PersonInfosDaoHibernateImpl();
-		Patient rowData = hqe.getPatientById(patientId);
+		BreathRateViewDaoHibernateImpl hqe = new BreathRateViewDaoHibernateImpl();
+		RtHeartRhythmRecord rowData = hqe.getRtHeartRhythmRecord(sensorId);
 		if (rowData != null) {
-			return rowData.getRtHeartRhythmRecords().stream().findFirst().get().getBreathData();
+			return rowData.getBreathData();
 		}
-		System.out.println("patientId :" + patientId + " can't find.");
+		System.out.println("sensorId :" + sensorId + " can't find.");
 		return "NULL";
 	}
 
-	public long getPatientId() {
-		return patientId;
+	public long getSensortId() {
+		return sensortId;
 	}
 
-	public void setPatientId(String patientIdStr) {
-		patientId = Long.parseLong(patientIdStr);
-		this.patientId = patientId;
+	public void setSensortId(String sensortIdStr) {
+		sensortId = Long.parseLong(sensortIdStr);
+		this.sensortId = sensortId;
+		
 	}
 
 	public Double getBreathRateHigh() {

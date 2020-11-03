@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,32 +21,32 @@ public class NewsRecord implements java.io.Serializable {
 
 	private long newsRecordId;
 	private Patient patient;
-	private Integer newsScore;
+	private int newsScore;
 	private Date timeCreated;
 
 	public NewsRecord() {
 	}
+
+	public NewsRecord(Patient patient, int newsScore, Date timeCreated) {
+		this.patient = patient;
+		this.newsScore = newsScore;
+		this.timeCreated = timeCreated;
+	}
 	
-	public NewsRecord(Patient patient, Integer newsScore, Date timeCreated) {
-		this.patient = patient;
-		this.newsScore = newsScore;
-		this.timeCreated = timeCreated;
-	}
-
-	public NewsRecord(long newsRecordId, Patient patient, Integer newsScore) {
+	public NewsRecord(long newsRecordId, Patient patient, int newsScore) {
 		this.newsRecordId = newsRecordId;
 		this.patient = patient;
 		this.newsScore = newsScore;
 	}
 
-	public NewsRecord(long newsRecordId, Patient patient, Integer newsScore, Date timeCreated) {
+	public NewsRecord(long newsRecordId, Patient patient, int newsScore, Date timeCreated) {
 		this.newsRecordId = newsRecordId;
 		this.patient = patient;
 		this.newsScore = newsScore;
 		this.timeCreated = timeCreated;
 	}
 
-	@SequenceGenerator(name="news_record_seq", sequenceName="news_record_news_record_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="news_record_seq")	@Id
+	@SequenceGenerator(name="news_record_seq", sequenceName="news_record_news_record_id_seq")	@GeneratedValue(generator="news_record_seq")	@Id
 
 	@Column(name = "news_record_id", unique = true, nullable = false)
 	public long getNewsRecordId() {
@@ -67,12 +67,12 @@ public class NewsRecord implements java.io.Serializable {
 		this.patient = patient;
 	}
 
-	@Column(name = "news_score")
-	public Integer getNewsScore() {
+	@Column(name = "news_score", nullable = false)
+	public int getNewsScore() {
 		return this.newsScore;
 	}
 
-	public void setNewsScore(Integer newsScore) {
+	public void setNewsScore(int newsScore) {
 		this.newsScore = newsScore;
 	}
 

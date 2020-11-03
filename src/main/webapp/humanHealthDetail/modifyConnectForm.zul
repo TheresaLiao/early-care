@@ -1,101 +1,99 @@
-<zk>
-	<window title="警報設定" border="normal" width="560px"
-		position="center,center" action="show: slideDown;hide: slideUp"
-		closable="true" onClose="self.detach(); event.stopPropagation();"
-		apply="org.itri.view.humanhealth.detail.ModifyFormViewTwo">
-		<textbox id="textboxPatientId" visible="false"
-			value="${arg.orderItems.id}" />
-		<grid>
-			<rows>
-				<row>
-					<label style="color:white;">病房編號</label>
-					<!--  <label style="color:white;" value="335-11" />-->
-					<label style="color:white;"
-						value="${arg.orderItems.bedRoom}" />
-				</row>
-				<row>
-					<label style="color:white;">追蹤人名</label>
-					<selectbox id="selectboxPatient">
-						<template name="model">
-							<label value="${each.text}" />
-						</template>
-					</selectbox>
-				</row>
-				<row>
-					心跳區間/min
-					<hbox>
-						<textbox width="80px"
-							value="${arg.orderItems.heartRateThreshold.specLow}" />
-						~
-						<textbox width="80px"
-							value="${arg.orderItems.heartRateThreshold.specHigh}" />
-					</hbox>
-				</row>
-				<row>
-					血氧濃度Spo2%
-					<hbox>
-						<textbox width="80px"
-							value="${arg.orderItems.oximeterThreshold.specLow}" />
-						~
-						<textbox width="80px"
-							value="${arg.orderItems.oximeterThreshold.specHigh}" />
-						<textbox id="textboxOximeter" visible="false"
-							value="${arg.orderItems.oximeterThreshold.sensorId}" />
-					</hbox>
-					<selectbox id="selectboxOximeter">
-						<template name="model">
-							<label value="${each.text}" />
-						</template>
-					</selectbox>
-				</row>
-				<row>
-					呼吸區間/min
-					<hbox>
-						<textbox width="80px"
-							value="${arg.orderItems.breathRateThreshold.specLow}" />
-						~
-						<textbox width="80px"
-							value="${arg.orderItems.breathRateThreshold.specHigh}" />
-						<textbox id="textboxBreathRate" visible="false"
-							value="${arg.orderItems.breathRateThreshold.sensorId}" />
-					</hbox>
-					<selectbox id="selectboxBreathRate">
-						<template name="model">
-							<label value="${each.text}" />
-						</template>
-					</selectbox>
-				</row>
-				<row>
-					體溫區間T°C
-					<hbox>
-						<textbox width="80px"
-							value="${arg.orderItems.bodyTempThreshold.specLow}" />
-						~
-						<textbox width="80px"
-							value="${arg.orderItems.bodyTempThreshold.specHigh}" />
-						<textbox id="textboxBodyTemp" visible="false"
-							value="${arg.orderItems.bodyTempThreshold.sensorId}" />
-					</hbox>
-					<selectbox id="selectboxTemp">
-						<template name="model">
-							<label value="${each.text}" />
-						</template>
-					</selectbox>
-				</row>
-				<row>
-					EWS
-					<hbox>
-						<textbox width="80px"
-							value="${arg.orderItems.ewsLow}" />
-					</hbox>
-				</row>
-				<row>
-					<button label="Submit"
-						onClick="@command('submitClick')" />
-					<button id="closeButton" label="Close"
-						onClick="@command('closeClick')" />
-				</row>
-			</rows>
-		</grid>
-	</window>
-</zk>
+<window id="modifyWin" title="警報設定" border="normal" width="560px"
+	position="center,center" action="show: slideDown;hide: slideUp"
+	closable="true" onClose="self.detach(); event.stopPropagation();"
+	apply="org.itri.view.humanhealth.detail.ModifyFormViewTwo">
+
+	<textbox id="textboxPatientId" visible="false"
+		value="${arg.orderItems.patientId}" />
+	<grid>
+		<rows>
+			<row>
+				<label style="color:white;">病房編號</label>
+				<!--  <label style="color:white;" value="335-11" />-->
+				<label style="color:white;"
+					value="${arg.orderItems.bedRoom}" />
+			</row>
+			<row>
+				<label style="color:white;">追蹤人名</label>
+				<selectbox id="selectboxPatient">
+					<template name="model">
+						<label value="${each.text}" />
+					</template>
+				</selectbox>
+			</row>
+			<row>
+				心跳區間/min
+				<hbox>
+					<textbox width="80px"
+						value="${arg.orderItems.heartRateThreshold.specLow}" />
+					~
+					<textbox width="80px"
+						value="${arg.orderItems.heartRateThreshold.specHigh}" />
+				</hbox>
+			</row>
+			<row>
+				血氧濃度Spo2%
+				<hbox>
+					<textbox width="80px"
+						value="${arg.orderItems.oximeterThreshold.specLow}" />
+					~
+					<textbox width="80px"
+						value="${arg.orderItems.oximeterThreshold.specHigh}" />
+					<textbox id="textboxOximeter" visible="false"
+						value="${arg.orderItems.oximeterThreshold.sensorId}" />
+				</hbox>
+				<selectbox id="selectboxOximeter">
+					<template name="model">
+						<label value="${each.text}" />
+					</template>
+				</selectbox>
+			</row>
+			<row>
+				呼吸區間/min
+				<hbox>
+					<textbox width="80px"
+						value="${arg.orderItems.breathRateThreshold.specLow}" />
+					~
+
+					<textbox width="80px"
+						value="${arg.orderItems.breathRateThreshold.specHigh}" />
+					<textbox id="textboxBreathRate" visible="false"
+						value="${arg.orderItems.breathRateThreshold.sensorId}" />
+				</hbox>
+				<selectbox id="selectboxBreathRate">
+					<template name="model">
+						<label value="${each.text}" />
+					</template>
+				</selectbox>
+			</row>
+			<row>
+				體溫區間T°C
+				<hbox>
+					<textbox width="80px"
+						value="${arg.orderItems.bodyTempThreshold.specLow}" />
+					~
+					<textbox width="80px"
+						value="${arg.orderItems.bodyTempThreshold.specHigh}" />
+					<textbox id="textboxBodyTemp" visible="false"
+						value="${arg.orderItems.bodyTempThreshold.sensorId}" />
+				</hbox>
+				<selectbox id="selectboxTemp">
+					<template name="model">
+						<label value="${each.text}" />
+					</template>
+				</selectbox>
+			</row>
+			<row>
+				EWS
+				<hbox>
+					<textbox width="80px"
+						value="${arg.orderItems.ewsLow}" />
+				</hbox>
+			</row>
+			<row>
+				<button id="submitButton" label="Submit" />
+				<button id="closeButton" label="Close" />
+			</row>
+		</rows>
+	</grid>
+</window>

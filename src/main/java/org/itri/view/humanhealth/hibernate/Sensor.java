@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:08:16 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -24,16 +24,17 @@ public class Sensor implements java.io.Serializable {
 	private String deviceId;
 	private String sensorName;
 	private String sensorDeviceStatus;
-	private Set<Patient2sensor> patient2sensors = new HashSet<Patient2sensor>(0);
+	private Set<SensorThreshold> sensorThresholds = new HashSet<SensorThreshold>(0);
+	private Set<Combination> combinations = new HashSet<Combination>(0);
 	private Set<RtHeartRhythmRecord> rtHeartRhythmRecords = new HashSet<RtHeartRhythmRecord>(0);
 	private Set<PmFiveRecord> pmFiveRecords = new HashSet<PmFiveRecord>(0);
 	private Set<RtMattressRecord> rtMattressRecords = new HashSet<RtMattressRecord>(0);
 	private Set<Gateway2sensor> gateway2sensors = new HashSet<Gateway2sensor>(0);
-	private Set<PatientThreshold> patientThresholds = new HashSet<PatientThreshold>(0);
 	private Set<RtPmFiveRecord> rtPmFiveRecords = new HashSet<RtPmFiveRecord>(0);
 	private Set<RtRespirationCoughRecord> rtRespirationCoughRecords = new HashSet<RtRespirationCoughRecord>(0);
 	private Set<MattressRecord> mattressRecords = new HashSet<MattressRecord>(0);
 	private Set<RtOximeterRecord> rtOximeterRecords = new HashSet<RtOximeterRecord>(0);
+	private Set<Sensor2healthType> sensor2healthTypes = new HashSet<Sensor2healthType>(0);
 	private Set<OximeterRecord> oximeterRecords = new HashSet<OximeterRecord>(0);
 	private Set<RtTempPadRecord> rtTempPadRecords = new HashSet<RtTempPadRecord>(0);
 	private Set<TempPadRecord> tempPadRecords = new HashSet<TempPadRecord>(0);
@@ -56,29 +57,31 @@ public class Sensor implements java.io.Serializable {
 		this.sensorName = sensorName;
 	}
 
-	public Sensor(long sensorId, SensorType sensorType, String deviceId, String sensorName,
-			Set<Patient2sensor> patient2sensors, Set<RtHeartRhythmRecord> rtHeartRhythmRecords,
-			Set<PmFiveRecord> pmFiveRecords, Set<RtMattressRecord> rtMattressRecords,
-			Set<Gateway2sensor> gateway2sensors, Set<PatientThreshold> patientThresholds,
+	public Sensor(long sensorId, SensorType sensorType, String deviceId, String sensorName, String sensorDeviceStatus,
+			Set<SensorThreshold> sensorThresholds, Set<Combination> combinations,
+			Set<RtHeartRhythmRecord> rtHeartRhythmRecords, Set<PmFiveRecord> pmFiveRecords,
+			Set<RtMattressRecord> rtMattressRecords, Set<Gateway2sensor> gateway2sensors,
 			Set<RtPmFiveRecord> rtPmFiveRecords, Set<RtRespirationCoughRecord> rtRespirationCoughRecords,
 			Set<MattressRecord> mattressRecords, Set<RtOximeterRecord> rtOximeterRecords,
-			Set<OximeterRecord> oximeterRecords, Set<RtTempPadRecord> rtTempPadRecords,
-			Set<TempPadRecord> tempPadRecords, Set<HeartRhythmRecord> heartRhythmRecords,
-			Set<RespirationCoughRecord> respirationCoughRecords) {
+			Set<Sensor2healthType> sensor2healthTypes, Set<OximeterRecord> oximeterRecords,
+			Set<RtTempPadRecord> rtTempPadRecords, Set<TempPadRecord> tempPadRecords,
+			Set<HeartRhythmRecord> heartRhythmRecords, Set<RespirationCoughRecord> respirationCoughRecords) {
 		this.sensorId = sensorId;
 		this.sensorType = sensorType;
 		this.deviceId = deviceId;
 		this.sensorName = sensorName;
-		this.patient2sensors = patient2sensors;
+		this.sensorDeviceStatus = sensorDeviceStatus;
+		this.sensorThresholds = sensorThresholds;
+		this.combinations = combinations;
 		this.rtHeartRhythmRecords = rtHeartRhythmRecords;
 		this.pmFiveRecords = pmFiveRecords;
 		this.rtMattressRecords = rtMattressRecords;
 		this.gateway2sensors = gateway2sensors;
-		this.patientThresholds = patientThresholds;
 		this.rtPmFiveRecords = rtPmFiveRecords;
 		this.rtRespirationCoughRecords = rtRespirationCoughRecords;
 		this.mattressRecords = mattressRecords;
 		this.rtOximeterRecords = rtOximeterRecords;
+		this.sensor2healthTypes = sensor2healthTypes;
 		this.oximeterRecords = oximeterRecords;
 		this.rtTempPadRecords = rtTempPadRecords;
 		this.tempPadRecords = tempPadRecords;
@@ -86,7 +89,7 @@ public class Sensor implements java.io.Serializable {
 		this.respirationCoughRecords = respirationCoughRecords;
 	}
 
-	@SequenceGenerator(name="sensor_seq", sequenceName="sensor_sensor_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="sensor_seq")	@Id
+	@SequenceGenerator(name="sensor_seq", sequenceName="sensor_sensor_id_seq")	@GeneratedValue(generator="sensor_seq")	@Id
 
 	@Column(name = "sensor_id", unique = true, nullable = false)
 	public long getSensorId() {
@@ -124,7 +127,7 @@ public class Sensor implements java.io.Serializable {
 	public void setSensorName(String sensorName) {
 		this.sensorName = sensorName;
 	}
-	
+
 	@Column(name = "sensor_device_status", length = 16)
 	public String getSensorDeviceStatus() {
 		return this.sensorDeviceStatus;
@@ -135,12 +138,21 @@ public class Sensor implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sensor")
-	public Set<Patient2sensor> getPatient2sensors() {
-		return this.patient2sensors;
+	public Set<SensorThreshold> getSensorThresholds() {
+		return this.sensorThresholds;
 	}
 
-	public void setPatient2sensors(Set<Patient2sensor> patient2sensors) {
-		this.patient2sensors = patient2sensors;
+	public void setSensorThresholds(Set<SensorThreshold> sensorThresholds) {
+		this.sensorThresholds = sensorThresholds;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sensor")
+	public Set<Combination> getCombinations() {
+		return this.combinations;
+	}
+
+	public void setCombinations(Set<Combination> combinations) {
+		this.combinations = combinations;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sensor")
@@ -180,15 +192,6 @@ public class Sensor implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sensor")
-	public Set<PatientThreshold> getPatientThresholds() {
-		return this.patientThresholds;
-	}
-
-	public void setPatientThresholds(Set<PatientThreshold> patientThresholds) {
-		this.patientThresholds = patientThresholds;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sensor")
 	public Set<RtPmFiveRecord> getRtPmFiveRecords() {
 		return this.rtPmFiveRecords;
 	}
@@ -222,6 +225,15 @@ public class Sensor implements java.io.Serializable {
 
 	public void setRtOximeterRecords(Set<RtOximeterRecord> rtOximeterRecords) {
 		this.rtOximeterRecords = rtOximeterRecords;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sensor")
+	public Set<Sensor2healthType> getSensor2healthTypes() {
+		return this.sensor2healthTypes;
+	}
+
+	public void setSensor2healthTypes(Set<Sensor2healthType> sensor2healthTypes) {
+		this.sensor2healthTypes = sensor2healthTypes;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sensor")

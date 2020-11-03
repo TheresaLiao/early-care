@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:59:27 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +20,6 @@ import javax.persistence.TemporalType;
 public class RtTempPadRecord implements java.io.Serializable {
 
 	private long rtTempPadRecordId;
-	private Patient patient;
 	private Sensor sensor;
 	private String bodyTempData;
 	private String batteryLevel;
@@ -30,10 +29,18 @@ public class RtTempPadRecord implements java.io.Serializable {
 	public RtTempPadRecord() {
 	}
 
-	public RtTempPadRecord(long rtTempPadRecordId, Patient patient, Sensor sensor, String bodyTempData,
-			String batteryLevel, String bodyTempStatus, Date lastUpdated) {
+	public RtTempPadRecord(Sensor sensor, String bodyTempData, String batteryLevel,
+			String bodyTempStatus, Date lastUpdated) {
+		this.sensor = sensor;
+		this.bodyTempData = bodyTempData;
+		this.batteryLevel = batteryLevel;
+		this.bodyTempStatus = bodyTempStatus;
+		this.lastUpdated = lastUpdated;
+	}
+	
+	public RtTempPadRecord(long rtTempPadRecordId, Sensor sensor, String bodyTempData, String batteryLevel,
+			String bodyTempStatus, Date lastUpdated) {
 		this.rtTempPadRecordId = rtTempPadRecordId;
-		this.patient = patient;
 		this.sensor = sensor;
 		this.bodyTempData = bodyTempData;
 		this.batteryLevel = batteryLevel;
@@ -41,7 +48,7 @@ public class RtTempPadRecord implements java.io.Serializable {
 		this.lastUpdated = lastUpdated;
 	}
 
-	@SequenceGenerator(name="rt_temp_pad_record_seq", sequenceName="rt_temp_pad_record_rt_temp_pad_record_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="rt_temp_pad_record_seq")	@Id
+	@SequenceGenerator(name="rt_temp_pad_record_seq", sequenceName="rt_temp_pad_record_rt_temp_pad_record_id_seq")	@GeneratedValue(generator="rt_temp_pad_record_seq")	@Id
 
 	@Column(name = "rt_temp_pad_record_id", unique = true, nullable = false)
 	public long getRtTempPadRecordId() {
@@ -50,16 +57,6 @@ public class RtTempPadRecord implements java.io.Serializable {
 
 	public void setRtTempPadRecordId(long rtTempPadRecordId) {
 		this.rtTempPadRecordId = rtTempPadRecordId;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "patient_id", nullable = false)
-	public Patient getPatient() {
-		return this.patient;
-	}
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:59:27 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -19,23 +19,30 @@ public class SensorType implements java.io.Serializable {
 
 	private long sensorTypeId;
 	private String typeName;
+	private String description;
 	private Set<Sensor> sensors = new HashSet<Sensor>(0);
 
 	public SensorType() {
 	}
 
-	public SensorType(long sensorTypeId, String typeName) {
-		this.sensorTypeId = sensorTypeId;
+	public SensorType(String typeName) {
 		this.typeName = typeName;
 	}
-
-	public SensorType(long sensorTypeId, String typeName, Set<Sensor> sensors) {
+	
+	public SensorType(long sensorTypeId, String typeName, String description) {
 		this.sensorTypeId = sensorTypeId;
 		this.typeName = typeName;
+		this.description = description;
+	}
+
+	public SensorType(long sensorTypeId, String typeName, String description, Set<Sensor> sensors) {
+		this.sensorTypeId = sensorTypeId;
+		this.typeName = typeName;
+		this.description = description;
 		this.sensors = sensors;
 	}
 
-	@SequenceGenerator(name="sensor_type_seq", sequenceName="sensor_type_sensor_type_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="sensor_type_seq")	@Id
+	@SequenceGenerator(name="sensor_type_seq", sequenceName="sensor_type_sensor_type_id_seq")	@GeneratedValue(generator="sensor_type_seq")	@Id
 
 	@Column(name = "sensor_type_id", unique = true, nullable = false)
 	public long getSensorTypeId() {
@@ -53,6 +60,15 @@ public class SensorType implements java.io.Serializable {
 
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
+	}
+	
+	@Column(name = "description", length = 64)
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sensorType")

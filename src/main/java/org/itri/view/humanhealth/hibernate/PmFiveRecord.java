@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:59:27 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +20,6 @@ import javax.persistence.TemporalType;
 public class PmFiveRecord implements java.io.Serializable {
 
 	private long pmFiveRecordId;
-	private Patient patient;
 	private Sensor sensor;
 	private String pmFiveData;
 	private String pmFiveStatus;
@@ -29,17 +28,15 @@ public class PmFiveRecord implements java.io.Serializable {
 	public PmFiveRecord() {
 	}
 
-	public PmFiveRecord(long pmFiveRecordId, Patient patient, Sensor sensor, String pmFiveData, String pmFiveStatus,
-			Date timeCreated) {
+	public PmFiveRecord(long pmFiveRecordId, Sensor sensor, String pmFiveData, String pmFiveStatus, Date timeCreated) {
 		this.pmFiveRecordId = pmFiveRecordId;
-		this.patient = patient;
 		this.sensor = sensor;
 		this.pmFiveData = pmFiveData;
 		this.pmFiveStatus = pmFiveStatus;
 		this.timeCreated = timeCreated;
 	}
 
-	@SequenceGenerator(name="pm_five_record_seq", sequenceName="pm_five_record_pm_five_record_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pm_five_record_seq")	@Id
+	@SequenceGenerator(name="pm_five_record_seq", sequenceName="pm_five_record_pm_five_record_id_seq")	@GeneratedValue(generator="pm_five_record_seq")	@Id
 
 	@Column(name = "pm_five_record_id", unique = true, nullable = false)
 	public long getPmFiveRecordId() {
@@ -48,16 +45,6 @@ public class PmFiveRecord implements java.io.Serializable {
 
 	public void setPmFiveRecordId(long pmFiveRecordId) {
 		this.pmFiveRecordId = pmFiveRecordId;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "patient_id", nullable = false)
-	public Patient getPatient() {
-		return this.patient;
-	}
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

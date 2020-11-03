@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.itri.view.humanhealth.hibernate.OximeterRecord;
 import org.itri.view.humanhealth.hibernate.RtOximeterRecord;
-import org.itri.view.humanhealth.personal.chart.Imp.OximeterRecordViewDaoHibernateImpl;
+import org.itri.view.humanhealth.personal.chart.Imp.OximeterViewDaoHibernateImpl;
 import org.zkoss.chart.Charts;
 import org.zkoss.chart.Options;
 import org.zkoss.chart.PlotLine;
@@ -20,7 +20,7 @@ import org.zkoss.zul.Window;
 
 public class HeartBeatView extends SelectorComposer<Window> {
 
-	private long patientId = 0;
+	private long sensortId = 0;
 	private double specHigh = 0;
 	private double specLow = 0;
 
@@ -47,7 +47,7 @@ public class HeartBeatView extends SelectorComposer<Window> {
 		super.doAfterCompose(comp);
 
 		// set PatientId
-		setPatientId(textboxId.getValue());
+		setSensortId(textboxId.getValue());
 
 		// Get Spec
 		setSpecHigh(textboxSpecH.getValue());
@@ -90,7 +90,7 @@ public class HeartBeatView extends SelectorComposer<Window> {
 		chart.getXAxis().setLineColor(BLACK_HASH);
 		chart.setAlignTicks(false);
 
-		List<Point> histData = getHeartRhythmRecordList(getPatientId());
+		List<Point> histData = getHeartRhythmRecordList(getSensortId());
 		if (histData.size() != 0) {
 			// init point
 			for (Point p : histData) {
@@ -104,7 +104,7 @@ public class HeartBeatView extends SelectorComposer<Window> {
 		} else {
 			System.out.println("no history data in heart beat");
 			for (int i = -19; i <= 0; i++) {
-				Point nowPoint = getRtHeartRhythmRecordList(getPatientId());
+				Point nowPoint = getRtHeartRhythmRecordList(getSensortId());
 				nowPoint.setX(new Date().getTime() + i * 1000);
 				nowPoint.setColor(RED_HASH);
 				series.addPoint(nowPoint);
@@ -119,8 +119,8 @@ public class HeartBeatView extends SelectorComposer<Window> {
 
 	@Listen("onTimer = #timer")
 	public void updateData() {
-		setPatientId(textboxId.getValue());
-		Point nowPoint = getRtHeartRhythmRecordList(getPatientId());
+		setSensortId(textboxId.getValue());
+		Point nowPoint = getRtHeartRhythmRecordList(getSensortId());
 		chart.getSeries(0).addPoint(nowPoint, true, true, true);
 
 //		Point hPoint = getHighPoint(nowPoint.getX());
@@ -131,11 +131,11 @@ public class HeartBeatView extends SelectorComposer<Window> {
 	}
 
 	// Get history data
-	private List<Point> getHeartRhythmRecordList(long patientId) {
-		OximeterRecordViewDaoHibernateImpl hqe = new OximeterRecordViewDaoHibernateImpl();
-		List<OximeterRecord> oximeterRecordList = hqe.getOximeterRecordList(patientId);
+	private List<Point> getHeartRhythmRecordList(long sensortId) {
+		OximeterViewDaoHibernateImpl hqe = new OximeterViewDaoHibernateImpl();
+		List<OximeterRecord> oximeterRecordList = hqe.getOximeterRecordList(sensortId);
 
-		int i = oximeterRecordList.size() * (-1);
+//		int i = oximeterRecordList.size() * (-1);
 		List<Point> resp = new ArrayList<Point>();
 		for (OximeterRecord item : oximeterRecordList) {
 			resp.add(new Point(item.getTimeCreated().getTime(), Double.valueOf(item.getHeartRateData())));
@@ -145,25 +145,24 @@ public class HeartBeatView extends SelectorComposer<Window> {
 	}
 
 	// Get real time data
-	private Point getRtHeartRhythmRecordList(long patientId) {
-		OximeterRecordViewDaoHibernateImpl hqe = new OximeterRecordViewDaoHibernateImpl();
-		List<RtOximeterRecord> rtOximeterRecordList = hqe.getRtOximeterRecordList(patientId);
-		for (RtOximeterRecord tt : rtOximeterRecordList) {
-			String data = tt.getHeartRateData();
-			Date time = tt.getLastUpdated();
+	private Point getRtHeartRhythmRecordList(long sensortId) {
+		OximeterViewDaoHibernateImpl hqe = new OximeterViewDaoHibernateImpl();
+		RtOximeterRecord rtOximeterRecord = hqe.getRtOximeterRecord(sensortId);
+		if (rtOximeterRecord != null) {
+			String data = rtOximeterRecord.getHeartRateData();
+			Date time = rtOximeterRecord.getLastUpdated();
 			return new Point(time.getTime(), Double.valueOf(data));
 		}
 		return new Point(new Date().getTime(), 0);
 	}
 
-	public long getPatientId() {
-		return patientId;
+	public long getSensortId() {
+		return sensortId;
 	}
 
-	public void setPatientId(String patientIdStr) {
-
-		patientId = Long.parseLong(patientIdStr);
-		this.patientId = patientId;
+	public void setSensortId(String sensortIdStr) {
+		sensortId = Long.parseLong(sensortIdStr);
+		this.sensortId = sensortId;
 	}
 
 	private Point getHighPoint(Number xValue) {

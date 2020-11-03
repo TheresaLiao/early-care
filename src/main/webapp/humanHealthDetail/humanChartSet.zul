@@ -32,13 +32,14 @@
 								<style>
 									.z-window-content { padding:0px;}
 								</style>
+
 								<window
 									style="padding: 0px; z-window-content"
 									apply="org.itri.view.humanhealth.detail.HeartBeatView">
 									<charts id="chart" type="spline"
 										height="100" width="310" style="padding: 0px;" title="" />
 									<textbox id="textboxId"
-										visible="false" value="${each.id}" />
+										visible="false" value="${each.heartRateThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
 										visible="false" value="${each.heartRateThreshold.specHigh}" />
 									<textbox id="textboxSpecL"
@@ -62,26 +63,25 @@
 													class="text-right px-3" width="60px" pack="center"
 													align="end" height="92px">
 													<label id="hrLabel"
-														class=" h7">
+														class=" h6">
 														/min
 													</label>
 													<label
-														id="heightLabel" class=" h7"
+														id="heightLabel" class=" h6"
 														value="${each.heartRateThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h7" value="${each.heartRateThreshold.specLow}" />
+														class=" h6" value="${each.heartRateThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
 												<label class="h2 px-2" />
 												<textbox visible="false"
-													value="${each.id}" />
+													value="${each.heartRateThreshold.sensorId}" />
 											</hbox>
 										</bs-row>
 									</window>
 								</n:div>
 							</bs-row>
-
 
 							<!-- oximeter -->
 							<bs-row class="row py-0">
@@ -91,7 +91,7 @@
 									<charts id="chart" type="spline"
 										title="" height="100" width="310" />
 									<textbox id="textboxId"
-										visible="false" value="${each.id}" />
+										visible="false" value="${each.oximeterThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
 										visible="false" value="${each.oximeterThreshold.specHigh}" />
 									<textbox id="textboxSpecL"
@@ -115,27 +115,26 @@
 													class="text-right px-3" width="60px" pack="center"
 													align="end" height="92px">
 													<label id="hrLabel"
-														class=" h7">
+														class=" h6">
 														SpO2 %
 													</label>
 													<label
-														id="heightLabel" class=" h7"
+														id="heightLabel" class=" h6"
 														value="${each.oximeterThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h7" value="${each.oximeterThreshold.specLow}" />
+														class=" h6" value="${each.oximeterThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
 												<label class="h2 px-2" />
 												<textbox visible="false"
-													value="${each.id}" />
+													value="${each.oximeterThreshold.sensorId}" />
 											</hbox>
 										</bs-row>
 
 									</window>
 								</n:div>
 							</bs-row>
-
 
 							<!-- BreathRate -->
 							<bs-row class="row py-0">
@@ -145,7 +144,7 @@
 									<charts id="chart" type="spline"
 										title="" height="100" width="310" />
 									<textbox id="textboxId"
-										visible="false" value="${each.id}" />
+										visible="false" value="${each.breathRateThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
 										visible="false" value="${each.breathRateThreshold.specHigh}" />
 									<textbox id="textboxSpecL"
@@ -169,20 +168,20 @@
 													class="text-right px-3" width="60px" pack="center"
 													align="end" height="92px">
 													<label id="hrLabel"
-														class=" h7">
+														class=" h6">
 														/min
 													</label>
 													<label
-														id="heightLabel" class=" h7"
+														id="heightLabel" class=" h6"
 														value="${each.breathRateThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h7" value="${each.breathRateThreshold.specLow}" />
+														class=" h6" value="${each.breathRateThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
 												<label class="h2 px-2" />
 												<textbox visible="false"
-													value="${each.id}" />
+													value="${each.breathRateThreshold.sensorId}" />
 											</hbox>
 										</bs-row>
 
@@ -198,7 +197,7 @@
 									<charts id="chart" type="spline"
 										title="" height="100" width="310" />
 									<textbox id="textboxId"
-										visible="false" value="${each.id}" />
+										visible="false" value="${each.bodyTempThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
 										visible="false" value="${each.bodyTempThreshold.specHigh}" />
 									<textbox id="textboxSpecL"
@@ -222,14 +221,14 @@
 													class="text-right px-3" width="60px" pack="center"
 													align="end" height="92px">
 													<label
-														id="tempLabel" class=" h7">
+														id="tempLabel" class=" h6">
 														T °C
 													</label>
 													<label
-														id="heightLabel" class=" h7"
+														id="heightLabel" class=" h6"
 														value="${each.bodyTempThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h7" value="${each.bodyTempThreshold.specLow}" />
+														class=" h6" value="${each.bodyTempThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
@@ -237,7 +236,7 @@
 													class="h2 px-2">
 												</label>
 												<textbox visible="false"
-													value="${each.id}" />
+													value="${each.bodyTempThreshold.sensorId}" />
 											</hbox>
 										</bs-row>
 									</window>
@@ -256,7 +255,7 @@
 									<charts id="chart" type="spline"
 										title="" height="100" width="310" />
 									<textbox id="textboxId"
-										visible="false" value="${each.id}" />
+										visible="false" value="${each.patientId}" />
 									<textbox id="textboxHisDate"
 										visible="false" value="${each.historyDate}" />
 									<timer id="timer" delay="1000"
@@ -278,28 +277,25 @@
 													class="text-right px-3" width="60px" pack="center"
 													align="end" height="92px">
 													<label
-														id="tempLabel" class=" h7">
+														id="tempLabel" class=" h6">
 														EWS
 													</label>
 													<label
-														id="heightLabel" class=" h7" value="${each.ewsLow}" />
+														id="heightLabel" class=" h6" value="${each.ewsLow}" />
 												</vbox>
 
 												<!-- right value -->
 												<label class="h2 px-2" />
 												<textbox visible="false"
-													value="${each.id}" />
+													value="${each.patientId}" />
 											</hbox>
 										</bs-row>
 									</window>
 								</n:div>
 							</bs-row>
-
 						</panelchildren>
 					</panel>
-
 				</n:div>
-
 			</template>
 		</vlayout>
 

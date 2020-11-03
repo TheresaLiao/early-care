@@ -15,7 +15,7 @@ public class HibernateQueryExample {
 	public static void main(String[] args) {
 		HibernateQueryExample hqe = new HibernateQueryExample();
 		hqe.getPatientNameById();
-		hqe.getPatientOximeterRecord();
+//		hqe.getPatientOximeterRecord();
     }
 	
 	public void getPatientNameById() {
@@ -42,30 +42,30 @@ public class HibernateQueryExample {
 		}
 	}
 	
-	public void getPatientOximeterRecord() {
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		Transaction tx = null;
-		
-		try{
-			tx = session.beginTransaction();
-			
-			Criteria criteria = session.createCriteria(Patient.class);
-			criteria.add(Restrictions.eq("patientId", Long.parseLong("1")));
-			Patient p = (Patient) criteria.uniqueResult();
-			
-			String patientName = p.getPatientInfos().stream().findFirst().get().getName();
-			String oximeterData = p.getRtOximeterRecords().stream().findFirst().get().getOximeterData();
-			
-			System.out.println("Patient name: " + patientName + " oximeter data: " + oximeterData);
-			
-			tx.commit();
-		} 
-		catch (Exception e){
-			e.printStackTrace();
-			tx.rollback();
-		}
-		finally {
-			session.close();
-		}
-	}
+//	public void getPatientOximeterRecord() {
+//		Session session = HibernateUtil.getSessionFactory().openSession();
+//		Transaction tx = null;
+//		
+//		try{
+//			tx = session.beginTransaction();
+//			
+//			Criteria criteria = session.createCriteria(Patient.class);
+//			criteria.add(Restrictions.eq("patientId", Long.parseLong("1")));
+//			Patient p = (Patient) criteria.uniqueResult();
+//			
+//			String patientName = p.getPatientInfos().stream().findFirst().get().getName();
+//			String oximeterData = p.getRtOximeterRecords().stream().findFirst().get().getOximeterData();
+//			
+//			System.out.println("Patient name: " + patientName + " oximeter data: " + oximeterData);
+//			
+//			tx.commit();
+//		} 
+//		catch (Exception e){
+//			e.printStackTrace();
+//			tx.rollback();
+//		}
+//		finally {
+//			session.close();
+//		}
+//	}
 }

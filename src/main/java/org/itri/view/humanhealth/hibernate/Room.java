@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:59:27 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,11 +27,17 @@ public class Room implements java.io.Serializable {
 	private String roomNum;
 	private boolean isFull;
 	private Date lastUpdated;
-	private Set<Patient> patients = new HashSet<Patient>(0);
+	private Set<Combination> combinations = new HashSet<Combination>(0);
 
 	public Room() {
 	}
 
+	public Room(Users users, String roomNum, boolean isFull) {
+		this.users = users;
+		this.roomNum = roomNum;
+		this.isFull = isFull;
+	}
+	
 	public Room(long roomId, Users users, String roomNum, boolean isFull) {
 		this.roomId = roomId;
 		this.users = users;
@@ -39,16 +45,17 @@ public class Room implements java.io.Serializable {
 		this.isFull = isFull;
 	}
 
-	public Room(long roomId, Users users, String roomNum, boolean isFull, Date lastUpdated, Set<Patient> patients) {
+	public Room(long roomId, Users users, String roomNum, boolean isFull, Date lastUpdated,
+			Set<Combination> combinations) {
 		this.roomId = roomId;
 		this.users = users;
 		this.roomNum = roomNum;
 		this.isFull = isFull;
 		this.lastUpdated = lastUpdated;
-		this.patients = patients;
+		this.combinations = combinations;
 	}
 
-	@SequenceGenerator(name="room_seq", sequenceName="room_room_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="room_seq")	@Id
+	@SequenceGenerator(name="room_seq", sequenceName="room_room_id_seq")	@GeneratedValue(generator="room_seq")	@Id
 
 	@Column(name = "room_id", unique = true, nullable = false)
 	public long getRoomId() {
@@ -98,12 +105,12 @@ public class Room implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "room")
-	public Set<Patient> getPatients() {
-		return this.patients;
+	public Set<Combination> getCombinations() {
+		return this.combinations;
 	}
 
-	public void setPatients(Set<Patient> patients) {
-		this.patients = patients;
+	public void setCombinations(Set<Combination> combinations) {
+		this.combinations = combinations;
 	}
 
 }

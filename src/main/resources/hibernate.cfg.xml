@@ -1,28 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC
-"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-	<session-factory>
-		<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-		<property name="hibernate.connection.password">123456</property>
-		<!--<property name="hibernate.connection.url">jdbc:postgresql://54.178.235.133/AntiPandemic</property> -->
-		<!--<property name="hibernate.connection.url">jdbc:postgresql://10.99.10.147/AntiPandemic</property> -->
-		<!-- <property name="hibernate.connection.url">jdbc:postgresql://10.99.10.195/AntiPandemic</property> -->
-		<property name="hibernate.connection.url">jdbc:postgresql://54.178.235.133/AntiPandemic</property>
-
-		<property name="hibernate.connection.username">snake_eyes</property>
-		<property name="hibernate.default_schema">public</property>
-		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-
-		<!-- Enable Hibernate's automatic session context management -->
+    <session-factory>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.password">123456</property>
+<!--  	<property name="hibernate.connection.url">jdbc:postgresql://54.178.235.133/AntiPandemic</property> --> 
+        <property name="hibernate.connection.url">jdbc:postgresql://10.1.1.71/AntiPandemicEC</property>
+        <property name="hibernate.connection.username">snake_eyes</property>
+        <property name="hibernate.default_schema">public</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        
+        <!-- Enable Hibernate's automatic session context management -->
 		<property name="current_session_context_class">thread</property>
-
+		
 		<!-- Reconnect while disconnecting -->
 		<property name="connection.autoReconnect">true</property>
 		<property name="connection.autoReconnectForPools">true</property>
 		<property name="connection.is-connection-validation-required">true</property>
-
+		
+		<!-- <property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property> -->
 		<property name="hibernate.connection.provider_class">org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider</property>
 
 		<!-- Basic Pool Configuration -->
@@ -41,63 +39,39 @@
 		<property name="hibernate.c3p0.maxIdleTimeExcessConnections">90</property>
 		<!-- Configuring Connection Testing -->
 		<property name="hibernate.c3p0.idleConnectionTestPeriod">30</property>
-
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.OximeterRecord" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.RtTempPadRecord" />
+		
+		<!-- Mapping -->
 		<mapping class="org.itri.view.humanhealth.hibernate.Room" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.SensorType" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.HealthType" />
-		<mapping class="org.itri.view.humanhealth.hibernate.Patient" />
-		<mapping class="org.itri.view.humanhealth.hibernate.Users" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.MattressRecord" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.PatientThreshold" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.RtOximeterRecord" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.RespirationCoughRecord" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.RtRespirationCoughRecord" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.RtMattressRecord" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.RtHeartRhythmRecord" />
-		<mapping class="org.itri.view.humanhealth.hibernate.Gateway" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.Patient2sensor" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.AuditTrail" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.Gateway2sensor" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.RtPmFiveRecord" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.HeartRhythmRecord" />
-		<mapping class="org.itri.view.humanhealth.hibernate.Sensor" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.PatientInfo" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.HealthStatus" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.PmFiveRecord" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.TempPadRecord" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.NewsScoreThreshold" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.DeviceStatus" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.NewsRecord" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.SurveyQuestion" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.SurveyResult" />
-		<mapping
-			class="org.itri.view.humanhealth.hibernate.SurveyQuestionChoice" />
-	</session-factory>
+        <mapping class="org.itri.view.humanhealth.hibernate.TempPadRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.RtRespirationCoughRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.RtMattressRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.RespirationCoughRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.SensorThreshold" />
+        <mapping class="org.itri.view.humanhealth.hibernate.Sensor" />
+        <mapping class="org.itri.view.humanhealth.hibernate.PatientInfo" />
+        <mapping class="org.itri.view.humanhealth.hibernate.Combination" />
+        <mapping class="org.itri.view.humanhealth.hibernate.RtPmFiveRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.SensorType" />
+        <mapping class="org.itri.view.humanhealth.hibernate.HeartRhythmRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.RtTempPadRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.MattressRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.Users" />
+        <mapping class="org.itri.view.humanhealth.hibernate.Gateway" />
+        <mapping class="org.itri.view.humanhealth.hibernate.AuditTrail" />
+        <mapping class="org.itri.view.humanhealth.hibernate.OximeterRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.Patient" />
+        <mapping class="org.itri.view.humanhealth.hibernate.Gateway2sensor" />
+        <mapping class="org.itri.view.humanhealth.hibernate.RtOximeterRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.HealthType" />
+        <mapping class="org.itri.view.humanhealth.hibernate.RtHeartRhythmRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.HealthStatus" />
+        <mapping class="org.itri.view.humanhealth.hibernate.NewsScoreThreshold" />
+        <mapping class="org.itri.view.humanhealth.hibernate.DeviceStatus" />
+        <mapping class="org.itri.view.humanhealth.hibernate.NewsRecord" />
+        <mapping class="org.itri.view.humanhealth.hibernate.NewsWarningCondition" />
+        <mapping class="org.itri.view.humanhealth.hibernate.NewsMathOperator" />
+        <mapping class="org.itri.view.humanhealth.hibernate.Sensor2healthType" />
+        <mapping class="org.itri.view.humanhealth.hibernate.PmFiveRecord" />
+		
+    </session-factory>
 </hibernate-configuration>

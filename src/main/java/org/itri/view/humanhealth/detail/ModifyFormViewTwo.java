@@ -2,31 +2,46 @@ package org.itri.view.humanhealth.detail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.itri.view.humanhealth.detail.Imp.SensorDaoHibernateImpl;
 import org.itri.view.humanhealth.hibernate.PatientInfo;
 import org.itri.view.humanhealth.hibernate.Sensor;
+import org.itri.view.humanhealth.hibernate.Sensor2healthType;
 import org.itri.view.humanhealth.personal.chart.Imp.PersonInfoTableDaoHibernateImpl;
 import org.itri.view.humanhealth.personal.chart.dao.DateKeyValueSelectBox;
+import org.zkoss.bind.annotation.SelectorParam;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Selectbox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
-public class ModifyFormViewTwo extends SelectorComposer<Window> {
+public class ModifyFormViewTwo extends SelectorComposer<Component> {
 	private static final long serialVersionUID = 1L;
 
 	private PersonInfoTableDaoHibernateImpl hqe;
 	private SensorDaoHibernateImpl hqeSensor;
+
+	private long patientId = 0;
+	private long oximeterSensorId = 0;
+	private long breathRateSensorId = 0;
+	private long bodyTempSensorId = 0;
+
+	@Wire
+	private Window modifyWin;
 
 	@Wire("#textboxPatientId")
 	private Textbox textboxPatientId;
 	@Wire("#selectboxPatient")
 	private Selectbox selectboxPatient;
 
+	//
 	@Wire("#textboxOximeter")
 	private Textbox textboxOximeter;
 	@Wire("#selectboxOximeter")
@@ -42,44 +57,52 @@ public class ModifyFormViewTwo extends SelectorComposer<Window> {
 	@Wire("#selectboxTemp")
 	private Selectbox selectboxTemp;
 
-	private long patientId = 0;
-	private long oximeterSensorId = 0;
-	private long breathRateSensorId = 0;
-	private long bodyTempSensorId = 0;
-
 	@Override
-	public void doAfterCompose(Window comp) throws Exception {
+	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
 
+		// Connect DB
 		hqe = new PersonInfoTableDaoHibernateImpl();
 		hqeSensor = new SensorDaoHibernateImpl();
 
+		// Get parent pass through parameter
 		patientId = Long.parseLong(textboxPatientId.getValue());
 		oximeterSensorId = Long.parseLong(textboxOximeter.getValue());
 		breathRateSensorId = Long.parseLong(textboxBreathRate.getValue());
 		bodyTempSensorId = Long.parseLong(textboxBodyTemp.getValue());
-		System.out.println("oximeterSensorId :" + oximeterSensorId);
-		System.out.println("breathRateSensorId :" + breathRateSensorId);
-		System.out.println("bodyTempSensorId :" + bodyTempSensorId);
 
+		// Get selectBox List
 		getSelectBoxList();
 		getSensorList();
 	}
 
+	@Listen("onClick = #submitButton")
+	public void submit() {
+
+		
+		modifyWin.detach();
+	}
+
+	@Listen("onClick = #closeButton")
+	public void close() {
+		modifyWin.detach();
+	}
+
 	// Get Patient List
 	private void getSelectBoxList() {
+		int selectedItemIndex = 0;
+		boolean flag = false;
+		List<DateKeyValueSelectBox> patientList = new ArrayList<DateKeyValueSelectBox>();
+
 		// Get List
 		List<PatientInfo> dataList = hqe.getPatientList();
-		int selectedItemIndex = 0;
-		List<DateKeyValueSelectBox> patientList = new ArrayList<DateKeyValueSelectBox>();
-		for (int index = 0; index < dataList.size(); index++) {
-			PatientInfo patient = dataList.get(index);
+		for (PatientInfo patient : dataList) {
 			DateKeyValueSelectBox item = new DateKeyValueSelectBox(patient.getPatient().getPatientId(),
 					patient.getName());
 			patientList.add(item);
-
-			if (patient.getPatient().getPatientId() == patientId) {
-				selectedItemIndex = index;
+			if (!flag && patientId == patient.getPatient().getPatientId()) {
+				selectedItemIndex = patientList.size() - 1;
+				flag = true;
 			}
 		}
 
@@ -89,60 +112,49 @@ public class ModifyFormViewTwo extends SelectorComposer<Window> {
 		selectboxPatient.setModel(model);
 	}
 
+	// Get Sensor List
 	private void getSensorList() {
+		int oximeterIndex = 0;
+		boolean oximeterFlag = false;
 		List<DateKeyValueSelectBox> oximeterList = new ArrayList<DateKeyValueSelectBox>();
+
+		int breathRateIndex = 0;
+		boolean breathRateFlag = false;
 		List<DateKeyValueSelectBox> breathRateList = new ArrayList<DateKeyValueSelectBox>();
+
+		int bodyTempIndex = 0;
+		boolean bodyTempFlag = false;
 		List<DateKeyValueSelectBox> tempList = new ArrayList<DateKeyValueSelectBox>();
 
-		int oximeterIndex = 0;
-		int breathRateIndex = 0;
-		int bodyTempIndex = 0;
-
-		boolean oximeterFlag = false;
-		boolean breathRateFlag = false;
-		boolean bodyTempFlag = false;
-
+		// Get List
 		List<Sensor> SensorList = hqeSensor.getSensorListBySensorTypeId();
 		for (Sensor sensor : SensorList) {
 			DateKeyValueSelectBox item = new DateKeyValueSelectBox(sensor.getSensorId(), sensor.getSensorName());
-			int sensorTypeId = (int) sensor.getSensorType().getSensorTypeId();
+			Set<Sensor2healthType> sensorHealthTypeSet = sensor.getSensor2healthTypes();
 
-			if (1 == sensorTypeId) {
-				oximeterList.add(item);
-				if (!oximeterFlag && oximeterSensorId == item.getValue()) {
-					oximeterIndex = oximeterList.size();
-					System.out.println("oximeterSensorId :" + oximeterSensorId);
-					System.out.println("oximeterIndex :" + oximeterIndex);
-					System.out.println("item.getValue() :" + item.getValue());
-					System.out.println("item.getText() :" + item.getText());
-					oximeterFlag = true;
+			for (Sensor2healthType sensorHealthType : sensorHealthTypeSet) {
+				long healthTypeId = sensorHealthType.getHealthType().getHealthTypeId();
+				if (healthTypeId == 2) {
+					oximeterList.add(item);
+					if (!oximeterFlag && oximeterSensorId == item.getValue()) {
+						oximeterIndex = oximeterList.size() - 1;
+						oximeterFlag = true;
+					}
+				} else if (healthTypeId == 3) {
+					tempList.add(item);
+					if (!bodyTempFlag && bodyTempSensorId == item.getValue()) {
+						bodyTempIndex = tempList.size() - 1;
+						bodyTempFlag = true;
+					}
+
+				} else if (healthTypeId == 4) {
+					breathRateList.add(item);
+					if (!breathRateFlag && breathRateSensorId == item.getValue()) {
+						breathRateIndex = breathRateList.size() - 1;
+						breathRateFlag = true;
+					}
 				}
 			}
-
-			if (2 == sensorTypeId) {
-				breathRateList.add(item);
-				if (!breathRateFlag && breathRateSensorId == item.getValue()) {
-					breathRateIndex = breathRateList.size() + 1;
-					System.out.println("breathRateSensorId :" + breathRateSensorId);
-					System.out.println("breathRateIndex :" + breathRateIndex);
-					System.out.println("item.getValue() :" + item.getValue());
-					System.out.println("item.getText() :" + item.getText());
-					breathRateFlag = true;
-				}
-			}
-
-			if (3 == sensorTypeId) {
-				tempList.add(item);
-				if (!bodyTempFlag && bodyTempSensorId == item.getValue()) {
-					bodyTempIndex = tempList.size() + 1;
-					System.out.println("bodyTempSensorId :" + bodyTempSensorId);
-					System.out.println("bodyTempIndex :" + bodyTempIndex);
-					System.out.println("item.getValue() :" + item.getValue());
-					System.out.println("item.getText() :" + item.getText());
-					bodyTempFlag = true;
-				}
-			}
-
 		}
 
 		// Set Default selected
@@ -157,12 +169,5 @@ public class ModifyFormViewTwo extends SelectorComposer<Window> {
 		ListModelList bodyTempModel = new ListModelList(tempList);
 		bodyTempModel.addToSelection(bodyTempModel.get(bodyTempIndex));
 		selectboxTemp.setModel(bodyTempModel);
-
 	}
-
-	@Listen("onClick = #closeClick")
-	public void close() {
-//		modifyWin.detach();
-	}
-
 }

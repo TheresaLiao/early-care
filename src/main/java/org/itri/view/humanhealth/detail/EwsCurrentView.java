@@ -8,7 +8,7 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 import org.itri.view.humanhealth.hibernate.Patient;
-import org.itri.view.humanhealth.personal.chart.Imp.PersonInfosDaoHibernateImpl;
+import org.itri.view.humanhealth.personal.chart.Imp.EwsViewDaoHibernateImpl;
 
 public class EwsCurrentView extends SelectorComposer<Window> {
 
@@ -73,10 +73,10 @@ public class EwsCurrentView extends SelectorComposer<Window> {
 
 	// Get real time data
 	private String getEwsValueById(long patientId) {
-		PersonInfosDaoHibernateImpl hqe = new PersonInfosDaoHibernateImpl();
+		EwsViewDaoHibernateImpl hqe = new EwsViewDaoHibernateImpl();
 		Patient patient = hqe.getPatientById(patientId);
 		if (patient != null)
-			return patient.getTotalNewsScore().toString();
+			return String.valueOf(patient.getTotalNewsScore());
 
 		System.out.println("patientId :" + patientId + " can't find.");
 		return "NULL";

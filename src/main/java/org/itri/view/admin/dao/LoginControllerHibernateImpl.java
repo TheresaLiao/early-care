@@ -8,7 +8,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import org.itri.view.humanhealth.hibernate.Patient;
 import org.itri.view.humanhealth.hibernate.PatientInfo;
 import org.itri.view.util.HibernateUtil;
 
@@ -25,16 +24,16 @@ public class LoginControllerHibernateImpl {
 			Criteria criteria = session.createCriteria(PatientInfo.class);
 			criteria.add(Restrictions.eq("username", account));
 			criteria.add(Restrictions.eq("password", pwd));
-
 			tempPatientInfo = criteria.list();
-			for (PatientInfo p : tempPatientInfo) {
-				Hibernate.initialize(p.getPatient());
-				Hibernate.initialize(p.getPatient().getGateway());
-				return p;
-			}
 
+			PatientInfo p = tempPatientInfo.get(0);
+			Hibernate.initialize(p.getPatient());
+			Hibernate.initialize(p.getPatient().getGateway());
 			tx.commit();
-		} catch (Exception e) {
+			return p;
+		} catch (
+
+		Exception e) {
 			e.printStackTrace();
 			tx.rollback();
 		} finally {

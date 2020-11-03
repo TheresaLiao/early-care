@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
@@ -20,39 +19,38 @@ public class TemperatureViewDaoHibernateImpl {
 
 	private int minusThreeMinit = -3;
 
-	public List<RtTempPadRecord> getRtTempPadRecordList(long patientId) {
+	public RtTempPadRecord getRtTempPadRecord(long sensorId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
-		List<RtTempPadRecord> rtTempPadRecordList = new ArrayList<RtTempPadRecord>();
+		List<RtTempPadRecord> resp = new ArrayList<RtTempPadRecord>();
+		RtTempPadRecord item = new RtTempPadRecord();
 		try {
 			tx = session.beginTransaction();
+
 			Criteria criteria = session.createCriteria(RtTempPadRecord.class);
-			criteria.add(Restrictions.eq("patient.patientId", patientId));
-			rtTempPadRecordList = criteria.list();
-			for (RtTempPadRecord item : rtTempPadRecordList) {
-				Hibernate.initialize(item.getSensor());
-			}
+			criteria.add(Restrictions.eq("sensor.sensorId", sensorId));
+
+			resp = criteria.list();
+			item = resp.get(0);
 			tx.commit();
+			return item;
 		} catch (Exception e) {
 			e.printStackTrace();
 			tx.rollback();
 		} finally {
 			session.close();
 		}
-		return rtTempPadRecordList;
+		return null;
 	}
 
-	public List<TempPadRecord> getTempPadRecordList(long patientId) {
-
+	public List<TempPadRecord> getTempPadRecordList(long sensorId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		List<TempPadRecord> tempPadRecordList = new ArrayList<TempPadRecord>();
-
 		try {
 			tx = session.beginTransaction();
-
 			Criteria criteria = session.createCriteria(TempPadRecord.class);
-			criteria.add(Restrictions.eq("patient.patientId", patientId));
+			criteria.add(Restrictions.eq("sensor.sensorId", sensorId));
 
 			Date now = new Date();
 			Calendar calendar = Calendar.getInstance();
@@ -60,32 +58,6 @@ public class TemperatureViewDaoHibernateImpl {
 			calendar.add(Calendar.MINUTE, minusThreeMinit);
 			criteria.add(Restrictions.ge("timeCreated", calendar.getTime()));
 			criteria.addOrder(Order.asc("timeCreated"));
-			tempPadRecordList = criteria.list();
-
-			tx.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			tx.rollback();
-		} finally {
-			session.close();
-		}
-		return tempPadRecordList;
-	}
-
-	public List<TempPadRecord> getTempPadRecordByDateList(long patientId, Calendar calendar) {
-
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		Transaction tx = null;
-		List<TempPadRecord> tempPadRecordList = new ArrayList<TempPadRecord>();
-
-		try {
-			tx = session.beginTransaction();
-
-			Criteria criteria = session.createCriteria(TempPadRecord.class);
-			criteria.add(Restrictions.eq("patient.patientId", patientId));
-
-			criteria.add(Restrictions.ge("timeCreated", calendar.getTime()));
-			criteria.addOrder(Order.asc("timeCreated"));
 
 			tempPadRecordList = criteria.list();
 			tx.commit();
@@ -97,4 +69,5 @@ public class TemperatureViewDaoHibernateImpl {
 		}
 		return tempPadRecordList;
 	}
+
 }

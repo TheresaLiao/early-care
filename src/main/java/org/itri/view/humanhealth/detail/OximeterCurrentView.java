@@ -1,18 +1,14 @@
 package org.itri.view.humanhealth.detail;
 
-import org.itri.view.humanhealth.hibernate.Patient;
-import org.itri.view.humanhealth.personal.chart.Imp.PersonInfosDaoHibernateImpl;
+import org.itri.view.humanhealth.hibernate.RtOximeterRecord;
+import org.itri.view.humanhealth.personal.chart.Imp.OximeterViewDaoHibernateImpl;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
-import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Hlayout;
-import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Vbox;
-import org.zkoss.zul.Vlayout;
 import org.zkoss.zul.Window;
 
 public class OximeterCurrentView extends SelectorComposer<Window> {
@@ -45,7 +41,8 @@ public class OximeterCurrentView extends SelectorComposer<Window> {
 	private Double oximeterHigh;
 	private Double oximeterLow;
 
-	private long patientId = 0;
+	private long sensortId = 0;
+	private long heartOxygenDevice = 1;
 
 	@Override
 	public void doAfterCompose(Window comp) throws Exception {
@@ -54,8 +51,8 @@ public class OximeterCurrentView extends SelectorComposer<Window> {
 		super.doAfterCompose(comp);
 
 		// get PatientId & find data by PatientId
-		setPatientId(textboxId.getValue());
-		String dataStr = getOximeterValueById(getPatientId());
+		setSensortId(textboxId.getValue());
+		String dataStr = getOximeterValueById(getSensortId());
 		oximeterLabel.setValue(dataStr);
 
 		// Set spec
@@ -70,8 +67,8 @@ public class OximeterCurrentView extends SelectorComposer<Window> {
 	public void updateData() {
 
 		// get PatientId & find data by PatientId
-		setPatientId(textboxId.getValue());
-		String dataStr = getOximeterValueById(getPatientId());
+		setSensortId(textboxId.getValue());
+		String dataStr = getOximeterValueById(getSensortId());
 		oximeterLabel.setValue(dataStr);
 
 		hightLightLabel(dataStr);
@@ -104,24 +101,23 @@ public class OximeterCurrentView extends SelectorComposer<Window> {
 		}
 	}
 
-	private String getOximeterValueById(long patientId) {
-
-		PersonInfosDaoHibernateImpl hqe = new PersonInfosDaoHibernateImpl();
-		Patient rowData = hqe.getPatientById(patientId);
+	private String getOximeterValueById(long sensortId) {
+		OximeterViewDaoHibernateImpl hqe = new OximeterViewDaoHibernateImpl();
+		RtOximeterRecord rowData = hqe.getRtOximeterRecord(sensortId);
 		if (rowData != null) {
-			return rowData.getRtOximeterRecords().stream().findFirst().get().getOximeterData();
+			return rowData.getOximeterData();
 		}
-		System.out.println("patientId :" + patientId + " can't find.");
+		System.out.println("sensortId :" + sensortId + " can't find.");
 		return "NULL";
 	}
 
-	public long getPatientId() {
-		return patientId;
+	public long getSensortId() {
+		return sensortId;
 	}
 
-	public void setPatientId(String patientIdStr) {
-		patientId = Long.parseLong(patientIdStr);
-		this.patientId = patientId;
+	public void setSensortId(String sensortIdStr) {
+		sensortId = Long.parseLong(sensortIdStr);
+		this.sensortId = sensortId;
 	}
 
 	public Double getOximeterHigh() {

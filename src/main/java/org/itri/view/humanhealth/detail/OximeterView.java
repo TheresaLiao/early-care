@@ -20,7 +20,7 @@ import org.zkoss.zul.Textbox;
 
 public class OximeterView extends SelectorComposer<Component> {
 
-	private long patientId = 0;
+	private long sensortId = 0;
 	private double specHigh = 0;
 	private double specLow = 0;
 
@@ -47,7 +47,7 @@ public class OximeterView extends SelectorComposer<Component> {
 		super.doAfterCompose(comp);
 
 		// set PatientId
-		setPatientId(textboxId.getValue());
+		setSensortId(textboxId.getValue());
 
 		// Get Spec
 		setSpecHigh(textboxSpecH.getValue());
@@ -89,7 +89,7 @@ public class OximeterView extends SelectorComposer<Component> {
 		chart.getXAxis().setLineColor(BLACK_HASH);
 
 		// init point
-		List<Point> histData = getOximeterRecordList(getPatientId());
+		List<Point> histData = getOximeterRecordList(getSensortId());
 		for (Point p : histData) {
 			series.addPoint(p);
 
@@ -102,7 +102,7 @@ public class OximeterView extends SelectorComposer<Component> {
 			System.out.println("no history data in oximeter");
 			for (int i = -19; i <= 0; i++) {
 
-				Point nowPoint = getRtOximeterRecordList(getPatientId());
+				Point nowPoint = getRtOximeterRecordList(getSensortId());
 				nowPoint.setX(new Date().getTime() + i * 1000);
 				nowPoint.setColor(BLUE_HASH);
 				series.addPoint(nowPoint);
@@ -117,8 +117,8 @@ public class OximeterView extends SelectorComposer<Component> {
 
 	@Listen("onTimer = #timer")
 	public void updateData() {
-		setPatientId(textboxId.getValue());
-		Point nowPoint = getRtOximeterRecordList(getPatientId());
+		setSensortId(textboxId.getValue());
+		Point nowPoint = getRtOximeterRecordList(getSensortId());
 		chart.getSeries(0).addPoint(nowPoint, true, true, true);
 
 //		Point hPoint = getHighPoint(nowPoint.getX());
@@ -127,42 +127,39 @@ public class OximeterView extends SelectorComposer<Component> {
 //		chart.getSeries(2).addPoint(lPoint, true, true, true);
 	}
 
-	
-
 	// Get history data
-	private List<Point> getOximeterRecordList(long patientId) {
+	private List<Point> getOximeterRecordList(long sensortId) {
 		OximeterViewDaoHibernateImpl hqe = new OximeterViewDaoHibernateImpl();
-		List<OximeterRecord> oximeterRecordList = hqe.getOximeterRecordList(patientId);
+		List<OximeterRecord> oximeterRecordList = hqe.getOximeterRecordList(sensortId);
 
 		int i = oximeterRecordList.size() * (-1);
 		List<Point> resp = new ArrayList<Point>();
 		for (OximeterRecord item : oximeterRecordList) {
-			resp.add(new Point(item.getTimeCreated().getTime(), Double.valueOf(item.getHeartRateData())));
+			resp.add(new Point(item.getTimeCreated().getTime(), Double.valueOf(item.getOximeterData())));
 		}
 		return resp;
 	}
 
 	// Get real time data
-	private Point getRtOximeterRecordList(long patientId) {
+	private Point getRtOximeterRecordList(long sensortId) {
 		OximeterViewDaoHibernateImpl hqe = new OximeterViewDaoHibernateImpl();
-		List<RtOximeterRecord> oximeterRecordList = hqe.getRtOximeterRecordList(patientId);
-		for (RtOximeterRecord tt : oximeterRecordList) {
-			String data = tt.getOximeterData();
-			Date time = tt.getLastUpdated();
+		RtOximeterRecord rtOximeterRecord = hqe.getRtOximeterRecord(sensortId);
+		if (rtOximeterRecord != null) {
+			String data = rtOximeterRecord.getOximeterData();
+			Date time = rtOximeterRecord.getLastUpdated();
 			return new Point(time.getTime(), Double.valueOf(data));
 
 		}
 		return new Point(new Date().getTime(), 0);
 	}
-	
-	public long getPatientId() {
-		return patientId;
+
+	public long getSensortId() {
+		return sensortId;
 	}
 
-	public void setPatientId(String patientIdStr) {
-
-		patientId = Long.parseLong(patientIdStr);
-		this.patientId = patientId;
+	public void setSensortId(String sensortIdStr) {
+		sensortId = Long.parseLong(sensortIdStr);
+		this.sensortId = sensortId;
 	}
 
 	private Point getHighPoint(Number xValue) {

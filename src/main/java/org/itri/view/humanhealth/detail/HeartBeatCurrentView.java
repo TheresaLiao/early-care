@@ -8,8 +8,8 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
-import org.itri.view.humanhealth.hibernate.Patient;
-import org.itri.view.humanhealth.personal.chart.Imp.PersonInfosDaoHibernateImpl;
+import org.itri.view.humanhealth.hibernate.RtOximeterRecord;
+import org.itri.view.humanhealth.personal.chart.Imp.OximeterViewDaoHibernateImpl;
 
 public class HeartBeatCurrentView extends SelectorComposer<Window> {
 
@@ -35,14 +35,14 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 	private Label heartBeatLabel;
 
 	private String GRAY_HASH = "#2F2F2F";
-	private String GREEN_HASH = "#5CE498";
+//	private String GREEN_HASH = "#5CE498";
 	private String BLACK_HASH = "#000000";
 	private String RED_HASH = "#FF0000";
 
 	private Double heartRateHigh;
 	private Double heartRateLow;
 
-	private long patientId = 0;
+	private long sensortId = 0;
 
 	@Override
 	public void doAfterCompose(Window comp) throws Exception {
@@ -51,8 +51,8 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 		super.doAfterCompose(comp);
 
 		// get PatientId & find data by PatientId
-		setPatientId(textboxId.getValue());
-		String dataStr = getHeartBeatValueById(getPatientId());
+		setSensortId(textboxId.getValue());
+		String dataStr = getHeartBeatValueById(getSensortId());
 		heartBeatLabel.setValue(dataStr);
 
 		// Set spec
@@ -67,14 +67,15 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 	public void updateData() {
 
 		// get PatientId & find data by PatientId
-		setPatientId(textboxId.getValue());
-		String dataStr = getHeartBeatValueById(getPatientId());
+		setSensortId(textboxId.getValue());
+		String dataStr = getHeartBeatValueById(getSensortId());
 		heartBeatLabel.setValue(dataStr);
 
 		// Listen spec
 		hightLightLabel(dataStr);
 	}
 
+	// Set style for Hight Light Label
 	private void hightLightLabel(String dataStr) {
 
 		double data = Double.valueOf(dataStr);
@@ -101,24 +102,22 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 		}
 	}
 
-	private String getHeartBeatValueById(long patientId) {
-
-		PersonInfosDaoHibernateImpl hqe = new PersonInfosDaoHibernateImpl();
-		Patient rowData = hqe.getPatientById(patientId);
+	private String getHeartBeatValueById(long sensorId) {
+		OximeterViewDaoHibernateImpl hqe = new OximeterViewDaoHibernateImpl();
+		RtOximeterRecord rowData = hqe.getRtOximeterRecord(sensorId);
 		if (rowData != null) {
-			return rowData.getRtOximeterRecords().stream().findFirst().get().getHeartRateData();
+			return rowData.getHeartRateData();
 		}
-		System.out.println("patientId :" + patientId + " can't find.");
 		return "NULL";
 	}
 
-	public long getPatientId() {
-		return patientId;
+	public long getSensortId() {
+		return sensortId;
 	}
 
-	public void setPatientId(String patientIdStr) {
-		patientId = Long.parseLong(patientIdStr);
-		this.patientId = patientId;
+	public void setSensortId(String sensortIdStr) {
+		sensortId = Long.parseLong(sensortIdStr);
+		this.sensortId = sensortId;
 	}
 
 	public Double getHeartRateHigh() {

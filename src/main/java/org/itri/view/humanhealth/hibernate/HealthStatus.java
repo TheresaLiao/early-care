@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:59:27 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -28,7 +28,7 @@ public class HealthStatus implements java.io.Serializable {
 		this.isDeleted = isDeleted;
 	}
 
-	@SequenceGenerator(name="health_status_seq", sequenceName="health_status_health_status_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="health_status_seq")	@Id
+	@SequenceGenerator(name="health_status_seq", sequenceName="health_status_health_status_id_seq")	@GeneratedValue(generator="health_status_seq")	@Id
 
 	@Column(name = "health_status_id", unique = true, nullable = false)
 	public long getHealthStatusId() {

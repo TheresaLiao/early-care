@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:59:27 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,33 +20,35 @@ import javax.persistence.TemporalType;
 public class OximeterRecord implements java.io.Serializable {
 
 	private long oximeterRecordId;
-	private Patient patient;
 	private Sensor sensor;
 	private String oximeterData;
 	private String heartRateData;
+	private String breathData;
 	private String batteryLevel;
 	private String oximeterStatus;
 	private String heartRateStatus;
+	private String breathStatus;
 	private Date timeCreated;
 
 	public OximeterRecord() {
 	}
 
-	public OximeterRecord(long oximeterRecordId, Patient patient, Sensor sensor, String oximeterData,
-			String heartRateData, String batteryLevel, String oximeterStatus, String heartRateStatus,
+	public OximeterRecord(long oximeterRecordId, Sensor sensor, String oximeterData, String heartRateData,
+			String breathData, String batteryLevel, String oximeterStatus, String heartRateStatus, String breathStatus,
 			Date timeCreated) {
 		this.oximeterRecordId = oximeterRecordId;
-		this.patient = patient;
 		this.sensor = sensor;
 		this.oximeterData = oximeterData;
 		this.heartRateData = heartRateData;
+		this.breathData = breathData;
 		this.batteryLevel = batteryLevel;
 		this.oximeterStatus = oximeterStatus;
 		this.heartRateStatus = heartRateStatus;
+		this.breathStatus = breathStatus;
 		this.timeCreated = timeCreated;
 	}
 
-	@SequenceGenerator(name="oximeter_record_seq", sequenceName="oximeter_record_oximeter_record_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="oximeter_record_seq")	@Id
+	@SequenceGenerator(name="oximeter_record_seq", sequenceName="oximeter_record_oximeter_record_id_seq")	@GeneratedValue(generator="oximeter_record_seq")	@Id
 
 	@Column(name = "oximeter_record_id", unique = true, nullable = false)
 	public long getOximeterRecordId() {
@@ -55,16 +57,6 @@ public class OximeterRecord implements java.io.Serializable {
 
 	public void setOximeterRecordId(long oximeterRecordId) {
 		this.oximeterRecordId = oximeterRecordId;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "patient_id", nullable = false)
-	public Patient getPatient() {
-		return this.patient;
-	}
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -95,6 +87,15 @@ public class OximeterRecord implements java.io.Serializable {
 		this.heartRateData = heartRateData;
 	}
 
+	@Column(name = "breath_data", nullable = false, length = 64)
+	public String getBreathData() {
+		return this.breathData;
+	}
+
+	public void setBreathData(String breathData) {
+		this.breathData = breathData;
+	}
+
 	@Column(name = "battery_level", nullable = false, length = 64)
 	public String getBatteryLevel() {
 		return this.batteryLevel;
@@ -120,6 +121,15 @@ public class OximeterRecord implements java.io.Serializable {
 
 	public void setHeartRateStatus(String heartRateStatus) {
 		this.heartRateStatus = heartRateStatus;
+	}
+
+	@Column(name = "breath_status", nullable = false, length = 32)
+	public String getBreathStatus() {
+		return this.breathStatus;
+	}
+
+	public void setBreathStatus(String breathStatus) {
+		this.breathStatus = breathStatus;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

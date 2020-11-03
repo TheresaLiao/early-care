@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:59:27 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,7 +40,7 @@ public class AuditTrail implements java.io.Serializable {
 		this.executeResult = executeResult;
 	}
 
-	@SequenceGenerator(name="audit_trail_seq", sequenceName="audit_trail_audit_trail_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="audit_trail_seq")	@Id
+	@SequenceGenerator(name="audit_trail_seq", sequenceName="audit_trail_audit_trail_id_seq")	@GeneratedValue(generator="audit_trail_seq")	@Id
 
 	@Column(name = "audit_trail_id", unique = true, nullable = false)
 	public long getAuditTrailId() {

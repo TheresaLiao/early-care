@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/7/27 �U�� 04:58:44 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -26,7 +26,7 @@ public class DeviceStatus implements java.io.Serializable {
 		this.isDeleted = isDeleted;
 	}
 
-	@SequenceGenerator(name="device_status_seq", sequenceName="device_status_device_status_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="device_status_seq")	@Id
+	@SequenceGenerator(name="device_status_seq", sequenceName="device_status_device_status_id_seq")	@GeneratedValue(generator="device_status_seq")	@Id
 
 	@Column(name = "device_status_id", unique = true, nullable = false)
 	public long getDeviceStatusId() {

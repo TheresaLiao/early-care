@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:59:27 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +20,6 @@ import javax.persistence.TemporalType;
 public class TempPadRecord implements java.io.Serializable {
 
 	private long tempPadRecordId;
-	private Patient patient;
 	private Sensor sensor;
 	private String bodyTempData;
 	private String batteryLevel;
@@ -30,10 +29,9 @@ public class TempPadRecord implements java.io.Serializable {
 	public TempPadRecord() {
 	}
 
-	public TempPadRecord(long tempPadRecordId, Patient patient, Sensor sensor, String bodyTempData, String batteryLevel,
+	public TempPadRecord(long tempPadRecordId, Sensor sensor, String bodyTempData, String batteryLevel,
 			String bodyTempStatus, Date timeCreated) {
 		this.tempPadRecordId = tempPadRecordId;
-		this.patient = patient;
 		this.sensor = sensor;
 		this.bodyTempData = bodyTempData;
 		this.batteryLevel = batteryLevel;
@@ -41,7 +39,7 @@ public class TempPadRecord implements java.io.Serializable {
 		this.timeCreated = timeCreated;
 	}
 
-	@SequenceGenerator(name="temp_pad_record_seq", sequenceName="temp_pad_record_temp_pad_record_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="temp_pad_record_seq")	@Id
+	@SequenceGenerator(name="temp_pad_record_seq", sequenceName="temp_pad_record_temp_pad_record_id_seq")	@GeneratedValue(generator="temp_pad_record_seq")	@Id
 
 	@Column(name = "temp_pad_record_id", unique = true, nullable = false)
 	public long getTempPadRecordId() {
@@ -50,16 +48,6 @@ public class TempPadRecord implements java.io.Serializable {
 
 	public void setTempPadRecordId(long tempPadRecordId) {
 		this.tempPadRecordId = tempPadRecordId;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "patient_id", nullable = false)
-	public Patient getPatient() {
-		return this.patient;
-	}
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

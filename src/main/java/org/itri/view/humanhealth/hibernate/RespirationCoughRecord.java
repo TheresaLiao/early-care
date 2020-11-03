@@ -1,6 +1,6 @@
 package org.itri.view.humanhealth.hibernate;
-// Generated 2020/4/24 �U�� 08:59:27 by Hibernate Tools 4.0.0.Final
-import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;import javax.persistence.GenerationType;
+// Generated 2020/10/29 �U�� 04:58:12 by Hibernate Tools 4.0.0.Final
+import javax.persistence.GeneratedValue;import javax.persistence.SequenceGenerator;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +20,6 @@ import javax.persistence.TemporalType;
 public class RespirationCoughRecord implements java.io.Serializable {
 
 	private long respirationCoughRecordId;
-	private Patient patient;
 	private Sensor sensor;
 	private String respiratoryRateData;
 	private String coughRateData;
@@ -31,11 +30,9 @@ public class RespirationCoughRecord implements java.io.Serializable {
 	public RespirationCoughRecord() {
 	}
 
-	public RespirationCoughRecord(long respirationCoughRecordId, Patient patient, Sensor sensor,
-			String respiratoryRateData, String coughRateData, String respiratoryRateStatus, String coughRateStatus,
-			Date timeCreated) {
+	public RespirationCoughRecord(long respirationCoughRecordId, Sensor sensor, String respiratoryRateData,
+			String coughRateData, String respiratoryRateStatus, String coughRateStatus, Date timeCreated) {
 		this.respirationCoughRecordId = respirationCoughRecordId;
-		this.patient = patient;
 		this.sensor = sensor;
 		this.respiratoryRateData = respiratoryRateData;
 		this.coughRateData = coughRateData;
@@ -44,7 +41,7 @@ public class RespirationCoughRecord implements java.io.Serializable {
 		this.timeCreated = timeCreated;
 	}
 
-	@SequenceGenerator(name="respiration_cough_record_seq", sequenceName="respiration_cough_record_respiration_cough_record_id_seq", allocationSize=1)	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="respiration_cough_record_seq")	@Id
+	@SequenceGenerator(name="respiration_cough_record_seq", sequenceName="respiration_cough_record_respiration_cough_record_id_seq")	@GeneratedValue(generator="respiration_cough_record_seq")	@Id
 
 	@Column(name = "respiration_cough_record_id", unique = true, nullable = false)
 	public long getRespirationCoughRecordId() {
@@ -53,16 +50,6 @@ public class RespirationCoughRecord implements java.io.Serializable {
 
 	public void setRespirationCoughRecordId(long respirationCoughRecordId) {
 		this.respirationCoughRecordId = respirationCoughRecordId;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "patient_id", nullable = false)
-	public Patient getPatient() {
-		return this.patient;
-	}
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -26,6 +26,7 @@ public class SensorDaoHibernateImpl {
 
 			for (Sensor item : resp) {
 				Hibernate.initialize(item.getSensorType());
+				Hibernate.initialize(item.getSensor2healthTypes());
 			}
 			tx.commit();
 		} catch (Exception e) {

@@ -1,5 +1,14 @@
 package org.itri.view.humanhealth.detail;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,41 +20,70 @@ import java.util.Set;
 
 import org.itri.view.humanhealth.detail.Imp.PersonInfoHibernateImpl;
 import org.itri.view.humanhealth.hibernate.Combination;
-import org.itri.view.humanhealth.hibernate.Patient;
-import org.itri.view.humanhealth.hibernate.Sensor;
 import org.itri.view.humanhealth.hibernate.SensorThreshold;
-import org.itri.view.humanhealth.personal.chart.Imp.PersonInfosDaoHibernateImpl;
 import org.itri.view.humanhealth.personal.chart.dao.PersonState;
 import org.itri.view.humanhealth.personal.chart.dao.ThresholdDao;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.util.media.AMedia;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Window;
 
 public class PersonInfo {
 
 	private List<PersonState> personStateList;
-//	private PersonInfosDaoHibernateImpl hqe;
 	private PersonInfoHibernateImpl hqe;
 	static String NORMAL_PATH = "./resources/image/MapImages/icon_indicator_no_01.png";
 	static String WARNING_PATH = "./resources/image/MapImages/icon_indicator_o_01.png";
 
 	@Init
 	public void init() {
-//		hqe = new PersonInfosDaoHibernateImpl();
 		hqe = new PersonInfoHibernateImpl();
 		queryStates();
 	}
 
 	@NotifyChange({ "personStateList" })
-	@Command
+	@GlobalCommand
 	public void refreshPatientInfo() {
-//		hqe = new PersonInfosDaoHibernateImpl();
 		hqe = new PersonInfoHibernateImpl();
 		queryStates();
 	}
+
+	@Command
+	public void downloadClick(@BindingParam("item") PersonState item) throws IOException {
+		System.out.println("downloadClick");
+
+		File file = new File("");
+		byte[] buffer = new byte[(int) file.length()];
+		FileInputStream fs = new FileInputStream(file);
+		fs.read(buffer);
+		fs.close();
+		ByteArrayInputStream is = new ByteArrayInputStream(buffer);
+		AMedia amedia = new AMedia("file.csv", "csv", "application/file", is);
+		Filedownload.save(amedia);
+	}
+
+//	private void createCsvFile() throws IOException {
+//		try {
+//			InputStreamReader isr = new InputStreamReader(new FileInputStream("D://file_input.csv"));
+//			BufferedReader reader = new BufferedReader(isr);
+//			BufferedWriter bw = new BufferedWriter(new FileWriter("D://file_output.csv"));
+//			String line = null;
+//			while ((line = reader.readLine()) != null) {
+//				String item[] = line.split(",");
+//				bw.newLine();
+//				bw.write("data1,data2,data3");
+//			}
+//			bw.close();
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 	@Command
 	public void modifyClick(@BindingParam("item") PersonState item) {
@@ -61,7 +99,14 @@ public class PersonInfo {
 		Set<Long> sensorIdSet = new HashSet<Long>();
 
 		// Get patientList
-		List<Combination> combinationList = hqe.getCombination();
+		List<Long> roomIdList = new ArrayList<Long>();
+		roomIdList.add(1L);
+		roomIdList.add(2L);
+		roomIdList.add(3L);
+		roomIdList.add(4L);
+		roomIdList.add(5L);
+
+		List<Combination> combinationList = hqe.getCombinationByRoomId(roomIdList);
 		for (Combination item : combinationList) {
 
 			boolean exitFlag = false;
@@ -85,9 +130,10 @@ public class PersonInfo {
 
 				// Set Patient Info
 				patient.setPatientId(item.getPatient().getPatientId());
-				patient.setName(item.getPatient().getPatientInfos().stream().findFirst().get().getName());
+				patient.setRoomId(item.getRoom().getRoomId());
 				patient.setBedRoom(item.getRoom().getRoomNum());
 				patient.setTotalNewsScore(item.getPatient().getTotalNewsScore());
+				patient.setName(item.getPatient().getPatientInfos().stream().findFirst().get().getName());
 				patient.setEwsLow("4");
 
 				// Set sensorList

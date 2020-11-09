@@ -9,6 +9,7 @@ public class PersonState {
 
 	private long patientId;
 	private String name;
+	private long roomId;
 	private String bedRoom;
 	private String heartBeat;
 	private String bodyTemperature;
@@ -19,11 +20,6 @@ public class PersonState {
 	private String totalStatusImgPath;
 	private String historyDate;
 
-//	private String heartRateStatus;
-//	private String oximeterStatus;
-//	private String bodyTempStatus;
-//	private String breathStatus;
-
 	private List<Long> sensorIdList = new ArrayList<Long>();
 	private ThresholdDao heartRateThreshold;
 	private ThresholdDao oximeterThreshold;
@@ -31,38 +27,6 @@ public class PersonState {
 	private ThresholdDao breathRateThreshold;
 
 	private String ewsLow;
-
-//	public String getHeartRateStatus() {
-//		return heartRateStatus;
-//	}
-//
-//	public void setHeartRateStatus(String heartRateStatus) {
-//		this.heartRateStatus = heartRateStatus;
-//	}
-//
-//	public String getOximeterStatus() {
-//		return oximeterStatus;
-//	}
-//
-//	public void setOximeterStatus(String oximeterStatus) {
-//		this.oximeterStatus = oximeterStatus;
-//	}
-//
-//	public String getBodyTempStatus() {
-//		return bodyTempStatus;
-//	}
-//
-//	public void setBodyTempStatus(String bodyTempStatus) {
-//		this.bodyTempStatus = bodyTempStatus;
-//	}
-//
-//	public String getBreathStatus() {
-//		return breathStatus;
-//	}
-//
-//	public void setBreathStatus(String breathStatus) {
-//		this.breathStatus = breathStatus;
-//	}
 
 	public Integer getTotalNewsScore() {
 		return totalNewsScore;
@@ -198,6 +162,14 @@ public class PersonState {
 
 	public void setPatientId(long patientId) {
 		this.patientId = patientId;
+	}
+
+	public long getRoomId() {
+		return roomId;
+	}
+
+	public void setRoomId(long roomId) {
+		this.roomId = roomId;
 	}
 
 }

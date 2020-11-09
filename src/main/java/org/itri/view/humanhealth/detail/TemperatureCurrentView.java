@@ -2,7 +2,6 @@ package org.itri.view.humanhealth.detail;
 
 import org.itri.view.humanhealth.hibernate.RtTempPadRecord;
 import org.itri.view.humanhealth.hibernate.Sensor;
-import org.itri.view.humanhealth.personal.chart.Imp.PersonInfosDaoHibernateImpl;
 import org.itri.view.humanhealth.personal.chart.Imp.TemperatureViewDaoHibernateImpl;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;

@@ -1,10 +1,11 @@
 <window id="modifyWin" title="警報設定" border="normal" width="560px"
 	position="center,center" action="show: slideDown;hide: slideUp"
 	closable="true" onClose="self.detach(); event.stopPropagation();"
-	apply="org.itri.view.humanhealth.detail.ModifyFormViewTwo">
+	apply="org.itri.view.humanhealth.detail.ModifyFormView">
 
 	<textbox id="textboxPatientId" visible="false"
 		value="${arg.orderItems.patientId}" />
+
 	<grid>
 		<rows>
 			<row>
@@ -12,6 +13,8 @@
 				<!--  <label style="color:white;" value="335-11" />-->
 				<label style="color:white;"
 					value="${arg.orderItems.bedRoom}" />
+				<textbox id="textboxRoomId" visible="false"
+					value="${arg.orderItems.roomId}" />
 			</row>
 			<row>
 				<label style="color:white;">追蹤人名</label>

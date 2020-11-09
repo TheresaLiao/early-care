@@ -4,6 +4,8 @@
 ]]></zscript>
 	<nodom
 		viewModel="@id('vm')@init('org.itri.view.humanhealth.detail.PersonInfo')">
+		<button label="refresh"
+			onClick="@global-command('refreshPatientInfo')" />
 		<vlayout children="@bind(vm.personStateList)" spacing="0">
 			<template name="children">
 
@@ -22,7 +24,8 @@
 								image="resources/image/icon-edit-w.png"
 								onClick="@command('modifyClick', item=each)" />
 							<button
-								image="resources/image/icon-download-w.png" />
+								image="resources/image/icon-download-w.png"
+								onClick="@command('downloadClick', item=each)" />
 						</caption>
 
 						<panelchildren>
@@ -298,11 +301,5 @@
 				</n:div>
 			</template>
 		</vlayout>
-
-		<!-- Every 30s refresh person -->
-		<!-- 
-			<timer id="timer1234" delay="30000" running="true"
-			repeats="true" onTimer="@command('refreshPatientInfo')" />
-		-->
 	</nodom>
 </zk>

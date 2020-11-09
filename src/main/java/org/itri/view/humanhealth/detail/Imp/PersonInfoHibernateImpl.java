@@ -10,38 +10,37 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.itri.view.humanhealth.hibernate.Combination;
-import org.itri.view.humanhealth.hibernate.Patient;
-import org.itri.view.humanhealth.hibernate.Sensor;
+import org.itri.view.humanhealth.hibernate.Room;
 import org.itri.view.humanhealth.hibernate.SensorThreshold;
 import org.itri.view.util.HibernateUtil;
 
 public class PersonInfoHibernateImpl {
 
-	public List<Combination> getCombination() {
+	public List<Combination> getCombinationByRoomId(List<Long> roomIdList) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 
-		List<Combination> tempCombinationList = new ArrayList<Combination>();
+		List<Room> roomList = new ArrayList<Room>();
 		List<Combination> combinationList = new ArrayList<Combination>();
 		try {
 			tx = session.beginTransaction();
-			Criteria criteria = session.createCriteria(Combination.class);
-//			criteria.add(Restrictions.eq("room.roomNum", "335-01"));
-			criteria.add(Restrictions.isNull("endTime"));
+			Criteria criteria = session.createCriteria(Room.class);
+			criteria.add(Restrictions.in("roomId", roomIdList));
 
-			tempCombinationList = criteria.list();
+			roomList = criteria.list();
+			for (Room r : roomList) {
+				Hibernate.initialize(r.getCombinations());
 
-			for (Combination p : tempCombinationList) {
-				Hibernate.initialize(p.getRoom());
-				Hibernate.initialize(p.getPatient());
-				Hibernate.initialize(p.getPatient().getPatientInfos());
-				Hibernate.initialize(p.getSensor());
-
-				Hibernate.initialize(p.getSensor().getRtOximeterRecords());
-				Hibernate.initialize(p.getSensor().getRtHeartRhythmRecords());
-				Hibernate.initialize(p.getSensor().getRtTempPadRecords());
-
-				combinationList.add(p);
+				// combinationList.addAll(r.getCombinations());
+				for (Combination combination : r.getCombinations()) {
+					if (combination.getEndTime() == null) {
+						Hibernate.initialize(combination.getPatient());
+						Hibernate.initialize(combination.getPatient().getPatientInfos());
+						Hibernate.initialize(combination.getSensor());
+						Hibernate.initialize(combination.getRoom());
+						combinationList.add(combination);
+					}
+				}
 			}
 			tx.commit();
 		} catch (Exception e) {

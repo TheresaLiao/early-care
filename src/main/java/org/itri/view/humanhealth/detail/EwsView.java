@@ -98,7 +98,7 @@ public class EwsView extends SelectorComposer<Window> {
 	// Get history data
 	private List<Point> getNewsRecordList(long patientId) {
 		EwsViewDaoHibernateImpl hqe = new EwsViewDaoHibernateImpl();
-		List<NewsRecord> newsRecordList = hqe.getNewsRecordByDateList(patientId);
+		List<NewsRecord> newsRecordList = hqe.getNewsRecordThreeMinByPatientId(patientId);
 
 		List<Point> resp = new ArrayList<Point>();
 		for (NewsRecord item : newsRecordList) {

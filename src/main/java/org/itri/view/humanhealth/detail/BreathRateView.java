@@ -130,7 +130,7 @@ public class BreathRateView extends SelectorComposer<Component> {
 	// Get history data
 	private List<Point> getHeartRhythmRecordList(long sensortId) {
 		BreathRateViewDaoHibernateImpl hqe = new BreathRateViewDaoHibernateImpl();
-		List<HeartRhythmRecord> heartRhythmRecordList = hqe.getHeartRhythmRecordList(sensortId);
+		List<HeartRhythmRecord> heartRhythmRecordList = hqe.getHeartRhythmThreeMinRecordList(sensortId);
 
 		int i = heartRhythmRecordList.size() * (-1);
 		List<Point> resp = new ArrayList<Point>();

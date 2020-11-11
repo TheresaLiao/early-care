@@ -9,29 +9,47 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.itri.view.humanhealth.detail.Imp.PersonInfoHibernateImpl;
 import org.itri.view.humanhealth.hibernate.Combination;
+import org.itri.view.humanhealth.hibernate.HeartRhythmRecord;
+import org.itri.view.humanhealth.hibernate.NewsRecord;
+import org.itri.view.humanhealth.hibernate.OximeterRecord;
 import org.itri.view.humanhealth.hibernate.SensorThreshold;
+import org.itri.view.humanhealth.hibernate.TempPadRecord;
+import org.itri.view.humanhealth.personal.chart.Imp.BreathRateViewDaoHibernateImpl;
+import org.itri.view.humanhealth.personal.chart.Imp.EwsViewDaoHibernateImpl;
+import org.itri.view.humanhealth.personal.chart.Imp.OximeterViewDaoHibernateImpl;
+import org.itri.view.humanhealth.personal.chart.Imp.TemperatureViewDaoHibernateImpl;
 import org.itri.view.humanhealth.personal.chart.dao.PersonState;
+import org.itri.view.humanhealth.personal.chart.dao.SensorIdTimeDao;
 import org.itri.view.humanhealth.personal.chart.dao.ThresholdDao;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.lang.Strings;
 import org.zkoss.util.media.AMedia;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Window;
+
+import com.opencsv.CSVWriter;
 
 public class PersonInfo {
 
@@ -57,33 +75,96 @@ public class PersonInfo {
 	public void downloadClick(@BindingParam("item") PersonState item) throws IOException {
 		System.out.println("downloadClick");
 
-		File file = new File("");
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		String fileName = item.getBedRoom() + "_" + item.getName() + "_" + dateFormat.format(new Date()) + ".csv";
+		File file = createCsvFile(fileName, item);
 		byte[] buffer = new byte[(int) file.length()];
 		FileInputStream fs = new FileInputStream(file);
 		fs.read(buffer);
 		fs.close();
 		ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-		AMedia amedia = new AMedia("file.csv", "csv", "application/file", is);
+		AMedia amedia = new AMedia(fileName, "csv", "application/file", is);
 		Filedownload.save(amedia);
 	}
 
-//	private void createCsvFile() throws IOException {
-//		try {
-//			InputStreamReader isr = new InputStreamReader(new FileInputStream("D://file_input.csv"));
-//			BufferedReader reader = new BufferedReader(isr);
-//			BufferedWriter bw = new BufferedWriter(new FileWriter("D://file_output.csv"));
-//			String line = null;
-//			while ((line = reader.readLine()) != null) {
-//				String item[] = line.split(",");
-//				bw.newLine();
-//				bw.write("data1,data2,data3");
-//			}
-//			bw.close();
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+	private File createCsvFile(String filePath, PersonState item) throws IOException {
+		File file = new File(filePath);
+		try {
+			FileWriter outputfile = new FileWriter(file);
+			CSVWriter writer = new CSVWriter(outputfile);
+			writer.writeAll(getRawData(item));
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return file;
+	}
+
+	private List<String[]> getRawData(PersonState item) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+		hqe = new PersonInfoHibernateImpl();
+		OximeterViewDaoHibernateImpl oxhqe = new OximeterViewDaoHibernateImpl();
+		BreathRateViewDaoHibernateImpl brhqe = new BreathRateViewDaoHibernateImpl();
+		TemperatureViewDaoHibernateImpl temphqe = new TemperatureViewDaoHibernateImpl();
+		EwsViewDaoHibernateImpl ewshqe = new EwsViewDaoHibernateImpl();
+
+		List<Combination> combinationList = hqe.getCombinationByRoomId(item.getRoomId(), item.getPatientId());
+		List<SensorIdTimeDao> sensorTimeList = new ArrayList<SensorIdTimeDao>();
+
+		for (Combination combination : combinationList) {
+			SensorIdTimeDao sensorIdTimeDao = new SensorIdTimeDao();
+			sensorIdTimeDao.setSensorId(combination.getSensor().getSensorId());
+			sensorIdTimeDao.setStrTime(combination.getStartTime());
+			sensorIdTimeDao.setEndTime(combination.getEndTime());
+			sensorTimeList.add(sensorIdTimeDao);
+		}
+		System.out.println("combination size: " + combinationList.size());
+
+		// Title
+		List<String[]> resp = new ArrayList<String[]>();
+		resp.add(new String[] { "Room", "Name" });
+		resp.add(new String[] { item.getBedRoom(), item.getName() });
+
+		// HeartRateRecord
+		List<OximeterRecord> oxmeterDataList = oxhqe.getOximeterBySensorListRecordList(sensorTimeList);
+		System.out.println("oxmeterDataList size: " + oxmeterDataList.size());
+		resp.add(new String[] { "Time", "HeartBeat" });
+		for (OximeterRecord oxmeterData : oxmeterDataList) {
+			resp.add(new String[] { dateFormat.format(oxmeterData.getTimeCreated()), oxmeterData.getHeartRateData() });
+		}
+
+		// OximeterRecord
+		resp.add(new String[] { "Time", "oximeter" });
+		for (OximeterRecord oxmeterData : oxmeterDataList) {
+			resp.add(new String[] { dateFormat.format(oxmeterData.getTimeCreated()), oxmeterData.getOximeterData() });
+		}
+
+		// BreathRate
+		List<HeartRhythmRecord> breathRateList = brhqe.getHeartRhythmBySensorListRecordList(sensorTimeList);
+		System.out.println("breathRateList size: " + breathRateList.size());
+		resp.add(new String[] { "Time", "BreathRate" });
+		for (HeartRhythmRecord breathRate : breathRateList) {
+			resp.add(new String[] { dateFormat.format(breathRate.getTimeCreated()), breathRate.getBreathData() });
+		}
+
+		// Temperature
+		List<TempPadRecord> tempList = temphqe.getTempPadBySensorListRecordList(sensorTimeList);
+		System.out.println("tempList size: " + tempList.size());
+		resp.add(new String[] { "Time", "Temperature" });
+		for (TempPadRecord temp : tempList) {
+			resp.add(new String[] { dateFormat.format(temp.getTimeCreated()), temp.getBodyTempData() });
+		}
+
+		// EWS
+		List<NewsRecord> ewsList = ewshqe.getNewsRecordOneMonthByPatientId(item.getPatientId());
+		System.out.println("ewsList size: " + ewsList.size());
+		resp.add(new String[] { "Time", "EWS" });
+		for (NewsRecord ews : ewsList) {
+			resp.add(new String[] { dateFormat.format(ews.getTimeCreated()), Integer.toString(ews.getNewsScore()) });
+		}
+		return resp;
+	}
 
 	@Command
 	public void modifyClick(@BindingParam("item") PersonState item) {
@@ -106,7 +187,7 @@ public class PersonInfo {
 		roomIdList.add(4L);
 		roomIdList.add(5L);
 
-		List<Combination> combinationList = hqe.getCombinationByRoomId(roomIdList);
+		List<Combination> combinationList = hqe.getCombinationEndTimeNullByRoomId(roomIdList);
 		for (Combination item : combinationList) {
 
 			boolean exitFlag = false;

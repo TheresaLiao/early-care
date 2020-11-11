@@ -17,6 +17,7 @@ import org.itri.view.util.HibernateUtil;
 public class EwsViewDaoHibernateImpl {
 
 	private int minusThreeMinit = -3;
+	private int minusOneHour = -12;
 
 	public Patient getPatientById(long patientId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -42,7 +43,7 @@ public class EwsViewDaoHibernateImpl {
 		return null;
 	}
 
-	public List<NewsRecord> getNewsRecordByDateList(long patientId) {
+	public List<NewsRecord> getNewsRecordThreeMinByPatientId(long patientId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		List<NewsRecord> newsRecordList = new ArrayList<NewsRecord>();
@@ -56,6 +57,35 @@ public class EwsViewDaoHibernateImpl {
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(now);
 			calendar.add(Calendar.MINUTE, minusThreeMinit);
+			criteria.add(Restrictions.ge("timeCreated", calendar.getTime()));
+
+			criteria.addOrder(Order.asc("timeCreated"));
+
+			newsRecordList = criteria.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			session.close();
+		}
+		return newsRecordList;
+	}
+
+	public List<NewsRecord> getNewsRecordOneMonthByPatientId(long patientId) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		List<NewsRecord> newsRecordList = new ArrayList<NewsRecord>();
+
+		try {
+			tx = session.beginTransaction();
+			Criteria criteria = session.createCriteria(NewsRecord.class);
+			criteria.add(Restrictions.eq("patient.patientId", patientId));
+
+			Date now = new Date();
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(now);
+			calendar.add(Calendar.MONTH, minusOneHour);
 			criteria.add(Restrictions.ge("timeCreated", calendar.getTime()));
 
 			criteria.addOrder(Order.asc("timeCreated"));

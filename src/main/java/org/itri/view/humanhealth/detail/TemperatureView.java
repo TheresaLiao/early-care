@@ -128,7 +128,7 @@ public class TemperatureView extends SelectorComposer<Component> {
 	// Get history data
 	private List<Point> getTempPadRecordList(long patientId) {
 		TemperatureViewDaoHibernateImpl hqe = new TemperatureViewDaoHibernateImpl();
-		List<TempPadRecord> tempPadRecordList = hqe.getTempPadRecordList(sensortId);
+		List<TempPadRecord> tempPadRecordList = hqe.getTempPadThreeMinRecordList(sensortId);
 
 		int i = tempPadRecordList.size() * (-1);
 		List<Point> resp = new ArrayList<Point>();

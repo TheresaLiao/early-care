@@ -133,7 +133,7 @@ public class HeartBeatView extends SelectorComposer<Window> {
 	// Get history data
 	private List<Point> getHeartRhythmRecordList(long sensortId) {
 		OximeterViewDaoHibernateImpl hqe = new OximeterViewDaoHibernateImpl();
-		List<OximeterRecord> oximeterRecordList = hqe.getOximeterRecordList(sensortId);
+		List<OximeterRecord> oximeterRecordList = hqe.getOximeterThreeMinRecordList(sensortId);
 
 //		int i = oximeterRecordList.size() * (-1);
 		List<Point> resp = new ArrayList<Point>();

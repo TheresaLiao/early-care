@@ -66,6 +66,7 @@ public class PersonInfoHibernateImpl {
 						Hibernate.initialize(combination.getPatient().getPatientInfos());
 						Hibernate.initialize(combination.getSensor());
 						Hibernate.initialize(combination.getRoom());
+						Hibernate.initialize(combination.getPatient().getNewsWarningConditions());
 						combinationList.add(combination);
 					}
 				}
@@ -98,7 +99,7 @@ public class PersonInfoHibernateImpl {
 			calendar.setTime(now);
 			calendar.add(Calendar.MONTH, minusOneHour);
 			System.out.println(dateFormat.format(calendar.getTime()));
-			
+
 			for (Room r : roomList) {
 				Hibernate.initialize(r.getCombinations());
 				for (Combination combination : r.getCombinations()) {

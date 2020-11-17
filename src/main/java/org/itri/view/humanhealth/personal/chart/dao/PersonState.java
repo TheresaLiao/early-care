@@ -26,6 +26,8 @@ public class PersonState {
 	private ThresholdDao bodyTempThreshold;
 	private ThresholdDao breathRateThreshold;
 
+	private List<EwsSpecDao> ewsSpecList = new ArrayList<EwsSpecDao>();
+
 	private String ewsLow;
 
 	public Integer getTotalNewsScore() {
@@ -170,6 +172,14 @@ public class PersonState {
 
 	public void setRoomId(long roomId) {
 		this.roomId = roomId;
+	}
+
+	public List<EwsSpecDao> getEwsSpecList() {
+		return ewsSpecList;
+	}
+
+	public void setEwsSpecList(List<EwsSpecDao> ewsSpecList) {
+		this.ewsSpecList = ewsSpecList;
 	}
 
 }

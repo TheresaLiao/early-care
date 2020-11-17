@@ -1,4 +1,4 @@
-<window id="modifyWin" title="警報設定" border="normal" width="560px"
+<window id="modifyWin" title="編輯" border="normal" width="510px"
 	position="center,center" action="show: slideDown;hide: slideUp"
 	closable="true" onClose="self.detach(); event.stopPropagation();"
 	apply="org.itri.view.humanhealth.detail.ModifyFormView">
@@ -7,10 +7,14 @@
 		value="${arg.orderItems.patientId}" />
 
 	<grid>
+		<columns>
+			<column label="" width="110px" />
+			<column label="數值" hflex="1" />
+			<column label="感應器" width="170px" />
+		</columns>
 		<rows>
 			<row>
 				<label style="color:white;">病房編號</label>
-				<!--  <label style="color:white;" value="335-11" />-->
 				<label style="color:white;"
 					value="${arg.orderItems.bedRoom}" />
 				<textbox id="textboxRoomId" visible="false"
@@ -87,15 +91,51 @@
 				</selectbox>
 			</row>
 			<row>
-				EWS
+				EWS 分數
 				<hbox>
-					<textbox width="80px"
-						value="${arg.orderItems.ewsLow}" />
+					<selectbox id="selectboxMathOperator">
+						<template name="model">
+							<label value="${each.text}" />
+						</template>
+					</selectbox>
+					<!-- <textbox id="textboxEwsPoint" width="80px" /> -->
+					<spinner id="spinnerEwsPoint" width="80px"
+						format=",###" />
+				</hbox>
+
+			</row>
+			<row>
+				EWS 持續時間
+				<hbox>
+					<!-- <textbox id="textboxEwsTime" width="80px" /> -->
+					<spinner id="spinnerEwsTime" width="80px"
+						format=",###" />
+					min
+					<button id="ewsAddbtn" label="新增" />
 				</hbox>
 			</row>
 			<row>
+				<label visible="false" />
+				<grid id="ewsGrid">
+					<columns>
+						<column label="" width="30px" />
+						<column label="" hflex="1" />
+						<column label="" width="60px" />
+					</columns>
+					<rows>
+						<template name="model">
+							<row>
+								<radio />
+								<label value="${each.value}" />
+								<button
+									image="resources/image/icon-edit-w.png" />
+							</row>
+						</template>
+					</rows>
+				</grid>
+			</row>
+			<row>
 				<button id="submitButton" label="Submit" />
-				<button id="closeButton" label="Close" />
 			</row>
 		</rows>
 	</grid>

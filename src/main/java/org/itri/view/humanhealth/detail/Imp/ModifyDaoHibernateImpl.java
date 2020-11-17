@@ -11,11 +11,33 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.itri.view.humanhealth.hibernate.Combination;
+import org.itri.view.humanhealth.hibernate.NewsMathOperator;
+import org.itri.view.humanhealth.hibernate.NewsWarningCondition;
 import org.itri.view.humanhealth.hibernate.PatientInfo;
 import org.itri.view.humanhealth.hibernate.Sensor;
 import org.itri.view.util.HibernateUtil;
 
 public class ModifyDaoHibernateImpl {
+
+	public List<NewsMathOperator> getNewsMathOperatorList() {
+		System.out.println("getNewsMathOperatorList");
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+
+		List<NewsMathOperator> resp = new ArrayList<NewsMathOperator>();
+		try {
+			tx = session.beginTransaction();
+			Criteria criteria = session.createCriteria(NewsMathOperator.class);
+			resp = criteria.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			session.close();
+		}
+		return resp;
+	}
 
 	public void updateCombination(Combination item) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -129,4 +151,27 @@ public class ModifyDaoHibernateImpl {
 		return resp;
 	}
 
+	public List<NewsWarningCondition> getNewsWarningConditionList(Long patientId) {
+		System.out.println("getNewsWarningConditionList");
+		List<NewsWarningCondition> resp = new ArrayList<NewsWarningCondition>();
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			Criteria criteria = session.createCriteria(NewsWarningCondition.class);
+			criteria.add(Restrictions.eq("patient.patientId", patientId));
+			resp = criteria.list();
+			for (NewsWarningCondition item : resp) {
+				Hibernate.initialize(item.getNewsMathOperator());
+			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			session.close();
+		}
+		return resp;
+
+	}
 }

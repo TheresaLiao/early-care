@@ -1,15 +1,10 @@
 package org.itri.view.humanhealth.detail;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,13 +16,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.itri.view.humanhealth.detail.Imp.PersonInfoHibernateImpl;
 import org.itri.view.humanhealth.hibernate.Combination;
 import org.itri.view.humanhealth.hibernate.HeartRhythmRecord;
 import org.itri.view.humanhealth.hibernate.NewsRecord;
+import org.itri.view.humanhealth.hibernate.NewsWarningCondition;
 import org.itri.view.humanhealth.hibernate.OximeterRecord;
 import org.itri.view.humanhealth.hibernate.SensorThreshold;
 import org.itri.view.humanhealth.hibernate.TempPadRecord;
@@ -35,6 +29,7 @@ import org.itri.view.humanhealth.personal.chart.Imp.BreathRateViewDaoHibernateIm
 import org.itri.view.humanhealth.personal.chart.Imp.EwsViewDaoHibernateImpl;
 import org.itri.view.humanhealth.personal.chart.Imp.OximeterViewDaoHibernateImpl;
 import org.itri.view.humanhealth.personal.chart.Imp.TemperatureViewDaoHibernateImpl;
+import org.itri.view.humanhealth.personal.chart.dao.EwsSpecDao;
 import org.itri.view.humanhealth.personal.chart.dao.PersonState;
 import org.itri.view.humanhealth.personal.chart.dao.SensorIdTimeDao;
 import org.itri.view.humanhealth.personal.chart.dao.ThresholdDao;
@@ -222,6 +217,17 @@ public class PersonInfo {
 				sensorIdList.add(item.getSensor().getSensorId());
 				patient.setSensorIdList(sensorIdList);
 				sensorIdSet.add(item.getSensor().getSensorId());
+
+				// Set EWS Spec.
+				List<EwsSpecDao> ewsSpecList = new ArrayList<EwsSpecDao>();
+				for (NewsWarningCondition ewsSpec : item.getPatient().getNewsWarningConditions()) {
+					EwsSpecDao ewsSpecDao = new EwsSpecDao();
+					ewsSpecDao.setNewsWarningConditionId(ewsSpec.getNewsWarningConditionId());
+					ewsSpecDao.setValue(
+							"EWS " + " " + ewsSpec.getNewsWarningThreshold() + " / " + ewsSpec.getTimeBeforeWarning());
+					ewsSpecList.add(ewsSpecDao);
+				}
+				patient.setEwsSpecList(ewsSpecList);
 
 				personStateList.add(patient);
 			}

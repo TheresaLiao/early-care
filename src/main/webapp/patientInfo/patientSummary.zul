@@ -1,0 +1,27 @@
+<zk xmlns:n="native" xmlns:z="zul">
+	<nodom
+		viewModel="@id('vm') @init('org.itri.view.patientInfo.patientSummary')">
+
+		<button label="Create" onClick="@command('createClick')" />
+		<button label="Refresh" onClick="@command('refreshClick')" />
+
+		<!-- All Patient Info -->
+		<grid height="500px" model="@bind(vm.patientSummary)">
+			<columns>
+				<column label="ID" width="50px" />
+				<column label="性別" width="50px" />
+				<column label="年齡" width="50px" />
+				<column label="姓名" />
+			</columns>
+			<template name="model">
+				<row>
+					<label value="@load(each.patient.patientId)" />
+					<label value="@load(each.gender)" />
+					<label value="@load(each.age)" />
+					<label value="@load(each.name)" />
+				</row>
+			</template>
+		</grid>
+
+	</nodom>
+</zk>

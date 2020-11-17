@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -27,8 +26,8 @@ public class LoginControllerHibernateImpl {
 			tempPatientInfo = criteria.list();
 
 			PatientInfo p = tempPatientInfo.get(0);
-			Hibernate.initialize(p.getPatient());
-			Hibernate.initialize(p.getPatient().getGateway());
+//			Hibernate.initialize(p.getPatient());
+//			Hibernate.initialize(p.getPatient().getGateway());
 			tx.commit();
 			return p;
 		} catch (

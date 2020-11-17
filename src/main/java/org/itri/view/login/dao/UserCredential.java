@@ -18,15 +18,15 @@ public class UserCredential implements Serializable {
 	private String account;
 	private String name;
 	private long patientId;
-	private String gatewayDeviceStatus;
+//	private String gatewayDeviceStatus;
 
 	Set<String> roles = new HashSet<String>();
 
-	public UserCredential(String account, String name, long patientId, String gatewayDeviceStatus) {
+	public UserCredential(String account, String name, long patientId) {
 		this.account = account;
 		this.name = name;
 		this.patientId = patientId;
-		this.gatewayDeviceStatus = gatewayDeviceStatus;
+//		this.gatewayDeviceStatus = gatewayDeviceStatus;
 	}
 
 	public UserCredential() {
@@ -71,12 +71,12 @@ public class UserCredential implements Serializable {
 		this.patientId = patientId;
 	}
 
-	public String getGatewayDeviceStatus() {
-		return gatewayDeviceStatus;
-	}
-
-	public void setGatewayDeviceStatus(String gatewayDeviceStatus) {
-		this.gatewayDeviceStatus = gatewayDeviceStatus;
-	}
+//	public String getGatewayDeviceStatus() {
+//		return gatewayDeviceStatus;
+//	}
+//
+//	public void setGatewayDeviceStatus(String gatewayDeviceStatus) {
+//		this.gatewayDeviceStatus = gatewayDeviceStatus;
+//	}
 
 }

@@ -44,7 +44,7 @@ public class UserInfoServiceHibernateImpl implements UserInfoService, Serializab
 		}
 
 		user.setPatientId(patientInfo.getPatient().getPatientId());
-		user.setGatewayDeviceStatus(patientInfo.getPatient().getGateway().getGatewayDeviceStatus());
+//		user.setGatewayDeviceStatus(patientInfo.getPatient().getGateway().getGatewayDeviceStatus());
 		return user;
 	}
 

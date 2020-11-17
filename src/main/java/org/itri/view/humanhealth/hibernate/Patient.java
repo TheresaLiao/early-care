@@ -8,8 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,7 +21,6 @@ import javax.persistence.TemporalType;
 public class Patient implements java.io.Serializable {
 
 	private long patientId;
-	private Gateway gateway;
 	private String heartRateStatus;
 	private Integer heartRateNewsScore;
 	private String oximeterStatus;
@@ -71,11 +68,10 @@ public class Patient implements java.io.Serializable {
 		this.isDeleted = isDeleted;
 	}
 	
-	public Patient(long patientId, Gateway gateway, String heartRateStatus, String oximeterStatus,
+	public Patient(long patientId, String heartRateStatus, String oximeterStatus,
 			String bodyTempStatus, String breathStatus, String pmFiveStatus, String mattressStatus, int totalNewsScore,
 			int newsWarningCounter, boolean isNewsWarning, Date timeCreated, boolean isDeleted) {
 		this.patientId = patientId;
-		this.gateway = gateway;
 		this.heartRateStatus = heartRateStatus;
 		this.oximeterStatus = oximeterStatus;
 		this.bodyTempStatus = bodyTempStatus;
@@ -89,14 +85,13 @@ public class Patient implements java.io.Serializable {
 		this.isDeleted = isDeleted;
 	}
 
-	public Patient(long patientId, Gateway gateway, String heartRateStatus, Integer heartRateNewsScore,
+	public Patient(long patientId, String heartRateStatus, Integer heartRateNewsScore,
 			String oximeterStatus, Integer oximeterNewsScore, String bodyTempStatus, Integer bodyTempNewsScore,
 			String breathStatus, Integer breathNewsScore, String pmFiveStatus, String mattressStatus,
 			int totalNewsScore, int newsWarningCounter, boolean isNewsWarning, Date lastUpdated, Date timeCreated,
 			boolean isDeleted, Set<NewsWarningCondition> newsWarningConditions, Set<PatientInfo> patientInfos,
 			Set<Combination> combinations, Set<NewsRecord> newsRecords) {
 		this.patientId = patientId;
-		this.gateway = gateway;
 		this.heartRateStatus = heartRateStatus;
 		this.heartRateNewsScore = heartRateNewsScore;
 		this.oximeterStatus = oximeterStatus;
@@ -128,16 +123,6 @@ public class Patient implements java.io.Serializable {
 
 	public void setPatientId(long patientId) {
 		this.patientId = patientId;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gateway_id", nullable = false)
-	public Gateway getGateway() {
-		return this.gateway;
-	}
-
-	public void setGateway(Gateway gateway) {
-		this.gateway = gateway;
 	}
 
 	@Column(name = "heart_rate_status", nullable = false, length = 32)

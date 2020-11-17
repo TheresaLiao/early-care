@@ -20,7 +20,7 @@ public class User implements Serializable, Cloneable {
 	private long patientId;
 	private String account;
 	private String password;
-	private String gatewayDeviceStatus;
+//	private String gatewayDeviceStatus;
 
 	public User() {
 	}
@@ -80,13 +80,13 @@ public class User implements Serializable, Cloneable {
 		this.patientId = patientId;
 	}
 
-	public String getGatewayDeviceStatus() {
-		return gatewayDeviceStatus;
-	}
-
-	public void setGatewayDeviceStatus(String gatewayDeviceStatus) {
-		this.gatewayDeviceStatus = gatewayDeviceStatus;
-	}
+//	public String getGatewayDeviceStatus() {
+//		return gatewayDeviceStatus;
+//	}
+//
+//	public void setGatewayDeviceStatus(String gatewayDeviceStatus) {
+//		this.gatewayDeviceStatus = gatewayDeviceStatus;
+//	}
 
 	
 

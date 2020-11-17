@@ -1,0 +1,32 @@
+<window id="createPatientWin" title="新增" border="normal" width="300px"
+	position="center,center" action="show: slideDown;hide: slideUp"
+	closable="true" onClose="self.detach(); event.stopPropagation();"
+	apply="org.itri.view.patientInfo.patientCreate">
+	<grid>
+		<columns>
+			<column label="" width="50px" />
+			<column label="" hflex="1" />
+		</columns>
+		<rows>
+			<row>
+				姓名
+				<textbox id="textboxName" />
+			</row>
+			<row>
+				性別
+				<selectbox id="selectboxGenders">
+					<template name="model">
+						<label value="${each.text}" />
+					</template>
+				</selectbox>
+			</row>
+			<row>
+				年齡
+				<spinner id="spinnerAge" width="80px" format=",###" />
+			</row>
+		</rows>
+	</grid>
+	<button id="submitButton" label="新增" />
+	<button id="closeButton" label="取消" />
+
+</window>

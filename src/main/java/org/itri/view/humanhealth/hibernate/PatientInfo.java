@@ -20,7 +20,6 @@ import javax.persistence.TemporalType;
 public class PatientInfo implements java.io.Serializable {
 
 	private long patientInfoId;
-	private Users users;
 	private Patient patient;
 	private String name;
 	private String gender;
@@ -35,9 +34,8 @@ public class PatientInfo implements java.io.Serializable {
 	public PatientInfo() {
 	}
 
-	public PatientInfo(Users users, Patient patient, String name, String gender, String age,
+	public PatientInfo(Patient patient, String name, String gender, String age,
 			String idNum, boolean isDeleted, Date timeCreated) {
-		this.users = users;
 		this.patient = patient;
 		this.name = name;
 		this.gender = gender;
@@ -47,10 +45,9 @@ public class PatientInfo implements java.io.Serializable {
 		this.timeCreated = timeCreated;
 	}
 	
-	public PatientInfo(long patientInfoId, Users users, Patient patient, String name, String gender, String age,
+	public PatientInfo(long patientInfoId, Patient patient, String name, String gender, String age,
 			String idNum, boolean isDeleted, Date timeCreated) {
 		this.patientInfoId = patientInfoId;
-		this.users = users;
 		this.patient = patient;
 		this.name = name;
 		this.gender = gender;
@@ -60,10 +57,9 @@ public class PatientInfo implements java.io.Serializable {
 		this.timeCreated = timeCreated;
 	}
 
-	public PatientInfo(long patientInfoId, Users users, Patient patient, String name, String gender, String age,
+	public PatientInfo(long patientInfoId, Patient patient, String name, String gender, String age,
 			String idNum, String username, String password, boolean isDeleted, Date timeCreated, Date lastUpdated) {
 		this.patientInfoId = patientInfoId;
-		this.users = users;
 		this.patient = patient;
 		this.name = name;
 		this.gender = gender;
@@ -85,16 +81,6 @@ public class PatientInfo implements java.io.Serializable {
 
 	public void setPatientInfoId(long patientInfoId) {
 		this.patientInfoId = patientInfoId;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "users_id", nullable = false)
-	public Users getUsers() {
-		return this.users;
-	}
-
-	public void setUsers(Users users) {
-		this.users = users;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

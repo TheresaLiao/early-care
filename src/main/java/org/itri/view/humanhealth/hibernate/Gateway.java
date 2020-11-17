@@ -26,7 +26,6 @@ public class Gateway implements java.io.Serializable {
 	private int updateFreqSec;
 	private Date lastActive;
 	private Set<Gateway2sensor> gateway2sensors = new HashSet<Gateway2sensor>(0);
-	private Set<Patient> patients = new HashSet<Patient>(0);
 
 	public Gateway() {
 	}
@@ -38,14 +37,13 @@ public class Gateway implements java.io.Serializable {
 	}
 
 	public Gateway(long gatewayId, String gatewayMac, String gatewayDeviceStatus, int updateFreqSec, Date lastActive,
-			Set<Gateway2sensor> gateway2sensors, Set<Patient> patients) {
+			Set<Gateway2sensor> gateway2sensors) {
 		this.gatewayId = gatewayId;
 		this.gatewayMac = gatewayMac;
 		this.gatewayDeviceStatus = gatewayDeviceStatus;
 		this.updateFreqSec = updateFreqSec;
 		this.lastActive = lastActive;
 		this.gateway2sensors = gateway2sensors;
-		this.patients = patients;
 	}
 
 	@SequenceGenerator(name="gateway_seq", sequenceName="gateway_gateway_id_seq")	@GeneratedValue(generator="gateway_seq")	@Id
@@ -104,14 +102,4 @@ public class Gateway implements java.io.Serializable {
 	public void setGateway2sensors(Set<Gateway2sensor> gateway2sensors) {
 		this.gateway2sensors = gateway2sensors;
 	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "gateway")
-	public Set<Patient> getPatients() {
-		return this.patients;
-	}
-
-	public void setPatients(Set<Patient> patients) {
-		this.patients = patients;
-	}
-
 }

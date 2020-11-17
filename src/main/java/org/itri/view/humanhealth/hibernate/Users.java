@@ -27,7 +27,6 @@ public class Users implements java.io.Serializable {
 	private Date lastUpdated;
 	private Date lastLogin;
 	private boolean isDeleted;
-	private Set<PatientInfo> patientInfos = new HashSet<PatientInfo>(0);
 	private Set<Room> rooms = new HashSet<Room>(0);
 	private Set<SensorThreshold> sensorThresholds = new HashSet<SensorThreshold>(0);
 
@@ -46,7 +45,7 @@ public class Users implements java.io.Serializable {
 	}
 
 	public Users(long usersId, String username, String password, Date timeCreated, Date lastUpdated, Date lastLogin,
-			boolean isDeleted, Set<PatientInfo> patientInfos, Set<Room> rooms, Set<SensorThreshold> sensorThresholds) {
+			boolean isDeleted, Set<Room> rooms, Set<SensorThreshold> sensorThresholds) {
 		this.usersId = usersId;
 		this.username = username;
 		this.password = password;
@@ -54,7 +53,6 @@ public class Users implements java.io.Serializable {
 		this.lastUpdated = lastUpdated;
 		this.lastLogin = lastLogin;
 		this.isDeleted = isDeleted;
-		this.patientInfos = patientInfos;
 		this.rooms = rooms;
 		this.sensorThresholds = sensorThresholds;
 	}
@@ -125,15 +123,6 @@ public class Users implements java.io.Serializable {
 
 	public void setIsDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
-	public Set<PatientInfo> getPatientInfos() {
-		return this.patientInfos;
-	}
-
-	public void setPatientInfos(Set<PatientInfo> patientInfos) {
-		this.patientInfos = patientInfos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "users")

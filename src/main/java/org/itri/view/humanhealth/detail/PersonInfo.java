@@ -1,10 +1,20 @@
 package org.itri.view.humanhealth.detail;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,30 +83,31 @@ public class PersonInfo {
 		System.out.println("downloadClick");
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		String parentPath = Executions.getCurrent().getDesktop().getWebApp().getRealPath("/resources");
 		StringBuffer fileNameBuf = new StringBuffer();
-//		fileNameBuf.append("//home//alientest//");
-		fileNameBuf.append(".//");
 		fileNameBuf.append(item.getBedRoom());
-		fileNameBuf.append("_");
-		fileNameBuf.append(item.getName());
 		fileNameBuf.append("_");
 		fileNameBuf.append(dateFormat.format(new Date()));
 		fileNameBuf.append(".csv");
 
-		createCsvFile(fileNameBuf.toString(), item);
-		File file = new File(fileNameBuf.toString());
-		byte[] buffer = new byte[(int) file.length()];
-		FileInputStream fs = new FileInputStream(file);
-		fs.read(buffer);
-		fs.close();
-		ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-		AMedia amedia = new AMedia(fileNameBuf.toString(), "csv", "application/file", is);
-		Filedownload.save(amedia);
+		File file = writeCsvFile(parentPath + "/" + fileNameBuf.toString(), item);
+//		byte[] buffer = new byte[(int) file.length()];
+//		FileInputStream fs = new FileInputStream(file);
+//		fs.read(buffer);
+//		fs.close();
+//		ByteArrayInputStream is = new ByteArrayInputStream(buffer);
+//		System.out.println("fileNameBuf: " + fileNameBuf.toString());
+//		AMedia amedia = new AMedia(fileNameBuf.toString(), "csv", "application/octet-stream", is);
+//		Filedownload.save(amedia);
+
+		System.out.println("filePath: " + file.getPath());
+		System.out.println("download: " + "resources/" + fileNameBuf.toString());
+		Filedownload.save("resources/" + fileNameBuf.toString(), null);
+
 	}
 
-	private void createCsvFile(String filePath, PersonState item) throws IOException {
-//		File file = new File(filePath);
-//		StreamResult result = new StreamResult(file);
+	private File writeCsvFile(String filePath, PersonState item) throws IOException {
+		File file = new File(filePath);
 		try {
 			FileWriter outputfile = new FileWriter(filePath);
 			CSVWriter writer = new CSVWriter(outputfile);
@@ -105,7 +116,7 @@ public class PersonInfo {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		return file;
+		return file;
 	}
 
 	private List<String[]> getRawData(PersonState item) {

@@ -83,7 +83,8 @@ public class PersonInfo {
 		fileNameBuf.append(dateFormat.format(new Date()));
 		fileNameBuf.append(".csv");
 
-		File file = createCsvFile(fileNameBuf.toString(), item);
+		createCsvFile(fileNameBuf.toString(), item);
+		File file = new File(fileNameBuf.toString());
 		byte[] buffer = new byte[(int) file.length()];
 		FileInputStream fs = new FileInputStream(file);
 		fs.read(buffer);
@@ -93,18 +94,18 @@ public class PersonInfo {
 		Filedownload.save(amedia);
 	}
 
-	private File createCsvFile(String filePath, PersonState item) throws IOException {
-		File file = new File(filePath);
-		StreamResult result = new StreamResult(file);
+	private void createCsvFile(String filePath, PersonState item) throws IOException {
+//		File file = new File(filePath);
+//		StreamResult result = new StreamResult(file);
 		try {
-			FileWriter outputfile = new FileWriter(file);
+			FileWriter outputfile = new FileWriter(filePath);
 			CSVWriter writer = new CSVWriter(outputfile);
 			writer.writeAll(getRawData(item));
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return file;
+//		return file;
 	}
 
 	private List<String[]> getRawData(PersonState item) {

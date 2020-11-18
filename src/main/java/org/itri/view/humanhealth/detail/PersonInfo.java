@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.transform.stream.StreamResult;
+
 import org.itri.view.humanhealth.detail.Imp.PersonInfoHibernateImpl;
 import org.itri.view.humanhealth.hibernate.Combination;
 import org.itri.view.humanhealth.hibernate.HeartRhythmRecord;
@@ -72,6 +74,7 @@ public class PersonInfo {
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		StringBuffer fileNameBuf = new StringBuffer();
+//		fileNameBuf.append("//home//alientest//");
 		fileNameBuf.append(".//");
 		fileNameBuf.append(item.getBedRoom());
 		fileNameBuf.append("_");
@@ -79,19 +82,20 @@ public class PersonInfo {
 		fileNameBuf.append("_");
 		fileNameBuf.append(dateFormat.format(new Date()));
 		fileNameBuf.append(".csv");
-		String fileName = item.getBedRoom() + "_" + item.getName() + "_" + dateFormat.format(new Date()) + ".csv";
-		File file = createCsvFile(fileName, item);
+
+		File file = createCsvFile(fileNameBuf.toString(), item);
 		byte[] buffer = new byte[(int) file.length()];
 		FileInputStream fs = new FileInputStream(file);
 		fs.read(buffer);
 		fs.close();
 		ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-		AMedia amedia = new AMedia(fileName, "csv", "application/file", is);
+		AMedia amedia = new AMedia(fileNameBuf.toString(), "csv", "application/file", is);
 		Filedownload.save(amedia);
 	}
 
 	private File createCsvFile(String filePath, PersonState item) throws IOException {
 		File file = new File(filePath);
+		StreamResult result = new StreamResult(file);
 		try {
 			FileWriter outputfile = new FileWriter(file);
 			CSVWriter writer = new CSVWriter(outputfile);

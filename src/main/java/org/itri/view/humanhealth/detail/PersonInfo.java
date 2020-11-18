@@ -91,6 +91,8 @@ public class PersonInfo {
 		fileNameBuf.append(".csv");
 
 		File file = writeCsvFile(parentPath + "/" + fileNameBuf.toString(), item);
+
+		// For Window
 //		byte[] buffer = new byte[(int) file.length()];
 //		FileInputStream fs = new FileInputStream(file);
 //		fs.read(buffer);
@@ -100,8 +102,7 @@ public class PersonInfo {
 //		AMedia amedia = new AMedia(fileNameBuf.toString(), "csv", "application/octet-stream", is);
 //		Filedownload.save(amedia);
 
-		System.out.println("filePath: " + file.getPath());
-		System.out.println("download: " + "resources/" + fileNameBuf.toString());
+		// For ubuntu
 		Filedownload.save("resources/" + fileNameBuf.toString(), null);
 
 	}

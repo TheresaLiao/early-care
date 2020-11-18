@@ -71,6 +71,14 @@ public class PersonInfo {
 		System.out.println("downloadClick");
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		StringBuffer fileNameBuf = new StringBuffer();
+		fileNameBuf.append(".//");
+		fileNameBuf.append(item.getBedRoom());
+		fileNameBuf.append("_");
+		fileNameBuf.append(item.getName());
+		fileNameBuf.append("_");
+		fileNameBuf.append(dateFormat.format(new Date()));
+		fileNameBuf.append(".csv");
 		String fileName = item.getBedRoom() + "_" + item.getName() + "_" + dateFormat.format(new Date()) + ".csv";
 		File file = createCsvFile(fileName, item);
 		byte[] buffer = new byte[(int) file.length()];

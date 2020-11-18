@@ -15,6 +15,7 @@ import org.itri.view.humanhealth.hibernate.Sensor2healthType;
 import org.itri.view.humanhealth.personal.chart.dao.DateKeyValueSelectBox;
 import org.itri.view.humanhealth.personal.chart.dao.EwsSpecDao;
 import org.zkoss.bind.BindUtils;
+import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
@@ -37,6 +38,8 @@ public class ModifyFormView extends SelectorComposer<Component> {
 	private long oximeterDefaultSensorId = 0;
 	private long breathRateDefaultSensorId = 0;
 	private long bodyTempDefaultSensorId = 0;
+
+	private List<EwsSpecDao> ewsSpecDaoList = new ArrayList<EwsSpecDao>();
 
 	@Wire
 	private Window modifyWin;
@@ -71,11 +74,6 @@ public class ModifyFormView extends SelectorComposer<Component> {
 	@Wire("#selectboxMathOperator")
 	private Selectbox selectboxMathOperator;
 	private ListModelList<DateKeyValueSelectBox> mathOperatorModel = new ListModelList<DateKeyValueSelectBox>();
-//	@Wire("#textboxEwsPoint")
-//	private Textbox textboxEwsPoint;
-//	@Wire("#textboxEwsTime")
-//	private Textbox textboxEwsTime;
-
 	@Wire("#spinnerEwsPoint")
 	private Spinner spinnerEwsPoint;
 	@Wire("#spinnerEwsTime")
@@ -89,6 +87,7 @@ public class ModifyFormView extends SelectorComposer<Component> {
 	private static long bodyTempHealthTypeId = 3;
 	private static long breathHealthTypeId = 4;
 
+	@NotifyChange({ "ewsSpecDaoList" })
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
@@ -206,9 +205,8 @@ public class ModifyFormView extends SelectorComposer<Component> {
 	private void getEwsSpec() {
 		System.out.println("getEwsSpec");
 		Long temp = 4L;
-		List<EwsSpecDao> ewsSpecDaoList = new ArrayList<EwsSpecDao>();
+		ewsSpecDaoList = new ArrayList<EwsSpecDao>();
 		List<NewsWarningCondition> ewsSpecList = hqeModify.getNewsWarningConditionList(temp);
-		System.out.println("ewsSpecList size: " + ewsSpecList.size());
 		for (NewsWarningCondition ewsSpec : ewsSpecList) {
 			EwsSpecDao item = new EwsSpecDao();
 			item.setNewsWarningConditionId(ewsSpec.getNewsWarningConditionId());
@@ -218,13 +216,13 @@ public class ModifyFormView extends SelectorComposer<Component> {
 			item.setNewsMathOperator(ewsSpec.getNewsMathOperator());
 			item.setNewsWarningThreshold(ewsSpec.getNewsWarningThreshold());
 			item.setTimeBeforeWarning(ewsSpec.getTimeBeforeWarning());
-
 			ewsSpecDaoList.add(item);
 		}
 
-		ListModelList ewsModel = new ListModelList(ewsSpecDaoList);
-		ewsModel.addToSelection(ewsModel.get(0));
-		ewsGrid.setModel(ewsModel);
+//		ListModelList ewsModel = new ListModelList(ewsSpecDaoList);
+//		ewsModel.addToSelection(ewsModel.get(0));
+//		ewsGrid.setModel(ewsModel);
+
 	}
 
 	@Listen("onClick = #ewsAddbtn")
@@ -233,8 +231,6 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		if (spinnerEwsPoint.getValue() == null || spinnerEwsTime.getValue() == null) {
 			Messagebox.show("EWS 分數 /EWS 持續時間  的表格都須填值!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
 		} else {
-			ListModel<EwsSpecDao> ewsModel = ewsGrid.getModel();
-
 			int ewsPoint = spinnerEwsPoint.getValue();
 			int ewsTime = spinnerEwsTime.getValue();
 
@@ -248,8 +244,6 @@ public class ModifyFormView extends SelectorComposer<Component> {
 			NewsMathOperator newsMathOperator = new NewsMathOperator();
 			newsMathOperator.setNewsMathOperatorId(mathId);
 			item.setNewsMathOperator(newsMathOperator);
-
-			ewsGrid.getModel();
 		}
 	}
 
@@ -399,5 +393,9 @@ public class ModifyFormView extends SelectorComposer<Component> {
 			item.setSensor(sensor);
 		}
 		return item;
+	}
+
+	public List<EwsSpecDao> getEwsSpecDaoList() {
+		return ewsSpecDaoList;
 	}
 }

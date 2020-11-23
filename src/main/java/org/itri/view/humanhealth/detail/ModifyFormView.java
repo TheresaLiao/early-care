@@ -21,7 +21,6 @@ import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Grid;
-import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Selectbox;
@@ -31,7 +30,6 @@ import org.zkoss.zul.Window;
 
 public class ModifyFormView extends SelectorComposer<Component> {
 	private static final long serialVersionUID = 1L;
-
 	private ModifyDaoHibernateImpl hqeModify;
 
 	private long patientId = 0;
@@ -39,19 +37,17 @@ public class ModifyFormView extends SelectorComposer<Component> {
 	private long breathRateDefaultSensorId = 0;
 	private long bodyTempDefaultSensorId = 0;
 
-	private List<EwsSpecDao> ewsSpecDaoList = new ArrayList<EwsSpecDao>();
-
 	@Wire
 	private Window modifyWin;
+
+	@Wire("#textboxRoomId")
+	private Textbox textboxRoomId;
 
 	@Wire("#textboxPatientId")
 	private Textbox textboxPatientId;
 	@Wire("#selectboxPatient")
 	private Selectbox selectboxPatient;
 	private ListModelList<DateKeyValueSelectBox> patientModel = new ListModelList<DateKeyValueSelectBox>();
-
-	@Wire("#textboxRoomId")
-	private Textbox textboxRoomId;
 
 	@Wire("#textboxOximeter")
 	private Textbox textboxOximeter;
@@ -74,6 +70,7 @@ public class ModifyFormView extends SelectorComposer<Component> {
 	@Wire("#selectboxMathOperator")
 	private Selectbox selectboxMathOperator;
 	private ListModelList<DateKeyValueSelectBox> mathOperatorModel = new ListModelList<DateKeyValueSelectBox>();
+
 	@Wire("#spinnerEwsPoint")
 	private Spinner spinnerEwsPoint;
 	@Wire("#spinnerEwsTime")
@@ -81,6 +78,9 @@ public class ModifyFormView extends SelectorComposer<Component> {
 
 	@Wire("#ewsGrid")
 	private Grid ewsGrid;
+	private List<EwsSpecDao> ewsSpecDaoList = new ArrayList<EwsSpecDao>();
+	private ListModelList ewsModel = new ListModelList();
+	private boolean changEwsFlag = false;
 
 	private static long heartRateHealthTypeId = 1;
 	private static long oximeterHealthTypeId = 2;
@@ -95,22 +95,21 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		// Connect DB
 		hqeModify = new ModifyDaoHibernateImpl();
 
-		// Get parent pass through parameter
-		patientId = Long.parseLong(textboxPatientId.getValue());
-		oximeterDefaultSensorId = Long.parseLong(textboxOximeter.getValue());
-		breathRateDefaultSensorId = Long.parseLong(textboxBreathRate.getValue());
-		bodyTempDefaultSensorId = Long.parseLong(textboxBodyTemp.getValue());
-		getEwsSpec();
-
 		// Get selectBox List
-		getSelectBoxList();
+		getPatientList();
 		getSensorList();
-		getNewsMathOperatorList();
+		getMathList();
 
+		// Get parent pass through parameter
+		setPatientId(Long.parseLong(textboxPatientId.getValue()));
+		setOximeterDefaultSensorId(Long.parseLong(textboxOximeter.getValue()));
+		setBreathRateDefaultSensorId(Long.parseLong(textboxBreathRate.getValue()));
+		setBodyTempDefaultSensorId(Long.parseLong(textboxBodyTemp.getValue()));
+		getEwsSpecGrid();
 	}
 
 	// Get Patient List
-	private void getSelectBoxList() {
+	private void getPatientList() {
 		int selectedItemIndex = 0;
 		boolean flag = false;
 		List<DateKeyValueSelectBox> patientList = new ArrayList<DateKeyValueSelectBox>();
@@ -121,7 +120,7 @@ public class ModifyFormView extends SelectorComposer<Component> {
 			DateKeyValueSelectBox item = new DateKeyValueSelectBox(patient.getPatient().getPatientId(),
 					patient.getName());
 			patientList.add(item);
-			if (!flag && patientId == patient.getPatient().getPatientId()) {
+			if (!flag && getPatientId() == patient.getPatient().getPatientId()) {
 				selectedItemIndex = patientList.size() - 1;
 				flag = true;
 			}
@@ -153,18 +152,18 @@ public class ModifyFormView extends SelectorComposer<Component> {
 				long healthTypeId = sensorHealthType.getHealthType().getHealthTypeId();
 				if (oximeterHealthTypeId == healthTypeId) {
 					oximeterList.add(item);
-					if (oximeterIndex == 0 && oximeterDefaultSensorId == item.getValue()) {
+					if (oximeterIndex == 0 && getOximeterDefaultSensorId() == item.getValue()) {
 						oximeterIndex = oximeterList.size() - 1;
 					}
 				} else if (bodyTempHealthTypeId == healthTypeId) {
 					tempList.add(item);
-					if (bodyTempIndex == 0 && bodyTempDefaultSensorId == item.getValue()) {
+					if (bodyTempIndex == 0 && getBodyTempDefaultSensorId() == item.getValue()) {
 						bodyTempIndex = tempList.size() - 1;
 					}
 
 				} else if (breathHealthTypeId == healthTypeId) {
 					breathRateList.add(item);
-					if (breathRateIndex == 0 && breathRateDefaultSensorId == item.getValue()) {
+					if (breathRateIndex == 0 && getBreathRateDefaultSensorId() == item.getValue()) {
 						breathRateIndex = breathRateList.size() - 1;
 					}
 				}
@@ -185,8 +184,8 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		selectboxTemp.setModel(bodyTempModel);
 	}
 
-	// Get EWS Math Selectbox List
-	private void getNewsMathOperatorList() {
+	// Get EWS-Math List
+	private void getMathList() {
 		List<DateKeyValueSelectBox> mathOperatorList = new ArrayList<DateKeyValueSelectBox>();
 		List<NewsMathOperator> dataList = hqeModify.getNewsMathOperatorList();
 		for (NewsMathOperator mathOperator : dataList) {
@@ -201,28 +200,20 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		selectboxMathOperator.setModel(mathOperatorModel);
 	}
 
-	// Get default EWS Spec. Grids
-	private void getEwsSpec() {
-		System.out.println("getEwsSpec");
-		Long temp = 4L;
-		ewsSpecDaoList = new ArrayList<EwsSpecDao>();
-		List<NewsWarningCondition> ewsSpecList = hqeModify.getNewsWarningConditionList(temp);
+	// Get default EWS-Spec.-Grids
+	private void getEwsSpecGrid() {
+		List<EwsSpecDao> tempEwsSpecDaoList = new ArrayList<EwsSpecDao>();
+		List<NewsWarningCondition> ewsSpecList = hqeModify.getNewsWarningConditionList(getPatientId());
 		for (NewsWarningCondition ewsSpec : ewsSpecList) {
-			EwsSpecDao item = new EwsSpecDao();
-			item.setNewsWarningConditionId(ewsSpec.getNewsWarningConditionId());
-			item.setValue("EWS " + ewsSpec.getNewsMathOperator().getOperator() + " " + ewsSpec.getNewsWarningThreshold()
-					+ " / " + ewsSpec.getTimeBeforeWarning() + " sec");
-
-			item.setNewsMathOperator(ewsSpec.getNewsMathOperator());
-			item.setNewsWarningThreshold(ewsSpec.getNewsWarningThreshold());
-			item.setTimeBeforeWarning(ewsSpec.getTimeBeforeWarning());
-			ewsSpecDaoList.add(item);
+			EwsSpecDao item = new EwsSpecDao(ewsSpec);
+			item.setValue(setEwsValue(ewsSpec.getNewsMathOperator().getOperator(), ewsSpec.getNewsWarningThreshold(),
+					ewsSpec.getTimeBeforeWarning()));
+			tempEwsSpecDaoList.add(item);
 		}
-
-//		ListModelList ewsModel = new ListModelList(ewsSpecDaoList);
-//		ewsModel.addToSelection(ewsModel.get(0));
-//		ewsGrid.setModel(ewsModel);
-
+		setEwsSpecDaoList(tempEwsSpecDaoList);
+		System.out.println("ewsSpecDaoList size: " + getEwsSpecDaoList().size());
+		ewsModel = new ListModelList(getEwsSpecDaoList());
+		ewsGrid.setModel(ewsModel);
 	}
 
 	@Listen("onClick = #ewsAddbtn")
@@ -231,36 +222,57 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		if (spinnerEwsPoint.getValue() == null || spinnerEwsTime.getValue() == null) {
 			Messagebox.show("EWS 分數 /EWS 持續時間  的表格都須填值!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
 		} else {
+			setChangEwsFlag(true);
 			int ewsPoint = spinnerEwsPoint.getValue();
 			int ewsTime = spinnerEwsTime.getValue();
 
 			long mathId = mathOperatorModel.get(selectboxMathOperator.getSelectedIndex()).getValue();
 			String mathText = mathOperatorModel.get(selectboxMathOperator.getSelectedIndex()).getText();
+
+			List<EwsSpecDao> tempEwsSpecDaoList = getEwsSpecDaoList();
 			EwsSpecDao item = new EwsSpecDao();
-			item.setValue("EWS " + mathText + " " + ewsPoint + " / " + ewsTime + " min");
-			item.setNewsWarningConditionId(mathId);
-			item.setNewsWarningThreshold(ewsPoint);
-			item.setTimeBeforeWarning(ewsTime);
 			NewsMathOperator newsMathOperator = new NewsMathOperator();
 			newsMathOperator.setNewsMathOperatorId(mathId);
 			item.setNewsMathOperator(newsMathOperator);
+			item.setNewsWarningConditionId(mathId);
+			item.setNewsWarningThreshold(ewsPoint);
+			item.setTimeBeforeWarning(ewsTime * 60);
+			item.setValue(setEwsValue(mathText, ewsPoint, ewsTime * 60));
+			tempEwsSpecDaoList.add(item);
+
+			setEwsSpecDaoList(tempEwsSpecDaoList);
+			System.out.println("ewsSpecDaoList size: " + getEwsSpecDaoList().size());
+			ewsModel = new ListModelList(getEwsSpecDaoList());
+			ewsGrid.setModel(ewsModel);
 		}
 	}
 
-	@Listen("onClick = #closeButton")
-	public void close() {
-		modifyWin.detach();
+	private String setEwsValue(String mathText, int ewsPoint, int ewsTime) {
+		StringBuffer sbf = new StringBuffer();
+		sbf.append("EWS ");
+		sbf.append(mathText);
+		sbf.append(" ");
+		sbf.append(ewsPoint);
+		sbf.append(" / ");
+		sbf.append(ewsTime);
+		sbf.append(" sec");
+		return sbf.toString();
 	}
 
 	@Listen("onClick = #submitButton")
 	public void submit() {
+		// Collection modify data
+		Date now = new Date();
+		List<Combination> modifyCombinationList = new ArrayList<Combination>();
+		List<Combination> newCombinationList = new ArrayList<Combination>();
+
 		// Get Selected Item
 		DateKeyValueSelectBox patientItem = patientModel.getSelection().stream().findFirst().get();
 		DateKeyValueSelectBox oximeterItem = oximeterModel.getSelection().stream().findFirst().get();
 		DateKeyValueSelectBox breathRateItem = breathRateModel.getSelection().stream().findFirst().get();
 		DateKeyValueSelectBox bodyTempItem = bodyTempModel.getSelection().stream().findFirst().get();
 
-		// Check this room, if it's change
+		// Check this room, if it is changed.
 		boolean changePatientFlag = false;
 		boolean changeOximeterFlag = false;
 		boolean changeBodyTempFlag = false;
@@ -269,7 +281,7 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		Long roomId = Long.parseLong(roomIdStr);
 		List<Combination> exitCombinationList = hqeModify.getCombinationByRoomId(roomId);
 		for (Combination combination : exitCombinationList) {
-			if (patientId != patientItem.getValue()) {
+			if (getPatientId() != patientItem.getValue()) {
 				changePatientFlag = true;
 				break;
 			}
@@ -277,24 +289,20 @@ public class ModifyFormView extends SelectorComposer<Component> {
 				long healthTypeId = sensor2healthType.getHealthType().getHealthTypeId();
 
 				if ((heartRateHealthTypeId == healthTypeId || oximeterHealthTypeId == healthTypeId)
-						&& oximeterDefaultSensorId != oximeterItem.getValue()) {
+						&& getOximeterDefaultSensorId() != oximeterItem.getValue()) {
 					changeOximeterFlag = true;
 					break;
-				} else if (bodyTempHealthTypeId == healthTypeId && bodyTempDefaultSensorId != bodyTempItem.getValue()) {
+				} else if (bodyTempHealthTypeId == healthTypeId
+						&& getBodyTempDefaultSensorId() != bodyTempItem.getValue()) {
 					changeBodyTempFlag = true;
 					break;
 				} else if (breathHealthTypeId == healthTypeId
-						&& breathRateDefaultSensorId != breathRateItem.getValue()) {
+						&& getBreathRateDefaultSensorId() != breathRateItem.getValue()) {
 					changeBreathRateFlag = true;
 					break;
 				}
 			}
 		}
-
-		// Collection modify data
-		Date now = new Date();
-		List<Combination> modifyCombinationList = new ArrayList<Combination>();
-		List<Combination> newCombinationList = new ArrayList<Combination>();
 
 		// Patient Change
 		if (changePatientFlag) {
@@ -343,6 +351,12 @@ public class ModifyFormView extends SelectorComposer<Component> {
 
 						changeBreathRateFlag = false;
 					}
+				}
+			}
+		} else if (isChangEwsFlag()) {
+			for (EwsSpecDao deleteEwsSpec : getEwsSpecDaoList()) {
+				if (deleteEwsSpec.getNewsWarningThreshold() != 0) {
+
 				}
 			}
 		}
@@ -395,7 +409,56 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		return item;
 	}
 
+	@Listen("onClick = #closeButton")
+	public void close() {
+		modifyWin.detach();
+	}
+
 	public List<EwsSpecDao> getEwsSpecDaoList() {
 		return ewsSpecDaoList;
+	}
+
+	public long getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(long patientId) {
+		this.patientId = patientId;
+	}
+
+	public long getOximeterDefaultSensorId() {
+		return oximeterDefaultSensorId;
+	}
+
+	public void setOximeterDefaultSensorId(long oximeterDefaultSensorId) {
+		this.oximeterDefaultSensorId = oximeterDefaultSensorId;
+	}
+
+	public long getBreathRateDefaultSensorId() {
+		return breathRateDefaultSensorId;
+	}
+
+	public void setBreathRateDefaultSensorId(long breathRateDefaultSensorId) {
+		this.breathRateDefaultSensorId = breathRateDefaultSensorId;
+	}
+
+	public long getBodyTempDefaultSensorId() {
+		return bodyTempDefaultSensorId;
+	}
+
+	public void setBodyTempDefaultSensorId(long bodyTempDefaultSensorId) {
+		this.bodyTempDefaultSensorId = bodyTempDefaultSensorId;
+	}
+
+	public void setEwsSpecDaoList(List<EwsSpecDao> ewsSpecDaoList) {
+		this.ewsSpecDaoList = ewsSpecDaoList;
+	}
+
+	public boolean isChangEwsFlag() {
+		return changEwsFlag;
+	}
+
+	public void setChangEwsFlag(boolean changEwsFlag) {
+		this.changEwsFlag = changEwsFlag;
 	}
 }

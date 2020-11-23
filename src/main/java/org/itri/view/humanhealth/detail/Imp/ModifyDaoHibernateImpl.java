@@ -19,6 +19,30 @@ import org.itri.view.util.HibernateUtil;
 
 public class ModifyDaoHibernateImpl {
 
+	public void deleteNewsWarningConditionByPatientId(Long patientId) {
+		System.out.println("deleteNewsWarningConditionByPatientId");
+		List<NewsWarningCondition> resp = new ArrayList<NewsWarningCondition>();
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			Criteria criteria = session.createCriteria(NewsWarningCondition.class);
+			criteria.add(Restrictions.eq("patient.patientId", patientId));
+			resp = criteria.list();
+			tx.commit();
+
+			for (NewsWarningCondition item : resp) {
+				session.delete(item);
+			}
+			session.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			session.close();
+		}
+	}
+
 	public List<NewsMathOperator> getNewsMathOperatorList() {
 		System.out.println("getNewsMathOperatorList");
 		Session session = HibernateUtil.getSessionFactory().openSession();

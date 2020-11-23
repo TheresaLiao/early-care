@@ -40,7 +40,7 @@
 									style="padding: 0px; z-window-content"
 									apply="org.itri.view.humanhealth.detail.HeartBeatView">
 									<charts id="chart" type="spline"
-										height="100" width="310" style="padding: 0px;" title="" />
+										height="145" width="700" style="padding: 0px;" title="" />
 									<textbox id="textboxId"
 										visible="false" value="${each.heartRateThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
@@ -66,18 +66,16 @@
 													class="text-right px-3" width="60px" pack="center"
 													align="end" height="92px">
 													<label id="hrLabel"
-														class=" h6">
-														/min
-													</label>
+														class="h2" value="/min" />
 													<label
-														id="heightLabel" class=" h6"
+														id="heightLabel" class=" h1"
 														value="${each.heartRateThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h6" value="${each.heartRateThreshold.specLow}" />
+														class=" h1" value="${each.heartRateThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
-												<label class="h2 px-2" />
+												<label class="h1 px-2" />
 												<textbox visible="false"
 													value="${each.heartRateThreshold.sensorId}" />
 											</hbox>
@@ -92,7 +90,7 @@
 								<window style="padding: 0px;"
 									apply="org.itri.view.humanhealth.detail.OximeterView">
 									<charts id="chart" type="spline"
-										title="" height="100" width="310" />
+										title="" height="145" width="700" />
 									<textbox id="textboxId"
 										visible="false" value="${each.oximeterThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
@@ -115,21 +113,19 @@
 												pack="center" align="center">
 												<!-- left spec -->
 												<vbox
-													class="text-right px-3" width="60px" pack="center"
+													class="text-right px-3" width="110px" pack="center"
 													align="end" height="92px">
 													<label id="hrLabel"
-														class=" h6">
-														SpO2 %
-													</label>
+														class="h3" value="SpO2 %" />
 													<label
-														id="heightLabel" class=" h6"
+														id="heightLabel" class=" h1"
 														value="${each.oximeterThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h6" value="${each.oximeterThreshold.specLow}" />
+														class=" h1" value="${each.oximeterThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
-												<label class="h2 px-2" />
+												<label class="h1 px-2" />
 												<textbox visible="false"
 													value="${each.oximeterThreshold.sensorId}" />
 											</hbox>
@@ -145,7 +141,7 @@
 								<window style="padding: 0px;"
 									apply="org.itri.view.humanhealth.detail.BreathRateView">
 									<charts id="chart" type="spline"
-										title="" height="100" width="310" />
+										title="" height="145" width="700" />
 									<textbox id="textboxId"
 										visible="false" value="${each.breathRateThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
@@ -171,18 +167,16 @@
 													class="text-right px-3" width="60px" pack="center"
 													align="end" height="92px">
 													<label id="hrLabel"
-														class=" h6">
-														/min
-													</label>
+														class="h2" value="/min" />
 													<label
-														id="heightLabel" class=" h6"
+														id="heightLabel" class="h1"
 														value="${each.breathRateThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h6" value="${each.breathRateThreshold.specLow}" />
+														class=" h1" value="${each.breathRateThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
-												<label class="h2 px-2" />
+												<label class="h1 px-2" />
 												<textbox visible="false"
 													value="${each.breathRateThreshold.sensorId}" />
 											</hbox>
@@ -198,7 +192,7 @@
 								<window style="padding: 0px;"
 									apply="org.itri.view.humanhealth.detail.TemperatureView">
 									<charts id="chart" type="spline"
-										title="" height="100" width="310" />
+										title="" height="145" width="700" />
 									<textbox id="textboxId"
 										visible="false" value="${each.bodyTempThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
@@ -221,22 +215,20 @@
 												pack="center" align="center">
 												<!-- left spec -->
 												<vbox
-													class="text-right px-3" width="60px" pack="center"
+													class="text-right px-3" width="90px" pack="center"
 													align="end" height="92px">
 													<label
-														id="tempLabel" class=" h6">
-														T °C
-													</label>
+														id="tempLabel" class="h2" value="T °C" />
 													<label
-														id="heightLabel" class=" h6"
+														id="heightLabel" class="h1"
 														value="${each.bodyTempThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h6" value="${each.bodyTempThreshold.specLow}" />
+														class=" h1" value="${each.bodyTempThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
 												<label
-													class="h2 px-2">
+													class="h1 px-2">
 												</label>
 												<textbox visible="false"
 													value="${each.bodyTempThreshold.sensorId}" />
@@ -256,7 +248,7 @@
 									style="padding: 0px; z-window-content"
 									apply="org.itri.view.humanhealth.detail.EwsView">
 									<charts id="chart" type="spline"
-										title="" height="100" width="310" />
+										title="" height="145" width="700" />
 									<textbox id="textboxId"
 										visible="false" value="${each.patientId}" />
 									<textbox id="textboxHisDate"
@@ -280,15 +272,13 @@
 													class="text-right px-3" width="60px" pack="center"
 													align="end" height="92px">
 													<label
-														id="tempLabel" class=" h6">
-														EWS
-													</label>
+														id="tempLabel" class="h2" value="EWS" />
 													<label
-														id="heightLabel" class=" h6" value="${each.ewsLow}" />
+														id="heightLabel" class="h1" value="${each.ewsLow}" />
 												</vbox>
 
 												<!-- right value -->
-												<label class="h2 px-2" />
+												<label class="h1 px-2" />
 												<textbox visible="false"
 													value="${each.patientId}" />
 											</hbox>

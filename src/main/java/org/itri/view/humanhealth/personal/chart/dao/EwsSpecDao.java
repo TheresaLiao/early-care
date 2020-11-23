@@ -1,14 +1,24 @@
 package org.itri.view.humanhealth.personal.chart.dao;
 
-import org.itri.view.humanhealth.hibernate.NewsMathOperator;
+import org.itri.view.humanhealth.hibernate.NewsWarningCondition;
 
-public class EwsSpecDao {
+public class EwsSpecDao extends NewsWarningCondition {
 
-	private long newsWarningConditionId;
-	private NewsMathOperator newsMathOperator;
-	private int newsWarningThreshold;
-	private int timeBeforeWarning;
 	private String value;
+
+	public EwsSpecDao() {
+	}
+
+	public EwsSpecDao(NewsWarningCondition item) {
+		setCountBeforeWarning(item.getCountBeforeWarning());
+		setCurrentCount(item.getCurrentCount());
+		setIsDeleted(item.isIsDeleted());
+		setNewsMathOperator(item.getNewsMathOperator());
+		setNewsWarningConditionId(item.getNewsWarningConditionId());
+		setNewsWarningThreshold(item.getNewsWarningThreshold());
+		setPatient(item.getPatient());
+		setTimeBeforeWarning(item.getTimeBeforeWarning());
+	}
 
 	public String getValue() {
 		return value;
@@ -18,35 +28,4 @@ public class EwsSpecDao {
 		this.value = value;
 	}
 
-	public long getNewsWarningConditionId() {
-		return newsWarningConditionId;
-	}
-
-	public void setNewsWarningConditionId(long newsWarningConditionId) {
-		this.newsWarningConditionId = newsWarningConditionId;
-	}
-
-	public NewsMathOperator getNewsMathOperator() {
-		return newsMathOperator;
-	}
-
-	public void setNewsMathOperator(NewsMathOperator newsMathOperator) {
-		this.newsMathOperator = newsMathOperator;
-	}
-
-	public int getNewsWarningThreshold() {
-		return newsWarningThreshold;
-	}
-
-	public void setNewsWarningThreshold(int newsWarningThreshold) {
-		this.newsWarningThreshold = newsWarningThreshold;
-	}
-
-	public int getTimeBeforeWarning() {
-		return timeBeforeWarning;
-	}
-
-	public void setTimeBeforeWarning(int timeBeforeWarning) {
-		this.timeBeforeWarning = timeBeforeWarning;
-	}
 }

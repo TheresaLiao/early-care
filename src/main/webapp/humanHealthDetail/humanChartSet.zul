@@ -13,7 +13,7 @@
 				<n:div sclass="row rounded col-lg-4" vflex="1">
 
 					<style>
-						.titleStyle { font-size: 20px; text-align:
+						.titleStyle { font-size: 30px; text-align:
 						center;}
 					</style>
 					<panel title="${each.bedRoom} ${each.name}"
@@ -40,7 +40,7 @@
 									style="padding: 0px; z-window-content"
 									apply="org.itri.view.humanhealth.detail.HeartBeatView">
 									<charts id="chart" type="spline"
-										height="145" width="700" style="padding: 0px;" title="" />
+										height="95" width="410" style="padding: 0px;" title="" />
 									<textbox id="textboxId"
 										visible="false" value="${each.heartRateThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
@@ -53,7 +53,7 @@
 
 								<!-- Current Status -->
 								<n:div sclass="col p-1"
-									style="min-width: 150px">
+									style="min-width: 130px">
 									<window style="padding: 0px"
 										apply="org.itri.view.humanhealth.detail.HeartBeatCurrentView">
 										<timer id="timer" delay="100"
@@ -66,16 +66,16 @@
 													class="text-right px-3" width="60px" pack="center"
 													align="end" height="92px">
 													<label id="hrLabel"
-														class="h2" value="/min" />
+														class="h6" value="/min" />
 													<label
-														id="heightLabel" class=" h1"
+														id="heightLabel" class="h7"
 														value="${each.heartRateThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h1" value="${each.heartRateThreshold.specLow}" />
+														class=" h7" value="${each.heartRateThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
-												<label class="h1 px-2" />
+												<label class="h5 px-2" />
 												<textbox visible="false"
 													value="${each.heartRateThreshold.sensorId}" />
 											</hbox>
@@ -90,7 +90,7 @@
 								<window style="padding: 0px;"
 									apply="org.itri.view.humanhealth.detail.OximeterView">
 									<charts id="chart" type="spline"
-										title="" height="145" width="700" />
+										title="" height="95" width="410" />
 									<textbox id="textboxId"
 										visible="false" value="${each.oximeterThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
@@ -103,7 +103,7 @@
 
 								<!-- Current Status -->
 								<n:div sclass="col p-1"
-									style="min-width: 150px">
+									style="min-width: 130px">
 									<window style="padding: 0px;"
 										apply="org.itri.view.humanhealth.detail.OximeterCurrentView">
 										<timer id="timer" delay="100"
@@ -116,16 +116,16 @@
 													class="text-right px-3" width="110px" pack="center"
 													align="end" height="92px">
 													<label id="hrLabel"
-														class="h3" value="SpO2 %" />
+														class="h6" value="SpO2 %" />
 													<label
-														id="heightLabel" class=" h1"
+														id="heightLabel" class=" h7"
 														value="${each.oximeterThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h1" value="${each.oximeterThreshold.specLow}" />
+														class=" h7" value="${each.oximeterThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
-												<label class="h1 px-2" />
+												<label class="h5 px-2" />
 												<textbox visible="false"
 													value="${each.oximeterThreshold.sensorId}" />
 											</hbox>
@@ -141,7 +141,7 @@
 								<window style="padding: 0px;"
 									apply="org.itri.view.humanhealth.detail.BreathRateView">
 									<charts id="chart" type="spline"
-										title="" height="145" width="700" />
+										title="" height="95" width="410" />
 									<textbox id="textboxId"
 										visible="false" value="${each.breathRateThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
@@ -154,7 +154,7 @@
 
 								<!-- Current Status -->
 								<n:div sclass="col p-1"
-									style="min-width: 150px">
+									style="min-width: 130px">
 									<window style="padding: 0px;"
 										apply="org.itri.view.humanhealth.detail.BreathRateCurrentView">
 										<timer id="timer" delay="1000"
@@ -167,16 +167,16 @@
 													class="text-right px-3" width="60px" pack="center"
 													align="end" height="92px">
 													<label id="hrLabel"
-														class="h2" value="/min" />
+														class="h6" value="/min" />
 													<label
-														id="heightLabel" class="h1"
+														id="heightLabel" class="h7"
 														value="${each.breathRateThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h1" value="${each.breathRateThreshold.specLow}" />
+														class=" h7" value="${each.breathRateThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
-												<label class="h1 px-2" />
+												<label class="h5 px-2" />
 												<textbox visible="false"
 													value="${each.breathRateThreshold.sensorId}" />
 											</hbox>
@@ -192,7 +192,7 @@
 								<window style="padding: 0px;"
 									apply="org.itri.view.humanhealth.detail.TemperatureView">
 									<charts id="chart" type="spline"
-										title="" height="145" width="700" />
+										title="" height="95" width="410" />
 									<textbox id="textboxId"
 										visible="false" value="${each.bodyTempThreshold.sensorId}" />
 									<textbox id="textboxSpecH"
@@ -205,7 +205,7 @@
 
 								<!-- Current Status -->
 								<n:div sclass="col p-1"
-									style="min-width: 150px">
+									style="min-width: 130px">
 									<window style="padding: 0px;"
 										apply="org.itri.view.humanhealth.detail.TemperatureCurrentView">
 										<timer id="timer" delay="100"
@@ -218,17 +218,17 @@
 													class="text-right px-3" width="90px" pack="center"
 													align="end" height="92px">
 													<label
-														id="tempLabel" class="h2" value="T °C" />
+														id="tempLabel" class="h6" value="T °C" />
 													<label
-														id="heightLabel" class="h1"
+														id="heightLabel" class="h7"
 														value="${each.bodyTempThreshold.specHigh}" />
 													<label id="lowLabel"
-														class=" h1" value="${each.bodyTempThreshold.specLow}" />
+														class=" h7" value="${each.bodyTempThreshold.specLow}" />
 												</vbox>
 
 												<!-- right value -->
 												<label
-													class="h1 px-2">
+													class="h5 px-2">
 												</label>
 												<textbox visible="false"
 													value="${each.bodyTempThreshold.sensorId}" />
@@ -248,7 +248,7 @@
 									style="padding: 0px; z-window-content"
 									apply="org.itri.view.humanhealth.detail.EwsView">
 									<charts id="chart" type="spline"
-										title="" height="145" width="700" />
+										title="" height="90" width="410" />
 									<textbox id="textboxId"
 										visible="false" value="${each.patientId}" />
 									<textbox id="textboxHisDate"
@@ -259,7 +259,7 @@
 
 								<!-- Current Status -->
 								<n:div sclass="col p-1"
-									style="min-width: 150px">
+									style="min-width: 130px">
 									<window style="padding: 0px"
 										apply="org.itri.view.humanhealth.detail.EwsCurrentView">
 										<timer id="timer" delay="100"
@@ -272,13 +272,13 @@
 													class="text-right px-3" width="60px" pack="center"
 													align="end" height="92px">
 													<label
-														id="tempLabel" class="h2" value="EWS" />
+														id="tempLabel" class="h7" value="EWS" />
 													<label
-														id="heightLabel" class="h1" value="${each.ewsLow}" />
+														id="heightLabel" class="h7" value="${each.ewsLow}" />
 												</vbox>
 
 												<!-- right value -->
-												<label class="h1 px-2" />
+												<label class="h5 px-2" />
 												<textbox visible="false"
 													value="${each.patientId}" />
 											</hbox>

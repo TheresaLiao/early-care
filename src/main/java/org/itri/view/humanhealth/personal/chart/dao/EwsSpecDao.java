@@ -9,6 +9,19 @@ public class EwsSpecDao extends NewsWarningCondition {
 	public EwsSpecDao() {
 	}
 
+	public NewsWarningCondition getNewsWarningCondition() {
+		NewsWarningCondition resp = new NewsWarningCondition();
+		resp.setCountBeforeWarning(this.getCountBeforeWarning());
+		resp.setCurrentCount(this.getCurrentCount());
+		resp.setIsDeleted(this.isIsDeleted());
+		resp.setNewsMathOperator(this.getNewsMathOperator());
+		resp.setNewsWarningConditionId(this.getNewsWarningConditionId());
+		resp.setNewsWarningThreshold(this.getNewsWarningThreshold());
+		resp.setPatient(this.getPatient());
+		resp.setTimeBeforeWarning(this.getTimeBeforeWarning());
+		return resp;
+	}
+
 	public EwsSpecDao(NewsWarningCondition item) {
 		setCountBeforeWarning(item.getCountBeforeWarning());
 		setCurrentCount(item.getCurrentCount());

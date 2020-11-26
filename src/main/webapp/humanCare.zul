@@ -15,8 +15,8 @@
 			<apply templateURI="clock.zul" />
 
 			<!-- Main Page -->
-			<n:div sclass="col-12 container-fluid">
-				<div width="99%" style="padding-left: 15px">
+			<n:div sclass="col-12">
+				<div width="100%" style="padding-left: 15px">
 					<apply
 						templateURI="@load(vm.navigationModel.contentUrl)" />
 				</div>

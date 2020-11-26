@@ -20,7 +20,7 @@ import org.zkoss.zul.Window;
 
 public class HeartBeatView extends SelectorComposer<Window> {
 
-	private long sensortId = 0;
+	private long sensorId = 0;
 	private double specHigh = 0;
 	private double specLow = 0;
 
@@ -90,7 +90,7 @@ public class HeartBeatView extends SelectorComposer<Window> {
 		chart.getXAxis().setLineColor(BLACK_HASH);
 		chart.setAlignTicks(false);
 
-		List<Point> histData = getHeartRhythmRecordList(getSensortId());
+		List<Point> histData = getHeartRhythmRecordList(getSensorId());
 		if (histData.size() != 0) {
 			// init point
 			for (Point p : histData) {
@@ -104,7 +104,7 @@ public class HeartBeatView extends SelectorComposer<Window> {
 		} else {
 			System.out.println("no history data in heart beat");
 			for (int i = -19; i <= 0; i++) {
-				Point nowPoint = getRtHeartRhythmRecordList(getSensortId());
+				Point nowPoint = getRtHeartRhythmRecordList(getSensorId());
 				nowPoint.setX(new Date().getTime() + i * 1000);
 				nowPoint.setColor(RED_HASH);
 				series.addPoint(nowPoint);
@@ -120,7 +120,7 @@ public class HeartBeatView extends SelectorComposer<Window> {
 	@Listen("onTimer = #timer")
 	public void updateData() {
 		setSensortId(textboxId.getValue());
-		Point nowPoint = getRtHeartRhythmRecordList(getSensortId());
+		Point nowPoint = getRtHeartRhythmRecordList(getSensorId());
 		chart.getSeries(0).addPoint(nowPoint, true, true, true);
 
 //		Point hPoint = getHighPoint(nowPoint.getX());
@@ -156,13 +156,17 @@ public class HeartBeatView extends SelectorComposer<Window> {
 		return new Point(new Date().getTime(), 0);
 	}
 
-	public long getSensortId() {
-		return sensortId;
+	public long getSensorId() {
+		return sensorId;
 	}
 
-	public void setSensortId(String sensortIdStr) {
-		sensortId = Long.parseLong(sensortIdStr);
-		this.sensortId = sensortId;
+	public void setSensortId(String sensorIdStr) {
+		if (sensorIdStr.isEmpty()) {
+			sensorId = 0;
+		} else {
+			sensorId = Long.parseLong(sensorIdStr);
+		}
+		this.sensorId = sensorId;
 	}
 
 	private Point getHighPoint(Number xValue) {
@@ -184,7 +188,11 @@ public class HeartBeatView extends SelectorComposer<Window> {
 	}
 
 	public void setSpecHigh(String specHighStr) {
-		specHigh = Double.valueOf(specHighStr);
+		if (specHighStr.isEmpty()) {
+			specHigh = 0;
+		} else {
+			specHigh = Double.valueOf(specHighStr);
+		}
 		this.specHigh = specHigh;
 	}
 
@@ -193,7 +201,11 @@ public class HeartBeatView extends SelectorComposer<Window> {
 	}
 
 	public void setSpecLow(String specLowStr) {
-		specLow = Double.valueOf(specLowStr);
+		if (specLowStr.isEmpty()) {
+			specLow = 0;
+		} else {
+			specLow = Double.valueOf(specLowStr);
+		}
 		this.specLow = specLow;
 	}
 

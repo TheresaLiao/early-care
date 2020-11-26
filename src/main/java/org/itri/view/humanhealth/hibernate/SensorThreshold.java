@@ -23,55 +23,48 @@ public class SensorThreshold implements java.io.Serializable {
 	private Users users;
 	private HealthType healthType;
 	private Sensor sensor;
-	private String warningLow;
-	private String warningHigh;
 	private String criticalLow;
 	private String criticalHigh;
 	private String durationTimes;
 	private String dataName;
 	private Date timeCreated;
 	private Date lastUpdated;
-	private boolean isDeleted;
 
 	public SensorThreshold() {
 	}
 
 	public SensorThreshold(Users users, HealthType healthType, Sensor sensor,
-			String durationTimes, Date timeCreated, boolean isDeleted) {
+			String durationTimes, Date timeCreated) {
 		this.users = users;
 		this.healthType = healthType;
 		this.sensor = sensor;
 		this.durationTimes = durationTimes;
 		this.timeCreated = timeCreated;
-		this.isDeleted = isDeleted;
 	}
+	
 	public SensorThreshold(long sensorThresholdId, Users users, HealthType healthType, Sensor sensor,
-			String durationTimes, Date timeCreated, boolean isDeleted) {
+			String durationTimes, Date timeCreated) {
 		this.sensorThresholdId = sensorThresholdId;
 		this.users = users;
 		this.healthType = healthType;
 		this.sensor = sensor;
 		this.durationTimes = durationTimes;
 		this.timeCreated = timeCreated;
-		this.isDeleted = isDeleted;
 	}
 
-	public SensorThreshold(long sensorThresholdId, Users users, HealthType healthType, Sensor sensor, String warningLow,
-			String warningHigh, String criticalLow, String criticalHigh, String durationTimes, String dataName,
-			Date timeCreated, Date lastUpdated, boolean isDeleted) {
+	public SensorThreshold(long sensorThresholdId, Users users, HealthType healthType, Sensor sensor, 
+			String criticalLow, String criticalHigh, String durationTimes, String dataName,
+			Date timeCreated, Date lastUpdated) {
 		this.sensorThresholdId = sensorThresholdId;
 		this.users = users;
 		this.healthType = healthType;
 		this.sensor = sensor;
-		this.warningLow = warningLow;
-		this.warningHigh = warningHigh;
 		this.criticalLow = criticalLow;
 		this.criticalHigh = criticalHigh;
 		this.durationTimes = durationTimes;
 		this.dataName = dataName;
 		this.timeCreated = timeCreated;
 		this.lastUpdated = lastUpdated;
-		this.isDeleted = isDeleted;
 	}
 
 	@SequenceGenerator(name="sensor_threshold_seq", sequenceName="sensor_threshold_sensor_threshold_id_seq")	@GeneratedValue(generator="sensor_threshold_seq")	@Id
@@ -113,24 +106,6 @@ public class SensorThreshold implements java.io.Serializable {
 
 	public void setSensor(Sensor sensor) {
 		this.sensor = sensor;
-	}
-
-	@Column(name = "warning_low", length = 256)
-	public String getWarningLow() {
-		return this.warningLow;
-	}
-
-	public void setWarningLow(String warningLow) {
-		this.warningLow = warningLow;
-	}
-
-	@Column(name = "warning_high", length = 256)
-	public String getWarningHigh() {
-		return this.warningHigh;
-	}
-
-	public void setWarningHigh(String warningHigh) {
-		this.warningHigh = warningHigh;
 	}
 
 	@Column(name = "critical_low", length = 256)
@@ -188,14 +163,4 @@ public class SensorThreshold implements java.io.Serializable {
 	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}
-
-	@Column(name = "is_deleted", nullable = false)
-	public boolean isIsDeleted() {
-		return this.isDeleted;
-	}
-
-	public void setIsDeleted(boolean isDeleted) {
-		this.isDeleted = isDeleted;
-	}
-
 }

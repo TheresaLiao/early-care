@@ -107,8 +107,7 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 		if (rowData != null) {
 			return rowData.getBreathData();
 		}
-		System.out.println("sensorId :" + sensorId + " can't find.");
-		return "NULL";
+		return "0.0";
 	}
 
 	public long getSensortId() {
@@ -116,9 +115,13 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 	}
 
 	public void setSensortId(String sensortIdStr) {
-		sensortId = Long.parseLong(sensortIdStr);
+		if (sensortIdStr.isEmpty()) {
+			sensortId = 0;
+		} else {
+			sensortId = Long.parseLong(sensortIdStr);
+		}
 		this.sensortId = sensortId;
-		
+
 	}
 
 	public Double getBreathRateHigh() {
@@ -126,7 +129,10 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 	}
 
 	public void setBreathRateHigh(String breathRateHighStr) {
-		Double breathRateHigh = Double.valueOf(breathRateHighStr);
+		Double breathRateHigh = new Double(0.0);
+		if (!breathRateHighStr.isEmpty()) {
+			breathRateHigh = Double.valueOf(breathRateHighStr);
+		}
 		this.breathRateHigh = breathRateHigh;
 	}
 
@@ -135,7 +141,10 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 	}
 
 	public void setBreathRateLow(String breathRateLowStr) {
-		Double breathRateLow = Double.valueOf(breathRateLowStr);
+		Double breathRateLow = new Double(0.0);
+		if (!breathRateLowStr.isEmpty()) {
+			breathRateLow = Double.valueOf(breathRateLowStr);
+		}
 		this.breathRateLow = breathRateLow;
 	}
 

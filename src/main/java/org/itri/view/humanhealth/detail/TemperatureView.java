@@ -158,7 +158,11 @@ public class TemperatureView extends SelectorComposer<Component> {
 	}
 
 	public void setSensortId(String sensortIdStr) {
-		sensortId = Long.parseLong(sensortIdStr);
+		if (sensortIdStr.isEmpty()) {
+			sensortId = 0;
+		} else {
+			sensortId = Long.parseLong(sensortIdStr);
+		}
 		this.sensortId = sensortId;
 	}
 
@@ -181,7 +185,11 @@ public class TemperatureView extends SelectorComposer<Component> {
 	}
 
 	public void setSpecHigh(String specHighStr) {
-		specHigh = Double.valueOf(specHighStr);
+		if (specHighStr.isEmpty()) {
+			specHigh = 0;
+		} else {
+			specHigh = Double.valueOf(specHighStr);
+		}
 		this.specHigh = specHigh;
 	}
 
@@ -190,7 +198,11 @@ public class TemperatureView extends SelectorComposer<Component> {
 	}
 
 	public void setSpecLow(String specLowStr) {
-		specLow = Double.valueOf(specLowStr);
+		if (specLowStr.isEmpty()) {
+			specLow = 0;
+		} else {
+			specLow = Double.valueOf(specLowStr);
+		}
 		this.specLow = specLow;
 	}
 

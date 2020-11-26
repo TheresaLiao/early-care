@@ -33,8 +33,11 @@ public class BreathRateViewDaoHibernateImpl {
 			criteria.add(Restrictions.eq("sensor.sensorId", sensorId));
 
 			resp = criteria.list();
+			if (resp.size() == 0) {
+				tx.commit();
+				return null;
+			}
 			item = resp.get(0);
-			tx.commit();
 			return item;
 		} catch (Exception e) {
 			e.printStackTrace();

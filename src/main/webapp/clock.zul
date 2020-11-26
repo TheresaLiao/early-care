@@ -1,5 +1,5 @@
 <zk xmlns:n="native" xmlns="http://www.zkoss.org/2005/zul">
-	<hbox align="center" pack="end" sclass="box col-11">
+	<hbox align="center" pack="end" sclass="box col-12">
 		<label id="clock" sclass="time text-white h6 " width="100%" />
 		<timer id="timer" delay="1000" repeats="true">
 			<attribute name="onTimer">

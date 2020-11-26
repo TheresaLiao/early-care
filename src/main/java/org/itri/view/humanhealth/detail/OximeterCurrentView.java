@@ -107,8 +107,7 @@ public class OximeterCurrentView extends SelectorComposer<Window> {
 		if (rowData != null) {
 			return rowData.getOximeterData();
 		}
-		System.out.println("sensortId :" + sensortId + " can't find.");
-		return "NULL";
+		return "0.0";
 	}
 
 	public long getSensortId() {
@@ -116,7 +115,11 @@ public class OximeterCurrentView extends SelectorComposer<Window> {
 	}
 
 	public void setSensortId(String sensortIdStr) {
-		sensortId = Long.parseLong(sensortIdStr);
+		if (sensortIdStr.isEmpty()) {
+			sensortId = 0;
+		} else {
+			sensortId = Long.parseLong(sensortIdStr);
+		}
 		this.sensortId = sensortId;
 	}
 
@@ -125,7 +128,10 @@ public class OximeterCurrentView extends SelectorComposer<Window> {
 	}
 
 	public void setOximeterHigh(String oximeterHighStr) {
-		Double oximeterHigh = Double.valueOf(oximeterHighStr);
+		Double oximeterHigh = new Double(0.0);
+		if (!oximeterHighStr.isEmpty()) {
+			oximeterHigh = Double.valueOf(oximeterHighStr);
+		}
 		this.oximeterHigh = oximeterHigh;
 	}
 
@@ -134,7 +140,10 @@ public class OximeterCurrentView extends SelectorComposer<Window> {
 	}
 
 	public void setOximeterLow(String oximeterLowStr) {
-		Double oximeterLow = Double.valueOf(oximeterLowStr);
+		Double oximeterLow = new Double(0.0);
+		if (!oximeterLowStr.isEmpty()) {
+			oximeterLow = Double.valueOf(oximeterLowStr);
+		}
 		this.oximeterLow = oximeterLow;
 	}
 

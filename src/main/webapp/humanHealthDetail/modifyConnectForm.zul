@@ -31,22 +31,23 @@
 			<row>
 				心跳區間/min
 				<hbox>
-					<textbox width="80px"
+					<textbox width="80px" id="textboxHeartRateLow"
 						value="${arg.orderItems.heartRateThreshold.specLow}" />
 					~
-					<textbox width="80px"
+					<textbox width="80px" id="textboxHeartRateHight"
 						value="${arg.orderItems.heartRateThreshold.specHigh}" />
 				</hbox>
 			</row>
 			<row>
 				血氧濃度Spo2%
 				<hbox>
-					<textbox width="80px"
+					<textbox width="80px" id="textboxOximeterLow"
 						value="${arg.orderItems.oximeterThreshold.specLow}" />
 					~
-					<textbox width="80px"
+					<textbox width="80px" id="textboxOximeterHight"
 						value="${arg.orderItems.oximeterThreshold.specHigh}" />
-					<textbox id="textboxOximeter" visible="false"
+					<textbox id="textboxOximeterSensorId"
+						visible="false"
 						value="${arg.orderItems.oximeterThreshold.sensorId}" />
 				</hbox>
 				<selectbox id="selectboxOximeter">
@@ -58,13 +59,13 @@
 			<row>
 				呼吸區間/min
 				<hbox>
-					<textbox width="80px"
+					<textbox width="80px" id="textboxBreathRateLow"
 						value="${arg.orderItems.breathRateThreshold.specLow}" />
 					~
-
-					<textbox width="80px"
+					<textbox width="80px" id="textboxBreathRateHight"
 						value="${arg.orderItems.breathRateThreshold.specHigh}" />
-					<textbox id="textboxBreathRate" visible="false"
+					<textbox id="textboxBreathRateSensorId"
+						visible="false"
 						value="${arg.orderItems.breathRateThreshold.sensorId}" />
 				</hbox>
 				<selectbox id="selectboxBreathRate">
@@ -76,12 +77,13 @@
 			<row>
 				體溫區間T°C
 				<hbox>
-					<textbox width="80px"
+					<textbox width="80px" id="textboxBodyTempLow"
 						value="${arg.orderItems.bodyTempThreshold.specLow}" />
 					~
-					<textbox width="80px"
+					<textbox width="80px" id="textboxBodyTempHight"
 						value="${arg.orderItems.bodyTempThreshold.specHigh}" />
-					<textbox id="textboxBodyTemp" visible="false"
+					<textbox id="textboxBodyTempSensorId"
+						visible="false"
 						value="${arg.orderItems.bodyTempThreshold.sensorId}" />
 				</hbox>
 				<selectbox id="selectboxTemp">
@@ -125,7 +127,8 @@
 							<row>
 								<label value="${each.value}" />
 								<button
-									image="resources/image/icon-edit-w.png" />
+									image="resources/image/icon-edit-w.png"
+									onClick="@command('removeEwsSpec', ewsSpecDao=each)" />
 							</row>
 						</template>
 					</rows>

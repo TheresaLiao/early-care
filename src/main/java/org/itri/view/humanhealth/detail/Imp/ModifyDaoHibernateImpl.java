@@ -15,9 +15,67 @@ import org.itri.view.humanhealth.hibernate.NewsMathOperator;
 import org.itri.view.humanhealth.hibernate.NewsWarningCondition;
 import org.itri.view.humanhealth.hibernate.PatientInfo;
 import org.itri.view.humanhealth.hibernate.Sensor;
+import org.itri.view.humanhealth.hibernate.SensorThreshold;
 import org.itri.view.util.HibernateUtil;
 
 public class ModifyDaoHibernateImpl {
+
+	public void deleteSensorThreshold(Long sensorId, Long healthTypeId) {
+		System.out.println("deleteSensorThreshold");
+		List<SensorThreshold> resp = new ArrayList<SensorThreshold>();
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			Criteria criteria = session.createCriteria(SensorThreshold.class);
+			criteria.add(Restrictions.eq("sensor.sensorId", sensorId));
+			criteria.add(Restrictions.eq("healthType.healthTypeId", healthTypeId));
+			resp = criteria.list();
+
+			for (SensorThreshold item : resp) {
+				session.delete(item);
+				session.flush();
+			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			session.close();
+		}
+	}
+
+	public void createSensorThreshold(SensorThreshold item) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			session.saveOrUpdate(item);
+			tx.commit();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			session.close();
+		}
+	}
+
+	public void createNewsWarningCondition(NewsWarningCondition item) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			session.save(item);
+			tx.commit();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			session.close();
+		}
+	}
 
 	public void deleteNewsWarningConditionByPatientId(Long patientId) {
 		System.out.println("deleteNewsWarningConditionByPatientId");
@@ -29,12 +87,12 @@ public class ModifyDaoHibernateImpl {
 			Criteria criteria = session.createCriteria(NewsWarningCondition.class);
 			criteria.add(Restrictions.eq("patient.patientId", patientId));
 			resp = criteria.list();
-			tx.commit();
 
 			for (NewsWarningCondition item : resp) {
 				session.delete(item);
+				session.flush();
 			}
-			session.flush();
+			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			tx.rollback();

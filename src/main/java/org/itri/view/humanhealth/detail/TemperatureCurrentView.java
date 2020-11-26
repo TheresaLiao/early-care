@@ -106,8 +106,7 @@ public class TemperatureCurrentView extends SelectorComposer<Window> {
 		if (rowData != null) {
 			return rowData.getBodyTempData();
 		}
-		System.out.println("sensortId :" + sensortId + " can't find.");
-		return "NULL";
+		return "0.0";
 	}
 
 	private String getBatteryPersent(String batteryLevel) {
@@ -132,7 +131,11 @@ public class TemperatureCurrentView extends SelectorComposer<Window> {
 	}
 
 	public void setSensortId(String sensortIdStr) {
-		sensortId = Long.parseLong(sensortIdStr);
+		if (sensortIdStr.isEmpty()) {
+			sensortId = 0;
+		} else {
+			sensortId = Long.parseLong(sensortIdStr);
+		}
 		this.sensortId = sensortId;
 	}
 
@@ -141,7 +144,10 @@ public class TemperatureCurrentView extends SelectorComposer<Window> {
 	}
 
 	public void setBodyTempHigh(String bodyTempHighStr) {
-		Double bodyTempHigh = Double.valueOf(bodyTempHighStr);
+		Double bodyTempHigh = new Double(0.0);
+		if (!bodyTempHighStr.isEmpty()) {
+			bodyTempHigh = Double.valueOf(bodyTempHighStr);
+		}
 		this.bodyTempHigh = bodyTempHigh;
 	}
 
@@ -150,7 +156,10 @@ public class TemperatureCurrentView extends SelectorComposer<Window> {
 	}
 
 	public void setBodyTempLow(String bodyTempLowStr) {
-		Double bodyTempLow = Double.valueOf(bodyTempLowStr);
+		Double bodyTempLow = new Double(0.0);
+		if (!bodyTempLowStr.isEmpty()) {
+			bodyTempLow = Double.valueOf(bodyTempLowStr);
+		}
 		this.bodyTempLow = bodyTempLow;
 	}
 

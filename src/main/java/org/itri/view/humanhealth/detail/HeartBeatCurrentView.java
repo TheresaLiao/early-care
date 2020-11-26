@@ -79,8 +79,8 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 	private void hightLightLabel(String dataStr) {
 
 		double data = Double.valueOf(dataStr);
-		Double heightData = getHeartRateHigh();
-		Double lowData = getHeartRateLow();
+		double heightData = getHeartRateHigh();
+		double lowData = getHeartRateLow();
 
 		if (Double.compare(data, heightData) > 0 || Double.compare(data, lowData) < 0) {
 
@@ -108,7 +108,7 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 		if (rowData != null) {
 			return rowData.getHeartRateData();
 		}
-		return "NULL";
+		return "0.0";
 	}
 
 	public long getSensortId() {
@@ -116,7 +116,11 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 	}
 
 	public void setSensortId(String sensortIdStr) {
-		sensortId = Long.parseLong(sensortIdStr);
+		if (sensortIdStr.isEmpty()) {
+			sensortId = 0;
+		} else {
+			sensortId = Long.parseLong(sensortIdStr);
+		}
 		this.sensortId = sensortId;
 	}
 
@@ -125,16 +129,22 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 	}
 
 	public void setHeartRateHigh(String heartRateHighStr) {
-		Double heartRateHigh = Double.valueOf(heartRateHighStr);
+		Double heartRateHigh = new Double(0.0);
+		if (!heartRateHighStr.isEmpty()) {
+			heartRateHigh = Double.valueOf(heartRateHighStr);
+		}
 		this.heartRateHigh = heartRateHigh;
 	}
 
-	public Double getHeartRateLow() {
+	public double getHeartRateLow() {
 		return heartRateLow;
 	}
 
 	public void setHeartRateLow(String heartRateLowStr) {
-		Double heartRateLow = Double.valueOf(heartRateLowStr);
+		Double heartRateLow = new Double(0.0);
+		if (!heartRateLowStr.isEmpty()) {
+			heartRateLow = Double.valueOf(heartRateLowStr);
+		}
 		this.heartRateLow = heartRateLow;
 	}
 }

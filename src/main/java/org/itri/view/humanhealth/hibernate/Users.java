@@ -27,7 +27,6 @@ public class Users implements java.io.Serializable {
 	private Date lastUpdated;
 	private Date lastLogin;
 	private boolean isDeleted;
-	private Set<Room> rooms = new HashSet<Room>(0);
 	private Set<SensorThreshold> sensorThresholds = new HashSet<SensorThreshold>(0);
 
 	public Users() {
@@ -45,7 +44,7 @@ public class Users implements java.io.Serializable {
 	}
 
 	public Users(long usersId, String username, String password, Date timeCreated, Date lastUpdated, Date lastLogin,
-			boolean isDeleted, Set<Room> rooms, Set<SensorThreshold> sensorThresholds) {
+			boolean isDeleted, Set<SensorThreshold> sensorThresholds) {
 		this.usersId = usersId;
 		this.username = username;
 		this.password = password;
@@ -53,7 +52,6 @@ public class Users implements java.io.Serializable {
 		this.lastUpdated = lastUpdated;
 		this.lastLogin = lastLogin;
 		this.isDeleted = isDeleted;
-		this.rooms = rooms;
 		this.sensorThresholds = sensorThresholds;
 	}
 
@@ -123,15 +121,6 @@ public class Users implements java.io.Serializable {
 
 	public void setIsDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
-	public Set<Room> getRooms() {
-		return this.rooms;
-	}
-
-	public void setRooms(Set<Room> rooms) {
-		this.rooms = rooms;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "users")

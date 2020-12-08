@@ -1,11 +1,13 @@
 package org.itri.view.humanhealth.detail;
 
 import org.itri.view.humanhealth.hibernate.RtHeartRhythmRecord;
+import org.itri.view.humanhealth.hibernate.Sensor;
 import org.itri.view.humanhealth.personal.chart.Imp.BreathRateViewDaoHibernateImpl;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Hbox;
+import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Vbox;
@@ -34,6 +36,9 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 	@Wire("window > bs-row > hbox > label")
 	private Label breathRateLabel;
 
+	@Wire("window > bs-row > #devStatHbox > vbox > #connectImg")
+	private Image connectImg;
+
 	private String GRAY_HASH = "#2F2F2F";
 	private String BLACK_HASH = "#000000";
 //	private String YELLOW_HASH = "#F8FF70";
@@ -43,6 +48,12 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 	private Double breathRateLow;
 
 	private long sensortId = 0;
+
+	private String deviceConnectionErrorNum = "3";
+	private String CONNECT_OK = "resources/image/icon2-connect-b-ok.png";
+	private String CONNECT_NO = "resources/image/icon2-connect-b-no.png";
+
+	BreathRateViewDaoHibernateImpl hqe = new BreathRateViewDaoHibernateImpl();
 
 	@Override
 	public void doAfterCompose(Window comp) throws Exception {
@@ -61,6 +72,7 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 
 		// Listen spec
 		hightLightLabel(dataStr);
+		getSensorStatus(getSensortId());
 	}
 
 	@Listen("onTimer = #timer")
@@ -72,6 +84,7 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 		breathRateLabel.setValue(dataStr);
 
 		hightLightLabel(dataStr);
+		getSensorStatus(getSensortId());
 
 	}
 
@@ -101,13 +114,20 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 	}
 
 	private String getBreathRateValueById(long sensorId) {
-
-		BreathRateViewDaoHibernateImpl hqe = new BreathRateViewDaoHibernateImpl();
 		RtHeartRhythmRecord rowData = hqe.getRtHeartRhythmRecord(sensorId);
 		if (rowData != null) {
 			return rowData.getBreathData();
 		}
 		return "0.0";
+	}
+
+	private void getSensorStatus(long sensorId) {
+		Sensor sensor = hqe.getSensorBySensorId(sensortId);
+		if (sensor == null) {
+			connectImg.setSrc(CONNECT_NO);
+		} else {
+			connectImg.setSrc(getConnectStatusIcon(sensor.getSensorDeviceStatus()));
+		}
 	}
 
 	public long getSensortId() {
@@ -148,4 +168,11 @@ public class BreathRateCurrentView extends SelectorComposer<Window> {
 		this.breathRateLow = breathRateLow;
 	}
 
+	private String getConnectStatusIcon(String deviceStatus) {
+
+		if (deviceStatus.equals(deviceConnectionErrorNum)) {
+			return CONNECT_OK;
+		}
+		return CONNECT_NO;
+	}
 }

@@ -11,14 +11,17 @@ public class NavDao {
 
 	static public void initMenus() {
 
-		Menu menuHuamanChartSet = new Menu("嚴重病人", "z-icon-home");
-		menuHuamanChartSet.setPath(NavigationMdel.DASHBOARD_HUMANCHARTSET_ZUL);
-		menuList.add(menuHuamanChartSet);
-
 		Menu menuCreatePatient = new Menu("新增病人", "z-icon-home");
 		menuCreatePatient.setPath(NavigationMdel.DASHBOARD_CREATEPATIENT_ZUL);
 		menuList.add(menuCreatePatient);
 
+		Menu menuCreateRoom = new Menu("新增病床", "z-icon-home");
+		menuCreateRoom.setPath(NavigationMdel.DASHBOARD_CREATEROOM_ZUL);
+		menuList.add(menuCreateRoom);
+
+		Menu menuHuamanChartSet = new Menu("嚴重病床", "z-icon-home");
+		menuHuamanChartSet.setPath(NavigationMdel.DASHBOARD_HUMANCHARTSET_ZUL);
+		menuList.add(menuHuamanChartSet);
 	}
 
 	static public List<Menu> queryMenu() {

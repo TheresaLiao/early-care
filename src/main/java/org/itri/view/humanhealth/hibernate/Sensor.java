@@ -23,6 +23,7 @@ public class Sensor implements java.io.Serializable {
 	private SensorType sensorType;
 	private String deviceId;
 	private String sensorName;
+	private String sensorNameChinese;
 	private String sensorDeviceStatus;
 	private Set<SensorThreshold> sensorThresholds = new HashSet<SensorThreshold>(0);
 	private Set<Combination> combinations = new HashSet<Combination>(0);
@@ -50,14 +51,17 @@ public class Sensor implements java.io.Serializable {
 		this.sensorName = sensorName;
 	}
 	
-	public Sensor(long sensorId, SensorType sensorType, String deviceId, String sensorName) {
+	public Sensor(long sensorId, SensorType sensorType, String deviceId, String sensorName, 
+			String sensorNameChinese) {
 		this.sensorId = sensorId;
 		this.sensorType = sensorType;
 		this.deviceId = deviceId;
 		this.sensorName = sensorName;
+		this.sensorNameChinese = sensorNameChinese;
 	}
 
-	public Sensor(long sensorId, SensorType sensorType, String deviceId, String sensorName, String sensorDeviceStatus,
+	public Sensor(long sensorId, SensorType sensorType, String deviceId, String sensorName, String sensorNameChinese,
+			String sensorDeviceStatus,
 			Set<SensorThreshold> sensorThresholds, Set<Combination> combinations,
 			Set<RtHeartRhythmRecord> rtHeartRhythmRecords, Set<PmFiveRecord> pmFiveRecords,
 			Set<RtMattressRecord> rtMattressRecords, Set<Gateway2sensor> gateway2sensors,
@@ -70,6 +74,7 @@ public class Sensor implements java.io.Serializable {
 		this.sensorType = sensorType;
 		this.deviceId = deviceId;
 		this.sensorName = sensorName;
+		this.sensorNameChinese = sensorNameChinese;
 		this.sensorDeviceStatus = sensorDeviceStatus;
 		this.sensorThresholds = sensorThresholds;
 		this.combinations = combinations;
@@ -126,6 +131,15 @@ public class Sensor implements java.io.Serializable {
 
 	public void setSensorName(String sensorName) {
 		this.sensorName = sensorName;
+	}
+	
+	@Column(name = "sensor_name_chinese", length = 256)
+	public String getSensorNameChinese() {
+		return this.sensorNameChinese;
+	}
+
+	public void setSensorNameChinese(String sensorNameChinese) {
+		this.sensorNameChinese = sensorNameChinese;
 	}
 
 	@Column(name = "sensor_device_status", length = 16)

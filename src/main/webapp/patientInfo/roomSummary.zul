@@ -1,0 +1,31 @@
+<zk xmlns:n="native" xmlns:z="zul">
+	<nodom
+		viewModel="@id('vm') @init('org.itri.view.patientInfo.roomSummary')">
+
+		<button label="Create" onClick="@command('createClick')" />
+		<button label="refresh"
+			onClick="@global-command('refreshRoomSummary')" />
+		<!-- All Room Info -->
+		<grid height="700px" model="@bind(vm.roomSummary)">
+			<columns>
+				<column label="Room ID" width="200px" />
+				<column label="分頁" width="200px" />
+				<column label="病床名稱" width="200px" />
+				<column label="病人名稱" />
+				<column label="修改" width="100px" />
+			</columns>
+			<template name="model">
+				<row>
+					<label value="@load(each.roomId)" />
+					<label value="@load(each.roomGroup)" />
+					<label value="@load(each.roomNum)" />
+					<label value="@load(each.username)" />
+					<button image="resources/image/icon-edit-w.png"
+						onClick="@command('modifyRoom', roomDao=each)" />
+				</row>
+			</template>
+
+		</grid>
+
+	</nodom>
+</zk>

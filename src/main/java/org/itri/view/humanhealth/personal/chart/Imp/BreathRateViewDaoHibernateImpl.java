@@ -17,7 +17,7 @@ import org.itri.view.humanhealth.hibernate.RtHeartRhythmRecord;
 import org.itri.view.humanhealth.personal.chart.dao.SensorIdTimeDao;
 import org.itri.view.util.HibernateUtil;
 
-public class BreathRateViewDaoHibernateImpl {
+public class BreathRateViewDaoHibernateImpl extends CommonViewDaoHibernateImpl {
 
 	private int minusThreeMinit = -3;
 
@@ -38,14 +38,14 @@ public class BreathRateViewDaoHibernateImpl {
 				return null;
 			}
 			item = resp.get(0);
-			return item;
+			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			tx.rollback();
 		} finally {
 			session.close();
 		}
-		return null;
+		return item;
 	}
 
 	public List<HeartRhythmRecord> getHeartRhythmThreeMinRecordList(long sensorId) {

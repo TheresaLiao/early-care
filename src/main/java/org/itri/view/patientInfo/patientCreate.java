@@ -9,6 +9,7 @@ import org.itri.view.humanhealth.hibernate.Patient;
 import org.itri.view.humanhealth.hibernate.PatientInfo;
 import org.itri.view.humanhealth.personal.chart.dao.DateKeyValueSelectBox;
 import org.itri.view.patientInfo.Imp.patientSummaryHibernateImpl;
+import org.zkoss.bind.BindUtils;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
@@ -102,6 +103,7 @@ public class patientCreate extends SelectorComposer<Component> {
 
 			createPatientWin.detach();
 		}
+		BindUtils.postGlobalCommand(null, null, "refreshPatientSummary", null);
 	}
 
 	@Listen("onClick = #closeButton")

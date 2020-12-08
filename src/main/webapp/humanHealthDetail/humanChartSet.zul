@@ -5,14 +5,13 @@
 	<nodom
 		viewModel="@id('vm')@init('org.itri.view.humanhealth.detail.PersonInfo')">
 		<button label="refresh"
-			onClick="@global-command('refreshPatientInfo')" />
+			onClick="@global-command('refresHumanChartSet')" />
 		<vlayout children="@bind(vm.personStateList)" spacing="0px">
 			<template name="children">
 
 				<!-- one person -->
 				<n:div
-					sclass="row rounded col-sm-4 col-md-4 col-lg-4">
-
+					sclass="person-info rounded col-sm-4 col-md-4 col-lg-4">
 					<style>
 						.titleStyle { font-size: 30px; text-align:
 						center;}
@@ -32,6 +31,7 @@
 						<panelchildren>
 							<!-- HeartBeat -->
 							<bs-row class="row py-0">
+
 								<!-- Chart -->
 								<style>
 									.z-window-content { padding:0px;}
@@ -80,6 +80,15 @@
 												<textbox visible="false"
 													value="${each.heartRateThreshold.sensorId}" />
 											</hbox>
+
+											<!-- Device Status -->
+											<hbox id="devStatHbox"
+												class="col-2">
+												<vbox align="end">
+													<image
+														id="connectImg" />
+												</vbox>
+											</hbox>
 										</bs-row>
 									</window>
 								</n:div>
@@ -87,6 +96,7 @@
 
 							<!-- oximeter -->
 							<bs-row class="row py-0">
+
 								<!-- Chart -->
 								<window style="padding: 0px;"
 									apply="org.itri.view.humanhealth.detail.OximeterView">
@@ -129,6 +139,15 @@
 												<label class="h4 px-2" />
 												<textbox visible="false"
 													value="${each.oximeterThreshold.sensorId}" />
+											</hbox>
+
+											<!-- Device Status -->
+											<hbox id="devStatHbox"
+												class="col-2">
+												<vbox align="end">
+													<image
+														id="connectImg" />
+												</vbox>
 											</hbox>
 										</bs-row>
 
@@ -180,6 +199,15 @@
 												<label class="h4 px-2" />
 												<textbox visible="false"
 													value="${each.breathRateThreshold.sensorId}" />
+											</hbox>
+
+											<!-- Device Status -->
+											<hbox id="devStatHbox"
+												class="col-2">
+												<vbox align="end">
+													<image
+														id="connectImg" />
+												</vbox>
 											</hbox>
 										</bs-row>
 
@@ -233,6 +261,15 @@
 												</label>
 												<textbox visible="false"
 													value="${each.bodyTempThreshold.sensorId}" />
+											</hbox>
+
+											<!-- Device Status -->
+											<hbox id="devStatHbox"
+												class="col-2">
+												<vbox align="end">
+													<image
+														id="connectImg" />
+												</vbox>
 											</hbox>
 										</bs-row>
 									</window>

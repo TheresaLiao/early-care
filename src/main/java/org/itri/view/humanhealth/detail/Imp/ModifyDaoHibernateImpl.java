@@ -121,7 +121,7 @@ public class ModifyDaoHibernateImpl {
 		return resp;
 	}
 
-	public void updateCombination(Combination item) {
+	public void updateCombinationEndTime(Combination item) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try {
@@ -168,8 +168,11 @@ public class ModifyDaoHibernateImpl {
 			combinationList = criteria.list();
 			for (Combination item : combinationList) {
 				Hibernate.initialize(item.getRoom());
-				Hibernate.initialize(item.getSensor());
-				Hibernate.initialize(item.getSensor().getSensor2healthTypes());
+				if (item.getSensor() != null) {
+					Hibernate.initialize(item.getSensor());
+					Hibernate.initialize(item.getSensor().getSensor2healthTypes());
+				}
+
 				if (item.getRoom().getRoomId() == roomId) {
 					resp.add(item);
 				}

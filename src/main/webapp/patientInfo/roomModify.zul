@@ -1,0 +1,44 @@
+<window id="modifyRoomWin" title="修改" border="normal" width="300px"
+	position="center,center" action="show: slideDown;hide: slideUp"
+	closable="true" onClose="self.detach(); event.stopPropagation();"
+	apply="org.itri.view.patientInfo.roomModify">
+
+	<label id="labelRoomId" value="${arg.orderItems.roomId}"
+		visible="false" />
+	<label id="labelRoomGroup" value="${arg.orderItems.roomGroup}"
+		visible="false" />
+	<label id="labelPatientId" value="${arg.orderItems.patientId}"
+		visible="false" />
+
+	<grid>
+		<columns>
+			<column label="" width="70px" />
+			<column label="" hflex="1" />
+		</columns>
+		<rows>
+			<row>
+				病床名稱
+				<textbox id="textboxRoomName"
+					value="${arg.orderItems.roomNum}" />
+			</row>
+			<row>
+				病人
+				<selectbox id="selectboxPatient">
+					<template name="model">
+						<label value="${each.text}" />
+					</template>
+				</selectbox>
+			</row>
+			<row>
+				分頁
+				<selectbox id="selectboxRoom">
+					<template name="model">
+						<label value="${each.text}" />
+					</template>
+				</selectbox>
+			</row>
+		</rows>
+	</grid>
+	<button id="submitButton" label="新增" />
+	<button id="closeButton" label="取消" />
+</window>

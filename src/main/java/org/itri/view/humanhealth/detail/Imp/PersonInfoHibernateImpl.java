@@ -15,12 +15,38 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.itri.view.humanhealth.hibernate.Combination;
 import org.itri.view.humanhealth.hibernate.Room;
+import org.itri.view.humanhealth.hibernate.RoomGroup;
 import org.itri.view.humanhealth.hibernate.SensorThreshold;
 import org.itri.view.util.HibernateUtil;
 
 public class PersonInfoHibernateImpl {
 
 	private int minusOneHour = -1;
+
+	public List<Long> getRoomIdListByRoomGroup(int roomGroup) {
+		List<Long> resp = new ArrayList<Long>();
+
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			Criteria criteria = session.createCriteria(RoomGroup.class);
+			criteria.add(Restrictions.eq("roomGroup", roomGroup));
+
+			List<RoomGroup> temp = criteria.list();
+			for (RoomGroup item : temp) {
+				Hibernate.initialize(item.getRoom());
+				resp.add(item.getRoom().getRoomId());
+			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			session.close();
+		}
+		return resp;
+	}
 
 	public List<SensorThreshold> getSensorThresholdByIdList(List<Long> sensorIdList) {
 		Session session = HibernateUtil.getSessionFactory().openSession();

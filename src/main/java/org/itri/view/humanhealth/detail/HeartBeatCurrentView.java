@@ -1,6 +1,7 @@
 package org.itri.view.humanhealth.detail;
 
 import org.zkoss.zul.Hbox;
+import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
@@ -9,6 +10,7 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 import org.itri.view.humanhealth.hibernate.RtOximeterRecord;
+import org.itri.view.humanhealth.hibernate.Sensor;
 import org.itri.view.humanhealth.personal.chart.Imp.OximeterViewDaoHibernateImpl;
 
 public class HeartBeatCurrentView extends SelectorComposer<Window> {
@@ -34,6 +36,9 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 	@Wire("window > bs-row > hbox > label")
 	private Label heartBeatLabel;
 
+	@Wire("window > bs-row > #devStatHbox > vbox > #connectImg")
+	private Image connectImg;
+
 	private String GRAY_HASH = "#2F2F2F";
 //	private String GREEN_HASH = "#5CE498";
 	private String BLACK_HASH = "#000000";
@@ -43,6 +48,12 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 	private Double heartRateLow;
 
 	private long sensortId = 0;
+
+	private String deviceConnectionErrorNum = "3";
+	private String CONNECT_OK = "resources/image/icon2-connect-b-ok.png";
+	private String CONNECT_NO = "resources/image/icon2-connect-b-no.png";
+
+	OximeterViewDaoHibernateImpl hqe = new OximeterViewDaoHibernateImpl();
 
 	@Override
 	public void doAfterCompose(Window comp) throws Exception {
@@ -61,6 +72,7 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 
 		// Listen spec
 		hightLightLabel(dataStr);
+		getSensorStatus(getSensortId());
 	}
 
 	@Listen("onTimer = #timer")
@@ -73,6 +85,7 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 
 		// Listen spec
 		hightLightLabel(dataStr);
+		getSensorStatus(getSensortId());
 	}
 
 	// Set style for Hight Light Label
@@ -103,12 +116,20 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 	}
 
 	private String getHeartBeatValueById(long sensorId) {
-		OximeterViewDaoHibernateImpl hqe = new OximeterViewDaoHibernateImpl();
 		RtOximeterRecord rowData = hqe.getRtOximeterRecord(sensorId);
 		if (rowData != null) {
 			return rowData.getHeartRateData();
 		}
 		return "0.0";
+	}
+
+	private void getSensorStatus(long sensorId) {
+		Sensor sensor = hqe.getSensorBySensorId(sensortId);
+		if (sensor == null) {
+			connectImg.setSrc(CONNECT_NO);
+		} else {
+			connectImg.setSrc(getConnectStatusIcon(sensor.getSensorDeviceStatus()));
+		}
 	}
 
 	public long getSensortId() {
@@ -147,4 +168,13 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 		}
 		this.heartRateLow = heartRateLow;
 	}
+
+	private String getConnectStatusIcon(String deviceStatus) {
+
+		if (deviceStatus.equals(deviceConnectionErrorNum)) {
+			return CONNECT_OK;
+		}
+		return CONNECT_NO;
+	}
+
 }

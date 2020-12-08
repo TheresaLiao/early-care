@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.itri.view.humanhealth.detail.Imp.PersonInfoHibernateImpl;
 import org.itri.view.humanhealth.hibernate.PatientInfo;
 import org.itri.view.patientInfo.Imp.patientSummaryHibernateImpl;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
@@ -15,6 +17,7 @@ import org.zkoss.zul.Window;
 
 public class patientSummary {
 
+	private static String modifyPage = "/patientInfo/patientCreate.zul";
 	List<PatientInfo> patientSummary = new ArrayList<PatientInfo>();
 	private patientSummaryHibernateImpl hqe;
 
@@ -26,25 +29,24 @@ public class patientSummary {
 	}
 
 	private void queryStates() {
+		System.out.println("queryStates");
 		patientSummary = hqe.getPatientList();
 	}
 
 	@Command
 	public void createClick() {
 		Map<String, Object> arguments = new HashMap<String, Object>();
-		String template = "/patientInfo/patientCreate.zul";
-		Window window = (Window) Executions.createComponents(template, null, null);
+		Window window = (Window) Executions.createComponents(modifyPage, null, null);
 		window.doModal();
 	}
 
 	@NotifyChange({ "patientSummary" })
-	@Command
-	public void refreshClick() {
+	@GlobalCommand
+	public void refreshPatientSummary() {
 		queryStates();
 	}
 
 	public List<PatientInfo> getPatientSummary() {
 		return patientSummary;
 	}
-
 }

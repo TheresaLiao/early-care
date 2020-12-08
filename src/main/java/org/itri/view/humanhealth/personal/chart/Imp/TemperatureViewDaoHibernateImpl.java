@@ -17,7 +17,7 @@ import org.itri.view.humanhealth.hibernate.TempPadRecord;
 import org.itri.view.humanhealth.personal.chart.dao.SensorIdTimeDao;
 import org.itri.view.util.HibernateUtil;
 
-public class TemperatureViewDaoHibernateImpl {
+public class TemperatureViewDaoHibernateImpl extends CommonViewDaoHibernateImpl {
 
 	private int minusThreeMinit = -3;
 
@@ -32,13 +32,13 @@ public class TemperatureViewDaoHibernateImpl {
 			Criteria criteria = session.createCriteria(RtTempPadRecord.class);
 			criteria.add(Restrictions.eq("sensor.sensorId", sensorId));
 
-			resp = criteria.list();
-			if (resp.size() == 0) {
+			List<RtTempPadRecord> temp = criteria.list();
+			if (temp.size() == 0) {
 				tx.commit();
 				return null;
 			}
-			item = resp.get(0);
-			return item;
+			item = temp.get(0);
+			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			tx.rollback();

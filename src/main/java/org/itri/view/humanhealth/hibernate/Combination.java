@@ -85,7 +85,7 @@ public class Combination implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sensor_id", nullable = false)
+	@JoinColumn(name = "sensor_id")
 	public Sensor getSensor() {
 		return this.sensor;
 	}

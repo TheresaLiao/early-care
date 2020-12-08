@@ -44,13 +44,15 @@ public class ModifyFormView extends SelectorComposer<Component> {
 	@Wire("#textboxRoomId")
 	private Textbox textboxRoomId;
 
-	private long orgPatientId = 0;
-	private long newPatientId = 0;
+	// Patient component
+	private long patientIdOrg = 0;
+	private long patientIdNew = 0;
 	@Wire("#textboxPatientId")
 	private Textbox textboxPatientId;
 	@Wire("#selectboxPatient")
 	private Selectbox selectboxPatient;
 	private ListModelList<DateKeyValueSelectBox> patientModel = new ListModelList<DateKeyValueSelectBox>();
+	private boolean changePatientFlag = false;
 
 	// HeartRate component
 	@Wire("#textboxHeartRateLow")
@@ -63,39 +65,42 @@ public class ModifyFormView extends SelectorComposer<Component> {
 	private Textbox textboxOximeterLow;
 	@Wire("#textboxOximeterHight")
 	private Textbox textboxOximeterHight;
-	private long oximeterOrgSensorId = 0;
+	private long oximeterSensorIdOrg = 0;
 	private long oximeterSensorId = 0;
 	@Wire("#textboxOximeterSensorId")
 	private Textbox textboxOximeterSensorId;
 	@Wire("#selectboxOximeter")
 	private Selectbox selectboxOximeter;
 	private ListModelList<DateKeyValueSelectBox> oximeterModel = new ListModelList<DateKeyValueSelectBox>();
+	private boolean changeOximeterFlag = false;
 
 	// BreathRate component
 	@Wire("#textboxBreathRateLow")
 	private Textbox textboxBreathRateLow;
 	@Wire("#textboxBreathRateHight")
 	private Textbox textboxBreathRateHight;
-	private long breathRateOrgSensorId = 0;
+	private long breathRateSensorIdOrg = 0;
 	private long breathRateSensorId = 0;
 	@Wire("#textboxBreathRateSensorId")
 	private Textbox textboxBreathRateSensorId;
 	@Wire("#selectboxBreathRate")
 	private Selectbox selectboxBreathRate;
 	private ListModelList<DateKeyValueSelectBox> breathRateModel = new ListModelList<DateKeyValueSelectBox>();
+	private boolean changeBreathRateFlag = false;
 
 	// BodyTemp component
 	@Wire("#textboxBodyTempLow")
 	private Textbox textboxBodyTempLow;
 	@Wire("#textboxBodyTempHight")
 	private Textbox textboxBodyTempHight;
-	private long bodyTempOrgSensorId = 0;
+	private long bodyTempSensorIdOrg = 0;
 	private long bodyTempSensorId = 0;
 	@Wire("#textboxBodyTempSensorId")
 	private Textbox textboxBodyTempSensorId;
 	@Wire("#selectboxTemp")
 	private Selectbox selectboxTemp;
 	private ListModelList<DateKeyValueSelectBox> bodyTempModel = new ListModelList<DateKeyValueSelectBox>();
+	private boolean changeBodyTempFlag = false;
 
 	// EWS component
 	@Wire("#spinnerEwsPoint")
@@ -126,10 +131,10 @@ public class ModifyFormView extends SelectorComposer<Component> {
 
 		// Get parent pass through parameter
 		setRoomId(Long.parseLong(textboxRoomId.getValue()));
-		setOrgPatientId(formateStr2Long(textboxPatientId.getValue()));
-		setOximeterOrgSensorId(formateStr2Long(textboxOximeterSensorId.getValue()));
-		setBreathRateOrgSensorId(formateStr2Long(textboxBreathRateSensorId.getValue()));
-		setBodyTempOrgSensorId(formateStr2Long(textboxBodyTempSensorId.getValue()));
+		setPatientIdOrg(formateStr2Long(textboxPatientId.getValue()));
+		setOximeterSensorIdOrg(formateStr2Long(textboxOximeterSensorId.getValue()));
+		setBreathRateSensorIdOrg(formateStr2Long(textboxBreathRateSensorId.getValue()));
+		setBodyTempSensorIdOrg(formateStr2Long(textboxBodyTempSensorId.getValue()));
 
 		// Get selectBox List
 		getPatientList();
@@ -138,6 +143,314 @@ public class ModifyFormView extends SelectorComposer<Component> {
 
 		// Get org. EWS setting
 		getEwsSpecGrid();
+	}
+
+	@Listen("onClick = #ewsAddbtn")
+	public void ewsAdd() {
+		// Check required value
+		if (spinnerEwsPoint.getValue() == null || spinnerEwsTime.getValue() == null) {
+			Messagebox.show("EWS 分數 /EWS 持續時間  的表格都須填值!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+		} else {
+			setChangEwsFlag(true);
+			int ewsPoint = spinnerEwsPoint.getValue();
+			int ewsTime = spinnerEwsTime.getValue();
+
+			long mathId = mathOperatorModel.get(selectboxMathOperator.getSelectedIndex()).getValue();
+			String mathText = mathOperatorModel.get(selectboxMathOperator.getSelectedIndex()).getText();
+
+			List<EwsSpecDao> tempEwsSpecDaoList = getEwsSpecDaoList();
+			EwsSpecDao item = new EwsSpecDao();
+			NewsMathOperator newsMathOperator = new NewsMathOperator();
+			newsMathOperator.setNewsMathOperatorId(mathId);
+			item.setNewsMathOperator(newsMathOperator);
+			item.setNewsWarningConditionId(mathId);
+			item.setNewsWarningThreshold(ewsPoint);
+			item.setTimeBeforeWarning(ewsTime * 60);
+			item.setValue(setEwsValue(mathText, ewsPoint, ewsTime * 60));
+			tempEwsSpecDaoList.add(item);
+
+			setEwsSpecDaoList(tempEwsSpecDaoList);
+			System.out.println("ewsSpecDaoList size: " + getEwsSpecDaoList().size());
+			ListModelList ewsModel = new ListModelList(getEwsSpecDaoList());
+			ewsGrid.setModel(ewsModel);
+		}
+	}
+
+	@Command
+	public void removeEwsSpec(@BindingParam("ewsSpecDao") EwsSpecDao item) {
+		getEwsSpecDaoList().remove(item);
+	}
+
+	@Listen("onClick = #submitButton")
+	public void submit() {
+
+		setChangeBodyTempFlag(false);
+		setChangeBreathRateFlag(false);
+		setChangeOximeterFlag(false);
+		setChangePatientFlag(false);
+
+		// Get Selected Item
+		setPatientIdNew(patientModel.getSelection().stream().findFirst().get().getValue());
+		setOximeterSensorId(oximeterModel.getSelection().stream().findFirst().get().getValue());
+		setBreathRateSensorId(breathRateModel.getSelection().stream().findFirst().get().getValue());
+		setBodyTempSensorId(bodyTempModel.getSelection().stream().findFirst().get().getValue());
+
+		// update Combination
+		updateCombination();
+
+		// Sensor Threshold
+		updateThreshold();
+
+		// EWS Change
+		if (isChangEwsFlag() == true) {
+			// Delete old setting
+			hqeModify.deleteNewsWarningConditionByPatientId(getPatientIdOrg());
+
+			// Add new ews setting
+			for (EwsSpecDao deleteEwsSpec : getEwsSpecDaoList()) {
+				Patient patient = new Patient();
+				patient.setPatientId(getPatientIdNew());
+				deleteEwsSpec.setPatient(patient);
+				hqeModify.createNewsWarningCondition(deleteEwsSpec.getNewsWarningCondition());
+			}
+		}
+		modifyWin.detach();
+		BindUtils.postGlobalCommand(null, null, "refresHumanChartSet", null);
+	}
+
+	@Listen("onClick = #closeButton")
+	public void close() {
+		modifyWin.detach();
+	}
+
+	private void updateCombination() {
+		// Get exit Combination
+		List<Combination> exitCombinationList = hqeModify.getCombinationByRoomId(getRoomId());
+		System.out.println("exitCombinationList size: " + exitCombinationList.size());
+
+		// Check this room, if it is changed.
+		submitCheckChange(exitCombinationList);
+
+		// Collection modify data
+		List<Combination> closeCombinationList = new ArrayList<Combination>();
+		List<Combination> newCombinationList = new ArrayList<Combination>();
+		if (exitCombinationList.size() < 2) {
+			createCollectionItem(exitCombinationList, closeCombinationList, newCombinationList);
+		} else {
+			submitCollectionItem(exitCombinationList, closeCombinationList, newCombinationList);
+		}
+
+		// Enable for DB Combination
+		for (Combination item : closeCombinationList) {
+			hqeModify.updateCombinationEndTime(item);
+
+		}
+		for (Combination item : newCombinationList) {
+			hqeModify.createCombination(item);
+		}
+	}
+
+	private void submitCheckChange(List<Combination> exitCombinationList) {
+		for (Combination combination : exitCombinationList) {
+
+			if (getPatientIdOrg() != getPatientIdNew()) {
+				setChangePatientFlag(true);
+				break;
+			}
+
+			if (combination.getSensor() == null) {
+				if (getOximeterSensorId() != 0)
+					setChangeOximeterFlag(true);
+				if (getBodyTempSensorId() != 0)
+					setChangeBodyTempFlag(true);
+				if (getBreathRateSensorId() != 0)
+					setChangeBreathRateFlag(true);
+				break;
+			} else {
+				if (getOximeterSensorIdOrg() != getOximeterSensorId())
+					setChangeOximeterFlag(true);
+				if (getBodyTempSensorIdOrg() != getBodyTempSensorId())
+					setChangeBodyTempFlag(true);
+				if (getBreathRateSensorIdOrg() != getBreathRateSensorId())
+					setChangeBreathRateFlag(true);
+			}
+		}
+	}
+
+	private void createCollectionItem(List<Combination> exitCombinationList, List<Combination> closeCombinationList,
+			List<Combination> newCombinationList) {
+		// Remove exitCombination by update end_time
+		Combination exitCombination = exitCombinationList.get(0);
+		closeCombinationList.add(exitCombination);
+
+		// Create init Combination for three sensor
+		Combination sensorOximeter = initCombination(exitCombination, getOximeterSensorId());
+		Combination sensorBreathRate = initCombination(exitCombination, getBreathRateSensorId());
+		Combination sensorBodyTemp = initCombination(exitCombination, getBodyTempSensorId());
+		newCombinationList.add(sensorOximeter);
+		newCombinationList.add(sensorBreathRate);
+		newCombinationList.add(sensorBodyTemp);
+	}
+
+	private void submitCollectionItem(List<Combination> exitCombinationList, List<Combination> closeCombinationList,
+			List<Combination> newCombinationList) {
+		Date now = new Date();
+
+		// Patient Change
+		if (isChangePatientFlag()) {
+			for (Combination combination : exitCombinationList) {
+				// Collection Modify
+				closeCombinationList.add(combination);
+
+				// Create new data
+				Combination item = modifyCombinationByPatientChange(combination, getPatientIdNew(),
+						getOximeterSensorId(), getBreathRateSensorId(), getBodyTempSensorId(), now);
+				newCombinationList.add(item);
+			}
+		}
+		// Sensor Change
+		else if (isChangeOximeterFlag() || isChangeBodyTempFlag() || isChangeBreathRateFlag()) {
+			for (Combination combination : exitCombinationList) {
+				for (Sensor2healthType sensor2healthType : combination.getSensor().getSensor2healthTypes()) {
+					long healthTypeId = sensor2healthType.getHealthType().getHealthTypeId();
+
+					if (isChangeOximeterFlag()
+							&& (heartRateHealthTypeId == healthTypeId || oximeterHealthTypeId == healthTypeId)) {
+						// Collection Modify
+						closeCombinationList.add(combination);
+
+						// Create new data
+						Combination item = modifyCombinationBySensorChange(combination, getOximeterSensorId(), now);
+						newCombinationList.add(item);
+
+						setChangeOximeterFlag(false);
+
+					} else if (isChangeBodyTempFlag() && bodyTempHealthTypeId == healthTypeId) {
+						// Collection Modify
+						closeCombinationList.add(combination);
+
+						// Create new data
+						Combination item = modifyCombinationBySensorChange(combination, getBodyTempSensorId(), now);
+						newCombinationList.add(item);
+
+						setChangeBodyTempFlag(false);
+
+					} else if (isChangeBreathRateFlag() && breathHealthTypeId == healthTypeId) {
+						// Collection Modify
+						closeCombinationList.add(combination);
+
+						// Create new data
+						Combination item = modifyCombinationBySensorChange(combination, getBreathRateSensorId(), now);
+						newCombinationList.add(item);
+
+						setChangeBreathRateFlag(false);
+					}
+				}
+			}
+		}
+	}
+
+	private Combination initCombination(Combination exitCombination, long sensorId) {
+		Date now = new Date();
+
+		Combination resp = new Combination();
+		resp.setRoom(exitCombination.getRoom());
+		resp.setPatient(exitCombination.getPatient());
+
+		Sensor sensor = new Sensor();
+		sensor.setSensorId(sensorId);
+		resp.setSensor(sensor);
+
+		resp.setStartTime(now);
+
+		return resp;
+	}
+
+	private Combination modifyCombinationBySensorChange(Combination combination, long sensorId, Date strDate) {
+		Combination item = new Combination();
+		item.setRoom(combination.getRoom());
+		item.setPatient(combination.getPatient());
+		item.setStartTime(strDate);
+
+		Sensor sensor = new Sensor();
+		sensor.setSensorId(sensorId);
+		item.setSensor(sensor);
+		return item;
+	}
+
+	private Combination modifyCombinationByPatientChange(Combination combination, long patientId, long oximeterSensorId,
+			long breathRateSensorId, long bodyTempSensorId, Date strDate) {
+		Combination item = new Combination();
+		item.setRoom(combination.getRoom());
+
+		Patient patient = new Patient();
+		patient.setPatientId(patientId);
+		item.setPatient(patient);
+		item.setStartTime(strDate);
+
+		for (Sensor2healthType sensor2healthType : combination.getSensor().getSensor2healthTypes()) {
+			long healthTypeId = sensor2healthType.getHealthType().getHealthTypeId();
+			Sensor sensor = new Sensor();
+			if (heartRateHealthTypeId == healthTypeId || oximeterHealthTypeId == healthTypeId) {
+				sensor.setSensorId(oximeterSensorId);
+			} else if (bodyTempHealthTypeId == healthTypeId) {
+				sensor.setSensorId(bodyTempSensorId);
+			} else if (breathHealthTypeId == healthTypeId) {
+				sensor.setSensorId(breathRateSensorId);
+			}
+			item.setSensor(sensor);
+		}
+		return item;
+	}
+
+	private void updateThreshold() {
+		List<SensorThreshold> thresholdList = new ArrayList<SensorThreshold>();
+
+		SensorThreshold heartRateThreshold = getNewSensorThreshold(textboxHeartRateLow.getValue(),
+				textboxHeartRateHight.getValue(), getOximeterSensorId(), 1L);
+		SensorThreshold oximeterThreshold = getNewSensorThreshold(textboxOximeterLow.getValue(),
+				textboxOximeterHight.getValue(), getOximeterSensorId(), 2L);
+		SensorThreshold bodyTempThreshold = getNewSensorThreshold(textboxBodyTempLow.getValue(),
+				textboxBodyTempHight.getValue(), getBodyTempSensorId(), 3L);
+		SensorThreshold breathRateThreshold = getNewSensorThreshold(textboxBreathRateLow.getValue(),
+				textboxBreathRateHight.getValue(), getBreathRateSensorId(), 4L);
+		thresholdList.add(heartRateThreshold);
+		thresholdList.add(oximeterThreshold);
+		thresholdList.add(bodyTempThreshold);
+		thresholdList.add(breathRateThreshold);
+
+		// Enable for DB SensorThreshold
+		for (SensorThreshold item : thresholdList) {
+			hqeModify.deleteSensorThreshold(item.getSensor().getSensorId(), item.getHealthType().getHealthTypeId());
+			hqeModify.createSensorThreshold(item);
+		}
+	}
+
+	private SensorThreshold getNewSensorThreshold(String criticalLow, String criticalHigh, long sensorId,
+			long healthTypeId) {
+		SensorThreshold item = new SensorThreshold();
+
+		Sensor sensor = new Sensor();
+		sensor.setSensorId(sensorId);
+		item.setSensor(sensor);
+		HealthType healthType = new HealthType();
+		healthType.setHealthTypeId(healthTypeId);
+		item.setHealthType(healthType);
+		Users users = new Users();
+		users.setUsersId(1);
+		item.setUsers(users);
+
+		item.setCriticalHigh(criticalHigh);
+		item.setCriticalLow(criticalLow);
+		item.setLastUpdated(new Date());
+		item.setTimeCreated(new Date());
+		item.setDurationTimes("0");
+
+//		item.setSensorThresholdId(long);
+//		setDataName(String)
+//		setIsDeleted(boolean)
+
+		return item;
 	}
 
 	// Get Patient List
@@ -152,7 +465,7 @@ public class ModifyFormView extends SelectorComposer<Component> {
 			DateKeyValueSelectBox item = new DateKeyValueSelectBox(patient.getPatient().getPatientId(),
 					patient.getName());
 			patientList.add(item);
-			if (!flag && getOrgPatientId() == patient.getPatient().getPatientId()) {
+			if (!flag && getPatientIdOrg() == patient.getPatient().getPatientId()) {
 				selectedItemIndex = patientList.size() - 1;
 				flag = true;
 			}
@@ -178,24 +491,24 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		// Get List
 		List<Sensor> SensorList = hqeModify.getSensorListBySensorTypeId();
 		for (Sensor sensor : SensorList) {
-			DateKeyValueSelectBox item = new DateKeyValueSelectBox(sensor.getSensorId(), sensor.getSensorName());
+			DateKeyValueSelectBox item = new DateKeyValueSelectBox(sensor.getSensorId(), sensor.getSensorNameChinese());
 
 			for (Sensor2healthType sensorHealthType : sensor.getSensor2healthTypes()) {
 				long healthTypeId = sensorHealthType.getHealthType().getHealthTypeId();
 				if (oximeterHealthTypeId == healthTypeId) {
 					oximeterList.add(item);
-					if (oximeterIndex == 0 && getOximeterOrgSensorId() == item.getValue()) {
+					if (oximeterIndex == 0 && getOximeterSensorIdOrg() == item.getValue()) {
 						oximeterIndex = oximeterList.size() - 1;
 					}
 				} else if (bodyTempHealthTypeId == healthTypeId) {
 					tempList.add(item);
-					if (bodyTempIndex == 0 && getBodyTempOrgSensorId() == item.getValue()) {
+					if (bodyTempIndex == 0 && getBodyTempSensorIdOrg() == item.getValue()) {
 						bodyTempIndex = tempList.size() - 1;
 					}
 
 				} else if (breathHealthTypeId == healthTypeId) {
 					breathRateList.add(item);
-					if (breathRateIndex == 0 && getBreathRateOrgSensorId() == item.getValue()) {
+					if (breathRateIndex == 0 && getBreathRateSensorIdOrg() == item.getValue()) {
 						breathRateIndex = breathRateList.size() - 1;
 					}
 				}
@@ -235,7 +548,7 @@ public class ModifyFormView extends SelectorComposer<Component> {
 	// Get default EWS-Spec.-Grids
 	private void getEwsSpecGrid() {
 		List<EwsSpecDao> tempEwsSpecDaoList = new ArrayList<EwsSpecDao>();
-		List<NewsWarningCondition> ewsSpecList = hqeModify.getNewsWarningConditionList(getOrgPatientId());
+		List<NewsWarningCondition> ewsSpecList = hqeModify.getNewsWarningConditionList(getPatientIdOrg());
 		for (NewsWarningCondition ewsSpec : ewsSpecList) {
 			EwsSpecDao item = new EwsSpecDao(ewsSpec);
 			item.setValue(setEwsValue(ewsSpec.getNewsMathOperator().getOperator(), ewsSpec.getNewsWarningThreshold(),
@@ -248,44 +561,7 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		ewsGrid.setModel(ewsModel);
 	}
 
-	@Listen("onClick = #ewsAddbtn")
-	public void ewsAdd() {
-		// Check required value
-		if (spinnerEwsPoint.getValue() == null || spinnerEwsTime.getValue() == null) {
-			Messagebox.show("EWS 分數 /EWS 持續時間  的表格都須填值!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
-		} else {
-			setChangEwsFlag(true);
-			int ewsPoint = spinnerEwsPoint.getValue();
-			int ewsTime = spinnerEwsTime.getValue();
-
-			long mathId = mathOperatorModel.get(selectboxMathOperator.getSelectedIndex()).getValue();
-			String mathText = mathOperatorModel.get(selectboxMathOperator.getSelectedIndex()).getText();
-
-			List<EwsSpecDao> tempEwsSpecDaoList = getEwsSpecDaoList();
-			EwsSpecDao item = new EwsSpecDao();
-			NewsMathOperator newsMathOperator = new NewsMathOperator();
-			newsMathOperator.setNewsMathOperatorId(mathId);
-			item.setNewsMathOperator(newsMathOperator);
-			item.setNewsWarningConditionId(mathId);
-			item.setNewsWarningThreshold(ewsPoint);
-			item.setTimeBeforeWarning(ewsTime * 60);
-			item.setValue(setEwsValue(mathText, ewsPoint, ewsTime * 60));
-			tempEwsSpecDaoList.add(item);
-
-			setEwsSpecDaoList(tempEwsSpecDaoList);
-			System.out.println("ewsSpecDaoList size: " + getEwsSpecDaoList().size());
-			ListModelList ewsModel = new ListModelList(getEwsSpecDaoList());
-			ewsGrid.setModel(ewsModel);
-		}
-	}
-
-	@Command
-	public void removeEwsSpec(@BindingParam("ewsSpecDao") EwsSpecDao item) {
-		System.out.println("removeEwsSpec");
-		System.out.println(item.getValue());
-		getEwsSpecDaoList().remove(item);
-	}
-
+	// Print EWS Spec. datagrid show
 	private String setEwsValue(String mathText, int ewsPoint, int ewsTime) {
 		StringBuffer sbf = new StringBuffer();
 		sbf.append("EWS ");
@@ -298,224 +574,51 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		return sbf.toString();
 	}
 
-	@Listen("onClick = #submitButton")
-	public void submit() {
-		// Get Selected Item
-		setNewPatientId(patientModel.getSelection().stream().findFirst().get().getValue());
-		setOximeterSensorId(oximeterModel.getSelection().stream().findFirst().get().getValue());
-		setBreathRateSensorId(breathRateModel.getSelection().stream().findFirst().get().getValue());
-		setBodyTempSensorId(bodyTempModel.getSelection().stream().findFirst().get().getValue());
-
-		// Check this room, if it is changed.
-		boolean changePatientFlag = false;
-		boolean changeOximeterFlag = false;
-		boolean changeBodyTempFlag = false;
-		boolean changeBreathRateFlag = false;
-		List<Combination> exitCombinationList = hqeModify.getCombinationByRoomId(getRoomId());
-		submitCheckChange(changePatientFlag, changeOximeterFlag, changeBodyTempFlag, changeBreathRateFlag,
-				exitCombinationList);
-
-		// Collection modify data
-		Date now = new Date();
-		List<Combination> modifyCombinationList = new ArrayList<Combination>();
-		List<Combination> newCombinationList = new ArrayList<Combination>();
-		// Patient Change
-		if (changePatientFlag) {
-			for (Combination combination : exitCombinationList) {
-				// Collection Modify
-				modifyCombinationList.add(combination);
-
-				// Create new data
-				Combination item = createCombinationByPatientChange(combination, getNewPatientId(),
-						getOximeterSensorId(), getBreathRateSensorId(), getBodyTempSensorId(), now);
-				newCombinationList.add(item);
-			}
-		} else if (changeOximeterFlag || changeBodyTempFlag || changeBreathRateFlag) {
-			for (Combination combination : exitCombinationList) {
-				for (Sensor2healthType sensor2healthType : combination.getSensor().getSensor2healthTypes()) {
-					long healthTypeId = sensor2healthType.getHealthType().getHealthTypeId();
-
-					if (changeOximeterFlag
-							&& (heartRateHealthTypeId == healthTypeId || oximeterHealthTypeId == healthTypeId)) {
-						// Collection Modify
-						modifyCombinationList.add(combination);
-
-						// Create new data
-						Combination item = createCombinationBySensorChange(combination, getOximeterSensorId(), now);
-						newCombinationList.add(item);
-
-						changeOximeterFlag = false;
-
-					} else if (changeBodyTempFlag && bodyTempHealthTypeId == healthTypeId) {
-						// Collection Modify
-						modifyCombinationList.add(combination);
-
-						// Create new data
-						Combination item = createCombinationBySensorChange(combination, getBodyTempSensorId(), now);
-						newCombinationList.add(item);
-
-						changeBodyTempFlag = false;
-
-					} else if (changeBreathRateFlag && breathHealthTypeId == healthTypeId) {
-						// Collection Modify
-						modifyCombinationList.add(combination);
-
-						// Create new data
-						Combination item = createCombinationBySensorChange(combination, getBreathRateSensorId(), now);
-						newCombinationList.add(item);
-
-						changeBreathRateFlag = false;
-					}
-				}
-			}
-		}
-		// Enable for DB Combination
-		for (Combination item : modifyCombinationList) {
-			hqeModify.updateCombination(item);
-		}
-		for (Combination item : newCombinationList) {
-			hqeModify.createCombination(item);
-		}
-
-		// Sensor Threshold
-		List<SensorThreshold> thresholdList = new ArrayList<SensorThreshold>();
-		SensorThreshold heartRateThreshold = getNewSensorThreshold(textboxHeartRateLow.getValue(),
-				textboxHeartRateHight.getValue(), getOximeterSensorId(), 1L);
-		SensorThreshold oximeterThreshold = getNewSensorThreshold(textboxOximeterLow.getValue(),
-				textboxOximeterHight.getValue(), getOximeterSensorId(), 2L);
-		SensorThreshold bodyTempThreshold = getNewSensorThreshold(textboxBodyTempLow.getValue(),
-				textboxBodyTempHight.getValue(), getBodyTempSensorId(), 3L);
-		SensorThreshold breathRateThreshold = getNewSensorThreshold(textboxBreathRateLow.getValue(),
-				textboxBreathRateHight.getValue(), getBreathRateSensorId(), 4L);
-		thresholdList.add(heartRateThreshold);
-		thresholdList.add(oximeterThreshold);
-		thresholdList.add(bodyTempThreshold);
-		thresholdList.add(breathRateThreshold);
-		// Enable for DB SensorThreshold
-		for (SensorThreshold item : thresholdList) {
-			System.out.println(item.getSensor().getSensorId() + "/ " + item.getHealthType().getHealthTypeId());
-			hqeModify.deleteSensorThreshold(item.getSensor().getSensorId(), item.getHealthType().getHealthTypeId());
-			hqeModify.createSensorThreshold(item);
-		}
-
-		// EWS Change
-		if (isChangEwsFlag() == true) {
-			// Delete old setting
-			hqeModify.deleteNewsWarningConditionByPatientId(getOrgPatientId());
-
-			// Add new ews setting
-			for (EwsSpecDao deleteEwsSpec : getEwsSpecDaoList()) {
-				Patient patient = new Patient();
-				patient.setPatientId(getNewPatientId());
-				deleteEwsSpec.setPatient(patient);
-				hqeModify.createNewsWarningCondition(deleteEwsSpec.getNewsWarningCondition());
-			}
-		}
-
-		modifyWin.detach();
-		BindUtils.postGlobalCommand(null, null, "refreshPatientInfo", null);
-	}
-
-	private SensorThreshold getNewSensorThreshold(String criticalLow, String criticalHigh, long sensorId,
-			long healthTypeId) {
-		SensorThreshold item = new SensorThreshold();
-
-		Sensor sensor = new Sensor();
-		sensor.setSensorId(sensorId);
-		item.setSensor(sensor);
-		HealthType healthType = new HealthType();
-		healthType.setHealthTypeId(healthTypeId);
-		item.setHealthType(healthType);
-		Users users = new Users();
-		users.setUsersId(1);
-		item.setUsers(users);
-
-		item.setCriticalHigh(criticalHigh);
-		item.setCriticalLow(criticalLow);
-		item.setLastUpdated(new Date());
-		item.setTimeCreated(new Date());
-		item.setDurationTimes("0");
-
-//		item.setSensorThresholdId(long);
-//		setDataName(String)
-//		setIsDeleted(boolean)
-
-		return item;
-	}
-
-	private void submitCheckChange(boolean changePatientFlag, boolean changeOximeterFlag, boolean changeBodyTempFlag,
-			boolean changeBreathRateFlag, List<Combination> exitCombinationList) {
-		for (Combination combination : exitCombinationList) {
-			if (getOrgPatientId() != getNewPatientId()) {
-				changePatientFlag = true;
-				break;
-			}
-			for (Sensor2healthType sensor2healthType : combination.getSensor().getSensor2healthTypes()) {
-				long healthTypeId = sensor2healthType.getHealthType().getHealthTypeId();
-
-				if ((heartRateHealthTypeId == healthTypeId || oximeterHealthTypeId == healthTypeId)
-						&& getOximeterOrgSensorId() != getOximeterSensorId()) {
-					changeOximeterFlag = true;
-					break;
-				} else if (bodyTempHealthTypeId == healthTypeId && getBodyTempOrgSensorId() != getBodyTempSensorId()) {
-					changeBodyTempFlag = true;
-					break;
-				} else if (breathHealthTypeId == healthTypeId
-						&& getBreathRateOrgSensorId() != getBreathRateSensorId()) {
-					changeBreathRateFlag = true;
-					break;
-				}
-			}
-		}
-	}
-
-	private Combination createCombinationBySensorChange(Combination combination, long sensorId, Date strDate) {
-		Combination item = new Combination();
-		item.setRoom(combination.getRoom());
-		item.setPatient(combination.getPatient());
-		item.setStartTime(strDate);
-
-		Sensor sensor = new Sensor();
-		sensor.setSensorId(sensorId);
-		item.setSensor(sensor);
-		return item;
-	}
-
-	private Combination createCombinationByPatientChange(Combination combination, long patientId, long oximeterSensorId,
-			long breathRateSensorId, long bodyTempSensorId, Date strDate) {
-		Combination item = new Combination();
-		item.setRoom(combination.getRoom());
-
-		Patient patient = new Patient();
-		patient.setPatientId(patientId);
-		item.setPatient(patient);
-		item.setStartTime(strDate);
-
-		for (Sensor2healthType sensor2healthType : combination.getSensor().getSensor2healthTypes()) {
-			long healthTypeId = sensor2healthType.getHealthType().getHealthTypeId();
-			Sensor sensor = new Sensor();
-			if (heartRateHealthTypeId == healthTypeId || oximeterHealthTypeId == healthTypeId) {
-				sensor.setSensorId(oximeterSensorId);
-			} else if (bodyTempHealthTypeId == healthTypeId) {
-				sensor.setSensorId(bodyTempSensorId);
-			} else if (breathHealthTypeId == healthTypeId) {
-				sensor.setSensorId(breathRateSensorId);
-			}
-			item.setSensor(sensor);
-		}
-		return item;
-	}
-
-	@Listen("onClick = #closeButton")
-	public void close() {
-		modifyWin.detach();
-	}
-
 	private static long formateStr2Long(String str) {
 		if (str.isEmpty() || str == null) {
 			return 0;
 		}
 		return Long.parseLong(str);
+	}
+
+	public long getRoomId() {
+		return roomId;
+	}
+
+	public void setRoomId(long roomId) {
+		this.roomId = roomId;
+	}
+
+	public long getOximeterSensorIdOrg() {
+		return oximeterSensorIdOrg;
+	}
+
+	public void setOximeterSensorIdOrg(long oximeterSensorIdOrg) {
+		this.oximeterSensorIdOrg = oximeterSensorIdOrg;
+	}
+
+	public long getBreathRateSensorIdOrg() {
+		return breathRateSensorIdOrg;
+	}
+
+	public void setBreathRateSensorIdOrg(long breathRateSensorIdOrg) {
+		this.breathRateSensorIdOrg = breathRateSensorIdOrg;
+	}
+
+	public long getBodyTempSensorIdOrg() {
+		return bodyTempSensorIdOrg;
+	}
+
+	public void setBodyTempSensorIdOrg(long bodyTempSensorIdOrg) {
+		this.bodyTempSensorIdOrg = bodyTempSensorIdOrg;
+	}
+
+	public long getPatientIdOrg() {
+		return patientIdOrg;
+	}
+
+	public void setPatientIdOrg(long patientIdOrg) {
+		this.patientIdOrg = patientIdOrg;
 	}
 
 	public List<EwsSpecDao> getEwsSpecDaoList() {
@@ -532,30 +635,6 @@ public class ModifyFormView extends SelectorComposer<Component> {
 
 	public void setChangEwsFlag(boolean changEwsFlag) {
 		this.changEwsFlag = changEwsFlag;
-	}
-
-	public long getOrgPatientId() {
-		return orgPatientId;
-	}
-
-	public void setOrgPatientId(long orgPatientId) {
-		this.orgPatientId = orgPatientId;
-	}
-
-	public long getNewPatientId() {
-		return newPatientId;
-	}
-
-	public void setNewPatientId(long newPatientId) {
-		this.newPatientId = newPatientId;
-	}
-
-	public long getRoomId() {
-		return roomId;
-	}
-
-	public void setRoomId(long roomId) {
-		this.roomId = roomId;
 	}
 
 	public long getOximeterSensorId() {
@@ -582,27 +661,44 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		this.bodyTempSensorId = bodyTempSensorId;
 	}
 
-	public long getOximeterOrgSensorId() {
-		return oximeterOrgSensorId;
+	public long getPatientIdNew() {
+		return patientIdNew;
 	}
 
-	public void setOximeterOrgSensorId(long oximeterOrgSensorId) {
-		this.oximeterOrgSensorId = oximeterOrgSensorId;
+	public void setPatientIdNew(long patientIdNew) {
+		this.patientIdNew = patientIdNew;
 	}
 
-	public long getBreathRateOrgSensorId() {
-		return breathRateOrgSensorId;
+	public boolean isChangePatientFlag() {
+		return changePatientFlag;
 	}
 
-	public void setBreathRateOrgSensorId(long breathRateOrgSensorId) {
-		this.breathRateOrgSensorId = breathRateOrgSensorId;
+	public void setChangePatientFlag(boolean changePatientFlag) {
+		this.changePatientFlag = changePatientFlag;
 	}
 
-	public long getBodyTempOrgSensorId() {
-		return bodyTempOrgSensorId;
+	public boolean isChangeOximeterFlag() {
+		return changeOximeterFlag;
 	}
 
-	public void setBodyTempOrgSensorId(long bodyTempOrgSensorId) {
-		this.bodyTempOrgSensorId = bodyTempOrgSensorId;
+	public void setChangeOximeterFlag(boolean changeOximeterFlag) {
+		this.changeOximeterFlag = changeOximeterFlag;
 	}
+
+	public boolean isChangeBreathRateFlag() {
+		return changeBreathRateFlag;
+	}
+
+	public void setChangeBreathRateFlag(boolean changeBreathRateFlag) {
+		this.changeBreathRateFlag = changeBreathRateFlag;
+	}
+
+	public boolean isChangeBodyTempFlag() {
+		return changeBodyTempFlag;
+	}
+
+	public void setChangeBodyTempFlag(boolean changeBodyTempFlag) {
+		this.changeBodyTempFlag = changeBodyTempFlag;
+	}
+
 }

@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 import org.itri.view.humanhealth.detail.Imp.PersonInfoHibernateImpl;
 import org.itri.view.humanhealth.hibernate.Combination;
 import org.itri.view.humanhealth.hibernate.HeartRhythmRecord;
@@ -49,6 +48,7 @@ public class PersonInfo {
 	private PersonInfoHibernateImpl hqe;
 	static String NORMAL_PATH = "./resources/image/MapImages/icon_indicator_no_01.png";
 	static String WARNING_PATH = "./resources/image/MapImages/icon_indicator_o_01.png";
+	static String MODIFY_PAGE = "/humanHealthDetail/modifyConnectForm.zul";
 
 	@Init
 	public void init() {
@@ -58,7 +58,7 @@ public class PersonInfo {
 
 	@NotifyChange({ "personStateList" })
 	@GlobalCommand
-	public void refreshPatientInfo() {
+	public void refresHumanChartSet() {
 		hqe = new PersonInfoHibernateImpl();
 		queryStates();
 	}
@@ -90,6 +90,14 @@ public class PersonInfo {
 		// For ubuntu
 		Filedownload.save("resources/" + fileNameBuf.toString(), null);
 
+	}
+
+	@Command
+	public void modifyClick(@BindingParam("item") PersonState item) {
+		Map<String, Object> arguments = new HashMap<String, Object>();
+		arguments.put("orderItems", item);
+		Window window = (Window) Executions.createComponents(MODIFY_PAGE, null, arguments);
+		window.doModal();
 	}
 
 	private File writeCsvFile(String filePath, PersonState item) throws IOException {
@@ -171,26 +179,12 @@ public class PersonInfo {
 		return resp;
 	}
 
-	@Command
-	public void modifyClick(@BindingParam("item") PersonState item) {
-		Map<String, Object> arguments = new HashMap<String, Object>();
-		arguments.put("orderItems", item);
-		String template = "/humanHealthDetail/modifyConnectForm.zul";
-		Window window = (Window) Executions.createComponents(template, null, arguments);
-		window.doModal();
-	}
-
 	private void queryStates() {
 		personStateList = new LinkedList<>();
 		Set<Long> sensorIdSet = new HashSet<Long>();
 
 		// Get patientList
-		List<Long> roomIdList = new ArrayList<Long>();
-		roomIdList.add(1L);
-		roomIdList.add(2L);
-		roomIdList.add(3L);
-		roomIdList.add(4L);
-		roomIdList.add(5L);
+		List<Long> roomIdList = hqe.getRoomIdListByRoomGroup(1);
 
 		List<Combination> combinationList = hqe.getCombinationEndTimeNullByRoomId(roomIdList);
 		for (Combination item : combinationList) {
@@ -198,13 +192,13 @@ public class PersonInfo {
 			boolean exitFlag = false;
 			// merge by PatientId
 			for (PersonState personState : personStateList) {
-				if (personState.getPatientId() == item.getPatient().getPatientId()) {
+				if (personState.getPatientId() == item.getPatient().getPatientId() && item.getSensor() != null) {
 
 					// Set sensorList
 					List<Long> sensorIdList = personState.getSensorIdList();
+					sensorIdSet.add(item.getSensor().getSensorId());
 					sensorIdList.add(item.getSensor().getSensorId());
 					personState.setSensorIdList(sensorIdList);
-					sensorIdSet.add(item.getSensor().getSensorId());
 
 					exitFlag = true;
 					break;
@@ -223,10 +217,12 @@ public class PersonInfo {
 				patient.setEwsLow("4");
 
 				// Set sensorList
-				List<Long> sensorIdList = new ArrayList<Long>();
-				sensorIdList.add(item.getSensor().getSensorId());
-				patient.setSensorIdList(sensorIdList);
-				sensorIdSet.add(item.getSensor().getSensorId());
+				if (item.getSensor() != null) {
+					List<Long> sensorIdList = new ArrayList<Long>();
+					sensorIdList.add(item.getSensor().getSensorId());
+					patient.setSensorIdList(sensorIdList);
+					sensorIdSet.add(item.getSensor().getSensorId());
+				}
 
 				// Set EWS Spec.
 				List<EwsSpecDao> ewsSpecList = new ArrayList<EwsSpecDao>();
@@ -244,35 +240,37 @@ public class PersonInfo {
 		}
 
 		// Get each patient spec. high & low
-		List<Long> sensorIdList = new ArrayList<Long>(sensorIdSet);
-		Collections.sort(sensorIdList);
-		List<SensorThreshold> patientThresholdList = hqe.getSensorThresholdByIdList(sensorIdList);
+		if (sensorIdSet.size() != 0) {
+			List<Long> sensorIdList = new ArrayList<Long>(sensorIdSet);
+			Collections.sort(sensorIdList);
+			List<SensorThreshold> patientThresholdList = hqe.getSensorThresholdByIdList(sensorIdList);
+			// Set each sensor threshold spec value
+			for (PersonState item : personStateList) {
+				for (Long sensorId : item.getSensorIdList()) {
+					for (SensorThreshold patientThreshold : patientThresholdList) {
+						if (sensorId == patientThreshold.getSensor().getSensorId()) {
+							int healthTypeId = (int) patientThreshold.getHealthType().getHealthTypeId();
 
-		// Set each sensor threshold spec value
-		for (PersonState item : personStateList) {
-			for (Long sensorId : item.getSensorIdList()) {
-				for (SensorThreshold patientThreshold : patientThresholdList) {
-					if (sensorId == patientThreshold.getSensor().getSensorId()) {
-						int healthTypeId = (int) patientThreshold.getHealthType().getHealthTypeId();
+							ThresholdDao thresholdDao = new ThresholdDao();
+							thresholdDao.setSensorId(patientThreshold.getSensor().getSensorId());
+							thresholdDao.setSpecHigh(patientThreshold.getCriticalHigh());
+							thresholdDao.setSpecLow(patientThreshold.getCriticalLow());
 
-						ThresholdDao thresholdDao = new ThresholdDao();
-						thresholdDao.setSensorId(patientThreshold.getSensor().getSensorId());
-						thresholdDao.setSpecHigh(patientThreshold.getCriticalHigh());
-						thresholdDao.setSpecLow(patientThreshold.getCriticalLow());
-
-						if (1 == healthTypeId) {
-							item.setHeartRateThreshold(thresholdDao);
-						} else if (2 == healthTypeId) {
-							item.setOximeterThreshold(thresholdDao);
-						} else if (3 == healthTypeId) {
-							item.setBodyTempThreshold(thresholdDao);
-						} else if (4 == healthTypeId) {
-							item.setBreathRateThreshold(thresholdDao);
+							if (1 == healthTypeId) {
+								item.setHeartRateThreshold(thresholdDao);
+							} else if (2 == healthTypeId) {
+								item.setOximeterThreshold(thresholdDao);
+							} else if (3 == healthTypeId) {
+								item.setBodyTempThreshold(thresholdDao);
+							} else if (4 == healthTypeId) {
+								item.setBreathRateThreshold(thresholdDao);
+							}
 						}
 					}
 				}
 			}
 		}
+
 	}
 
 	public List<PersonState> getPersonStateList() {

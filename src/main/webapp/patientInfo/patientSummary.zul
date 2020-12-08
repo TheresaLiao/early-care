@@ -3,8 +3,8 @@
 		viewModel="@id('vm') @init('org.itri.view.patientInfo.patientSummary')">
 
 		<button label="Create" onClick="@command('createClick')" />
-		<button label="Refresh" onClick="@command('refreshClick')" />
-
+		<button label="refresh"
+			onClick="@global-command('refreshPatientSummary')" />
 		<!-- All Patient Info -->
 		<grid height="500px" model="@bind(vm.patientSummary)">
 			<columns>

@@ -30,6 +30,7 @@ public class EwsViewDaoHibernateImpl {
 			Criteria criteria = session.createCriteria(Patient.class);
 			criteria.add(Restrictions.eq("isDeleted", false));
 			criteria.add(Restrictions.eq("patientId", patientId));
+			
 			tempPatientList = criteria.list();
 			item = tempPatientList.get(0);
 			tx.commit();

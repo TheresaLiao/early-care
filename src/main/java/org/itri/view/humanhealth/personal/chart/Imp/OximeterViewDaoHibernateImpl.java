@@ -19,14 +19,14 @@ import org.itri.view.humanhealth.hibernate.RtOximeterRecord;
 import org.itri.view.humanhealth.personal.chart.dao.SensorIdTimeDao;
 import org.itri.view.util.HibernateUtil;
 
-public class OximeterViewDaoHibernateImpl {
+public class OximeterViewDaoHibernateImpl extends CommonViewDaoHibernateImpl {
 
 	private int minusThreeMinit = -3;
 
 	public RtOximeterRecord getRtOximeterRecord(long sensorId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
-		List<RtOximeterRecord> resp = new ArrayList<RtOximeterRecord>();
+
 		RtOximeterRecord item = new RtOximeterRecord();
 		try {
 			tx = session.beginTransaction();
@@ -34,14 +34,13 @@ public class OximeterViewDaoHibernateImpl {
 			Criteria criteria = session.createCriteria(RtOximeterRecord.class);
 			criteria.add(Restrictions.eq("sensor.sensorId", sensorId));
 
-			resp = criteria.list();
-			if (resp.size() == 0) {
+			List<RtOximeterRecord> temp = criteria.list();
+			if (temp.size() == 0) {
 				tx.commit();
 				return null;
 			}
-			item = resp.get(0);
+			item = temp.get(0);
 			tx.commit();
-			return item;
 		} catch (Exception e) {
 			e.printStackTrace();
 			tx.rollback();

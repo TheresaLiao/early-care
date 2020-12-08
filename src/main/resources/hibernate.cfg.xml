@@ -100,5 +100,6 @@
 			class="org.itri.view.humanhealth.hibernate.Sensor2healthType" />
 		<mapping
 			class="org.itri.view.humanhealth.hibernate.PmFiveRecord" />
+		<mapping class="org.itri.view.humanhealth.hibernate.RoomGroup" />
 	</session-factory>
 </hibernate-configuration>

@@ -1,6 +1,8 @@
 package org.itri.view.humanhealth.detail;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -36,6 +38,7 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.util.media.AMedia;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Window;
@@ -68,27 +71,28 @@ public class PersonInfo {
 		System.out.println("downloadClick");
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		String parentPath = Executions.getCurrent().getDesktop().getWebApp().getRealPath("/resources");
+
 		StringBuffer fileNameBuf = new StringBuffer();
 		fileNameBuf.append(item.getBedRoom());
 		fileNameBuf.append("_");
 		fileNameBuf.append(dateFormat.format(new Date()));
 		fileNameBuf.append(".csv");
 
-		File file = writeCsvFile(parentPath + "/" + fileNameBuf.toString(), item);
+//		// For ubuntu
+//		String parentPath = Executions.getCurrent().getDesktop().getWebApp().getRealPath("/resources");
+//		File file = writeCsvFile(parentPath + "/" + fileNameBuf.toString(), item);
+//		Filedownload.save("resources/" + fileNameBuf.toString(), null);
 
 		// For Window
-//		byte[] buffer = new byte[(int) file.length()];
-//		FileInputStream fs = new FileInputStream(file);
-//		fs.read(buffer);
-//		fs.close();
-//		ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-//		System.out.println("fileNameBuf: " + fileNameBuf.toString());
-//		AMedia amedia = new AMedia(fileNameBuf.toString(), "csv", "application/octet-stream", is);
-//		Filedownload.save(amedia);
-
-		// For ubuntu
-		Filedownload.save("resources/" + fileNameBuf.toString(), null);
+		File file = writeCsvFile(fileNameBuf.toString(), item);
+		byte[] buffer = new byte[(int) file.length()];
+		FileInputStream fs = new FileInputStream(file);
+		fs.read(buffer);
+		fs.close();
+		ByteArrayInputStream is = new ByteArrayInputStream(buffer);
+		System.out.println("fileNameBuf: " + fileNameBuf.toString());
+		AMedia amedia = new AMedia(fileNameBuf.toString(), "csv", "application/octet-stream", is);
+		Filedownload.save(amedia);
 
 	}
 

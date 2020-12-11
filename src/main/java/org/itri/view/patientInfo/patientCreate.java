@@ -41,17 +41,7 @@ public class patientCreate extends SelectorComposer<Component> {
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
-
-		List<DateKeyValueSelectBox> genderList = new ArrayList<DateKeyValueSelectBox>();
-		DateKeyValueSelectBox itemF = new DateKeyValueSelectBox(1, "F");
-		DateKeyValueSelectBox itemM = new DateKeyValueSelectBox(2, "M");
-		genderList.add(itemF);
-		genderList.add(itemM);
-
-		// Set Default selected
-		genderModel = new ListModelList(genderList);
-		genderModel.addToSelection(genderModel.get(0));
-		selectboxGenders.setModel(genderModel);
+		getGenderList();
 	}
 
 	@Listen("onClick = #submitButton")
@@ -111,4 +101,16 @@ public class patientCreate extends SelectorComposer<Component> {
 		createPatientWin.detach();
 	}
 
+	private void getGenderList() {
+		List<DateKeyValueSelectBox> genderList = new ArrayList<DateKeyValueSelectBox>();
+		DateKeyValueSelectBox itemF = new DateKeyValueSelectBox(1, "F");
+		DateKeyValueSelectBox itemM = new DateKeyValueSelectBox(2, "M");
+		genderList.add(itemF);
+		genderList.add(itemM);
+
+		// Set Default selected
+		genderModel = new ListModelList(genderList);
+		genderModel.addToSelection(genderModel.get(0));
+		selectboxGenders.setModel(genderModel);
+	}
 }

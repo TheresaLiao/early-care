@@ -78,29 +78,22 @@ public class roomModify extends SelectorComposer<Component> {
 	@Listen("onClick = #submitButton")
 	public void submit() {
 		if (textboxRoomName.getValue() == null) {
-			Messagebox.show("姓名 與 年齡為必填欄位!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+			Messagebox.show("病床名稱 病床名稱為必填欄位!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+		} else if (hqe.getRoomByRoomNum(textboxRoomName.getValue()).getRoomId() != getRoomIdOrg()
+				&& hqe.getRoomByRoomNum(textboxRoomName.getValue()).getRoomId() != 0) {
+			Messagebox.show("此病床名稱已經擁有，請修改病床名稱!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
 		} else {
-			// Change Patient
-			if (getPatientIdOrg() != patientModel.getSelection().stream().findFirst().get().getValue()) {
-				System.out.println("Change Patient");
-				// Get exit Combination
-//				List<Combination> exitCombinationList = hqe.getCombinationByRoomId(getRoomIdOrg());
-//				for (Combination exitCombination : exitCombinationList) {
-//					hqe.updateCombinationEndTime(exitCombination);
-//
-//					Combination newCombination = initCombination(exitCombination);
-//					Date now = new Date();
-//					Patient patient = new Patient();
-//					patient.setPatientId(patientModel.getSelection().stream().findFirst().get().getValue());
-//					newCombination.setPatient(patient);
-//					newCombination.setStartTime(now);
-//					hqe.createCombination(newCombination);
-//				}
+
+			Room room = hqe.getRoomByRoomId(getRoomIdOrg());
+
+			// Change Room name
+			if (!getRoomNameOrg().equals(textboxRoomName.getValue())) {
+				room.setRoomNum(textboxRoomName.getValue());
+				hqe.updateRoom(room);
 			}
 
 			// Change Room Group
 			if (getRoomGroupOrg() != roomModel.getSelection().stream().findFirst().get().getValue()) {
-				System.out.println("Change RoomGroup");
 				RoomGroup exitRoomGroup = hqe.getRoomGroupByRoomId(getRoomIdOrg());
 				if (exitRoomGroup.getRoomGroupId() != 0) {
 					exitRoomGroup.setRoomGroup((int) roomModel.getSelection().stream().findFirst().get().getValue());
@@ -113,16 +106,52 @@ public class roomModify extends SelectorComposer<Component> {
 				}
 			}
 
-			// Change Room name
-			if (!getRoomNameOrg().equals(textboxRoomName.getValue())) {
-				Room room = hqe.getRoomByRoomId(getRoomIdOrg());
-				room.setRoomNum(textboxRoomName.getValue());
-				hqe.updateRoom(room);
+			// Change Patient
+			Date now = new Date();
+			if (selectboxPatient.getSelectedIndex() == -1) {
+				// Patient change into empty ,so combination close those RoomIdOrg item
+				if (getPatientIdOrg() != 0) {
+					List<Combination> exitCombinationList = hqe.getCombinationByRoomId(getRoomIdOrg());
+					for (Combination exitCombination : exitCombinationList) {
+						exitCombination.setEndTime(now);
+						hqe.updateCombinationEndTime(exitCombination);
+					}
+				}
+			} else {
+				// Get exit Combination
+				List<Combination> exitCombinationList = hqe.getCombinationByRoomId(getRoomIdOrg());
+
+				if (exitCombinationList.size() == 0) {
+					Combination newCombination = new Combination();
+					newCombination.setStartTime(now);
+					newCombination.setRoom(room);
+
+					Patient patient = new Patient();
+					patient.setPatientId(patientModel.getSelection().stream().findFirst().get().getValue());
+					newCombination.setPatient(patient);
+
+					hqe.createCombination(newCombination);
+
+				} else if (getPatientIdOrg() != patientModel.getSelection().stream().findFirst().get().getValue()) {
+					System.out.println("Change Patient");
+					for (Combination exitCombination : exitCombinationList) {
+						hqe.updateCombinationEndTime(exitCombination);
+
+						Combination newCombination = initCombination(exitCombination);
+						Patient patient = new Patient();
+						patient.setPatientId(patientModel.getSelection().stream().findFirst().get().getValue());
+						newCombination.setPatient(patient);
+						newCombination.setStartTime(now);
+						hqe.createCombination(newCombination);
+					}
+				}
 			}
+
 			// Close win
 			modifyRoomWin.detach();
 			BindUtils.postGlobalCommand(null, null, "refreshRoomSummary", null);
 		}
+
 	}
 
 	private Combination initCombination(Combination exitCombination) {

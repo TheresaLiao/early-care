@@ -48,7 +48,7 @@
 										visible="false" value="${each.heartRateThreshold.specHigh}" />
 									<textbox id="textboxSpecL"
 										visible="false" value="${each.heartRateThreshold.specLow}" />
-									<timer id="timer" delay="1000"
+									<timer id="timer" delay="30000"
 										running="true" repeats="true" />
 								</window>
 
@@ -108,7 +108,7 @@
 										visible="false" value="${each.oximeterThreshold.specHigh}" />
 									<textbox id="textboxSpecL"
 										visible="false" value="${each.oximeterThreshold.specLow}" />
-									<timer id="timer" delay="1000"
+									<timer id="timer" delay="30000"
 										running="true" repeats="true" />
 								</window>
 
@@ -168,7 +168,7 @@
 										visible="false" value="${each.breathRateThreshold.specHigh}" />
 									<textbox id="textboxSpecL"
 										visible="false" value="${each.breathRateThreshold.specLow}" />
-									<timer id="timer" delay="1000"
+									<timer id="timer" delay="30000"
 										running="true" repeats="true" />
 								</window>
 
@@ -228,7 +228,7 @@
 										visible="false" value="${each.bodyTempThreshold.specHigh}" />
 									<textbox id="textboxSpecL"
 										visible="false" value="${each.bodyTempThreshold.specLow}" />
-									<timer id="timer" delay="1000"
+									<timer id="timer" delay="30000"
 										running="true" repeats="true" />
 								</window>
 
@@ -244,7 +244,7 @@
 												pack="center" align="center">
 												<!-- left spec -->
 												<vbox
-													class="text-right px-3" width="90px" pack="center"
+													class="text-right px-3" width="80px" pack="center"
 													align="end" height="82px">
 													<label
 														id="tempLabel" class="h6" value="T °C" />
@@ -291,7 +291,7 @@
 										visible="false" value="${each.patientId}" />
 									<textbox id="textboxHisDate"
 										visible="false" value="${each.historyDate}" />
-									<timer id="timer" delay="1000"
+									<timer id="timer" delay="30000"
 										running="true" repeats="true" />
 								</window>
 

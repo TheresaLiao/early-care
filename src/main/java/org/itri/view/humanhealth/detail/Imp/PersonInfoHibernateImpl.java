@@ -129,8 +129,9 @@ public class PersonInfoHibernateImpl {
 			for (Room r : roomList) {
 				Hibernate.initialize(r.getCombinations());
 				for (Combination combination : r.getCombinations()) {
+					Hibernate.initialize(combination.getSensor());
 					if (combination.getPatient().getPatientId() == patientId && (combination.getEndTime() == null
-							|| combination.getEndTime().after(calendar.getTime()))) {
+							|| combination.getEndTime().after(calendar.getTime())) && combination.getSensor() != null) {
 						Hibernate.initialize(combination.getPatient());
 						Hibernate.initialize(combination.getPatient().getPatientInfos());
 						Hibernate.initialize(combination.getSensor());

@@ -2,12 +2,15 @@ package org.itri.view.humanhealth.detail.Imp;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.itri.view.humanhealth.hibernate.Combination;
@@ -188,13 +191,41 @@ public class ModifyDaoHibernateImpl {
 		return null;
 	}
 
-	public List<PatientInfo> getPatientList() {
+	public Set<Long> getUsedPatientIdList() {
+		Set<Long> resp = new HashSet<>();
+
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			Criteria criteria = session.createCriteria(Combination.class);
+			criteria.add(Restrictions.isNull("endTime"));
+
+			List<Combination> temp = criteria.list();
+			for (Combination item : temp) {
+				Hibernate.initialize(item.getPatient());
+				resp.add(item.getPatient().getPatientId());
+			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			session.close();
+		}
+		return resp;
+	}
+
+	public List<PatientInfo> getPatientList(List<Long> usedPatientIdList, Long defaultPatientId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		List<PatientInfo> resp = new ArrayList<PatientInfo>();
 		try {
 			tx = session.beginTransaction();
 			Criteria criteria = session.createCriteria(PatientInfo.class);
+			Criterion where1 = Restrictions.not(Restrictions.in("patient.patientId", usedPatientIdList));
+			Criterion where2 = Restrictions.eq("patient.patientId", defaultPatientId);
+			criteria.add(Restrictions.or(where1, where2));
 			criteria.addOrder(Order.asc("name"));
 
 			resp = criteria.list();
@@ -211,6 +242,30 @@ public class ModifyDaoHibernateImpl {
 		}
 		return resp;
 	}
+
+//	public List<PatientInfo> getPatientList() {
+//		Session session = HibernateUtil.getSessionFactory().openSession();
+//		Transaction tx = null;
+//		List<PatientInfo> resp = new ArrayList<PatientInfo>();
+//		try {
+//			tx = session.beginTransaction();
+//			Criteria criteria = session.createCriteria(PatientInfo.class);
+//			criteria.addOrder(Order.asc("name"));
+//
+//			resp = criteria.list();
+//
+//			for (PatientInfo item : resp) {
+//				Hibernate.initialize(item.getPatient());
+//			}
+//			tx.commit();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			tx.rollback();
+//		} finally {
+//			session.close();
+//		}
+//		return resp;
+//	}
 
 	public List<Sensor> getSensorListBySensorTypeId() {
 		Session session = HibernateUtil.getSessionFactory().openSession();

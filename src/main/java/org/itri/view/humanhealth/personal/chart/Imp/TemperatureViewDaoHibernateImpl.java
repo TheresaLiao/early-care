@@ -45,7 +45,7 @@ public class TemperatureViewDaoHibernateImpl extends CommonViewDaoHibernateImpl 
 		} finally {
 			session.close();
 		}
-		return null;
+		return item;
 	}
 
 	public List<TempPadRecord> getTempPadThreeMinRecordList(long sensorId) {

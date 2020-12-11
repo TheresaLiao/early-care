@@ -34,7 +34,7 @@ public class TemperatureCurrentView extends SelectorComposer<Window> {
 
 	@Wire("window > bs-row > hbox > label")
 	private Label temperatureLabel;
-	
+
 	@Wire("window > bs-row > #devStatHbox > vbox > #connectImg")
 	private Image connectImg;
 
@@ -46,11 +46,11 @@ public class TemperatureCurrentView extends SelectorComposer<Window> {
 	private Double bodyTempLow;
 
 	private long sensortId = 0;
-	
+
 	private String deviceConnectionErrorNum = "3";
 	private String CONNECT_OK = "resources/image/icon2-connect-b-ok.png";
 	private String CONNECT_NO = "resources/image/icon2-connect-b-no.png";
-	
+
 	TemperatureViewDaoHibernateImpl hqe = new TemperatureViewDaoHibernateImpl();
 
 	@Override
@@ -118,7 +118,7 @@ public class TemperatureCurrentView extends SelectorComposer<Window> {
 		}
 		return "0.0";
 	}
-	
+
 	private void getSensorStatus(long sensorId) {
 		Sensor sensor = hqe.getSensorBySensorId(sensortId);
 		if (sensor == null) {
@@ -128,24 +128,6 @@ public class TemperatureCurrentView extends SelectorComposer<Window> {
 		}
 	}
 
-
-//	private String getBatteryPersent(String batteryLevel) {
-//
-//		// volt top : 4.2 , bottom: 3.65
-//		double top = 4.2;
-//		double bottom = 3.65;
-//		double defaultData = 1;
-//
-//		double gap = top - bottom;
-//		double value = Float.valueOf(batteryLevel);
-//		if (value < bottom) {
-//			return String.valueOf(defaultData);
-//		}
-//
-//		double data = (value - bottom) / gap;
-//		return String.valueOf(data * 100);
-//	}
-//
 	public long getSensortId() {
 		return sensortId;
 	}
@@ -182,7 +164,7 @@ public class TemperatureCurrentView extends SelectorComposer<Window> {
 		}
 		this.bodyTempLow = bodyTempLow;
 	}
-	
+
 	private String getConnectStatusIcon(String deviceStatus) {
 
 		if (deviceStatus.equals(deviceConnectionErrorNum)) {

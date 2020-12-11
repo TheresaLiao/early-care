@@ -3,6 +3,7 @@ package org.itri.view.humanhealth.detail;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.itri.view.humanhealth.detail.Imp.ModifyDaoHibernateImpl;
 import org.itri.view.humanhealth.hibernate.Combination;
@@ -460,7 +461,9 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		List<DateKeyValueSelectBox> patientList = new ArrayList<DateKeyValueSelectBox>();
 
 		// Get List
-		List<PatientInfo> dataList = hqeModify.getPatientList();
+		Set<Long> usedPatientIdSet = hqeModify.getUsedPatientIdList();
+
+		List<PatientInfo> dataList = hqeModify.getPatientList(new ArrayList<>(usedPatientIdSet), getPatientIdOrg());
 		for (PatientInfo patient : dataList) {
 			DateKeyValueSelectBox item = new DateKeyValueSelectBox(patient.getPatient().getPatientId(),
 					patient.getName());

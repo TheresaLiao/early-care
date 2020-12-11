@@ -12,6 +12,8 @@
 				<column label="性別" width="50px" />
 				<column label="年齡" width="50px" />
 				<column label="姓名" />
+				<!-- 
+					<column label="修改" width="100px" />-->
 			</columns>
 			<template name="model">
 				<row>
@@ -19,6 +21,9 @@
 					<label value="@load(each.gender)" />
 					<label value="@load(each.age)" />
 					<label value="@load(each.name)" />
+					<!-- 
+						<button image="resources/image/icon-edit-w.png"
+						onClick="@command('modifyPatient', roomDao=each)" /> -->
 				</row>
 			</template>
 		</grid>

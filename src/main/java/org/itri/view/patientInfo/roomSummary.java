@@ -1,7 +1,6 @@
 package org.itri.view.patientInfo;
 
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.itri.view.humanhealth.hibernate.Room;
 import org.itri.view.humanhealth.hibernate.RoomGroup;
 import org.itri.view.patientInfo.Imp.roomSummaryHibernateImpl;
 import org.itri.view.patientInfo.dao.RoomDao;
-import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
@@ -24,7 +22,9 @@ import org.zkoss.zul.Window;
 
 public class roomSummary {
 
-	private static String modifyPage = "/patientInfo/roomCreate.zul";
+	static String CREATE_PAGE = "/patientInfo/roomCreate.zul";
+	static String MODIFY_PAGE = "/patientInfo/roomModify.zul";
+
 	List<RoomDao> roomSummary = new ArrayList<RoomDao>();
 	private roomSummaryHibernateImpl hqe;
 
@@ -38,7 +38,7 @@ public class roomSummary {
 	@Command
 	public void createClick() {
 		Map<String, Object> arguments = new HashMap<String, Object>();
-		Window window = (Window) Executions.createComponents(modifyPage, null, null);
+		Window window = (Window) Executions.createComponents(CREATE_PAGE, null, null);
 		window.doModal();
 	}
 
@@ -47,8 +47,6 @@ public class roomSummary {
 	public void refreshRoomSummary() {
 		queryStates();
 	}
-
-	static String MODIFY_PAGE = "/patientInfo/roomModify.zul";
 
 	@Command
 	public void modifyRoom(@BindingParam("roomDao") RoomDao item) {

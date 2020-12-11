@@ -91,6 +91,7 @@ public class HeartBeatView extends SelectorComposer<Window> {
 		chart.setAlignTicks(false);
 
 		List<Point> histData = getHeartRhythmRecordList(getSensorId());
+		System.out.println("histData.size(): " + histData.size());
 		if (histData.size() != 0) {
 			// init point
 			for (Point p : histData) {
@@ -136,11 +137,11 @@ public class HeartBeatView extends SelectorComposer<Window> {
 		List<OximeterRecord> oximeterRecordList = hqe.getOximeterThreeMinRecordList(sensortId);
 
 //		int i = oximeterRecordList.size() * (-1);
+		System.out.println("oximeterRecordList size:" + oximeterRecordList.size());
 		List<Point> resp = new ArrayList<Point>();
 		for (OximeterRecord item : oximeterRecordList) {
 			resp.add(new Point(item.getTimeCreated().getTime(), Double.valueOf(item.getHeartRateData())));
 		}
-
 		return resp;
 	}
 

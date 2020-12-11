@@ -53,7 +53,9 @@ public class roomCreate extends SelectorComposer<Component> {
 	@Listen("onClick = #submitButton")
 	public void submit() {
 		if (textboxRoomName.getValue() == null) {
-			Messagebox.show("姓名 與 年齡為必填欄位!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+			Messagebox.show("病床名稱 病床名稱為必填欄位!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+		} else if (hqe.getRoomByRoomNum(textboxRoomName.getValue()).getRoomId() != 0) {
+			Messagebox.show("此病床名稱已經擁有，請修改病床名稱!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
 		} else {
 			Date now = new Date();
 
@@ -73,16 +75,19 @@ public class roomCreate extends SelectorComposer<Component> {
 			roomGroup.setRoomGroup(roomGroupInt);
 			hqe.createRoomGroup(roomGroup);
 
-			// Create Combination
-			Combination item = new Combination();
-			item.setRoom(roomDb);
-			long patientId = patientModel.get(selectboxPatient.getSelectedIndex()).getValue();
-			Patient patient = new Patient();
-			patient.setPatientId(patientId);
-			item.setPatient(patient);
-			item.setStartTime(now);
-			item.setSensor(null);
-			hqe.createCombination(item);
+			
+			if (selectboxPatient.getSelectedIndex() != -1) {
+				// Create Combination
+				Combination item = new Combination();
+				item.setRoom(roomDb);
+				long patientId = patientModel.get(selectboxPatient.getSelectedIndex()).getValue();
+				Patient patient = new Patient();
+				patient.setPatientId(patientId);
+				item.setPatient(patient);
+				item.setStartTime(now);
+				item.setSensor(null);
+				hqe.createCombination(item);
+			}
 
 			// Close win
 			createRoomWin.detach();

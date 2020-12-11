@@ -47,7 +47,7 @@ public class OximeterViewDaoHibernateImpl extends CommonViewDaoHibernateImpl {
 		} finally {
 			session.close();
 		}
-		return null;
+		return item;
 	}
 
 	public List<OximeterRecord> getOximeterThreeMinRecordList(long sensorId) {
@@ -62,7 +62,7 @@ public class OximeterViewDaoHibernateImpl extends CommonViewDaoHibernateImpl {
 			Date now = new Date();
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(now);
-			calendar.add(Calendar.MINUTE, minusThreeMinit);
+			calendar.add(Calendar.MINUTE, -12);
 			criteria.add(Restrictions.ge("timeCreated", calendar.getTime()));
 			criteria.addOrder(Order.asc("timeCreated"));
 

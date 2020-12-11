@@ -39,6 +39,6 @@
 			</row>
 		</rows>
 	</grid>
-	<button id="submitButton" label="新增" />
+	<button id="submitButton" label="修改" />
 	<button id="closeButton" label="取消" />
 </window>

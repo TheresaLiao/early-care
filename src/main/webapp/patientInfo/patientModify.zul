@@ -3,6 +3,8 @@
 	closable="true" onClose="self.detach(); event.stopPropagation();"
 	apply="org.itri.view.patientInfo.patientModify">
 
+	<label id="labelPatientId"
+		value="${arg.orderItems.patient.patientId}" visible="false" />
 	<label id="labelGender" value="${arg.orderItems.gender}"
 		visible="false" />
 	<label id="labelAge" value="${arg.orderItems.age}" visible="false" />
@@ -32,8 +34,8 @@
 			</row>
 		</rows>
 	</grid>
-	<button id="
-					submitButton " label="新增" />
-	<button id="closeButton" label="取消" />
 
+	
+	<button id="modifyButton" label="修改" />
+	<button id="closeButton" label="取消" />
 </window>

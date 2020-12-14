@@ -79,20 +79,20 @@ public class PersonInfo {
 		fileNameBuf.append(".csv");
 
 //		// For ubuntu
-//		String parentPath = Executions.getCurrent().getDesktop().getWebApp().getRealPath("/resources");
-//		File file = writeCsvFile(parentPath + "/" + fileNameBuf.toString(), item);
-//		Filedownload.save("resources/" + fileNameBuf.toString(), null);
+		String parentPath = Executions.getCurrent().getDesktop().getWebApp().getRealPath("/resources");
+		File file = writeCsvFile(parentPath + "/" + fileNameBuf.toString(), item);
+		Filedownload.save("resources/" + fileNameBuf.toString(), null);
 
 		// For Window
-		File file = writeCsvFile(fileNameBuf.toString(), item);
-		byte[] buffer = new byte[(int) file.length()];
-		FileInputStream fs = new FileInputStream(file);
-		fs.read(buffer);
-		fs.close();
-		ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-		System.out.println("fileNameBuf: " + fileNameBuf.toString());
-		AMedia amedia = new AMedia(fileNameBuf.toString(), "csv", "application/octet-stream", is);
-		Filedownload.save(amedia);
+//		File file = writeCsvFile(fileNameBuf.toString(), item);
+//		byte[] buffer = new byte[(int) file.length()];
+//		FileInputStream fs = new FileInputStream(file);
+//		fs.read(buffer);
+//		fs.close();
+//		ByteArrayInputStream is = new ByteArrayInputStream(buffer);
+//		System.out.println("fileNameBuf: " + fileNameBuf.toString());
+//		AMedia amedia = new AMedia(fileNameBuf.toString(), "csv", "application/octet-stream", is);
+//		Filedownload.save(amedia);
 
 	}
 

@@ -30,18 +30,19 @@ public class EwsViewDaoHibernateImpl {
 			Criteria criteria = session.createCriteria(Patient.class);
 			criteria.add(Restrictions.eq("isDeleted", false));
 			criteria.add(Restrictions.eq("patientId", patientId));
-			
+
 			tempPatientList = criteria.list();
-			item = tempPatientList.get(0);
+			if (tempPatientList.size() != 0) {
+				item = tempPatientList.get(0);
+			}
 			tx.commit();
-			return item;
 		} catch (Exception e) {
 			e.printStackTrace();
 			tx.rollback();
 		} finally {
 			session.close();
 		}
-		return null;
+		return item;
 	}
 
 	public List<NewsRecord> getNewsRecordThreeMinByPatientId(long patientId) {

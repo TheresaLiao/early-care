@@ -67,7 +67,7 @@ public class patientCreate extends SelectorComposer<Component> {
 			patient.setOximeterNewsScore(0);
 			patient.setTotalNewsScore(0);
 			patient.setIsDeleted(false);
-			patient.setIsNewsWarning(false);
+			patient.setNewsStatus("N");
 			patient.setLastUpdated(new Date());
 			patient.setTimeCreated(new Date());
 //			patient.setCombinations(Set<Combination>);

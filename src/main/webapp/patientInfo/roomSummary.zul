@@ -5,6 +5,7 @@
 		<button label="Create" onClick="@command('createClick')" />
 		<button label="refresh"
 			onClick="@global-command('refreshRoomSummary')" />
+	
 		<!-- All Room Info -->
 		<grid height="700px" model="@bind(vm.roomSummary)">
 			<columns>

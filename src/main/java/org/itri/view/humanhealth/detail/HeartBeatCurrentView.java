@@ -9,9 +9,11 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
+import org.itri.view.humanhealth.hibernate.Patient;
 import org.itri.view.humanhealth.hibernate.RtOximeterRecord;
 import org.itri.view.humanhealth.hibernate.Sensor;
 import org.itri.view.humanhealth.personal.chart.Imp.OximeterViewDaoHibernateImpl;
+import org.zkoss.zul.Audio;
 
 public class HeartBeatCurrentView extends SelectorComposer<Window> {
 
@@ -30,28 +32,35 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 	@Wire("window > bs-row > hbox ")
 	private Hbox hbox;
 
-	@Wire("window > bs-row > hbox > textbox")
-	private Textbox textboxId;
-
-	@Wire("window > bs-row > hbox > label")
+	@Wire("window > bs-row > hbox > #heartBeatLabel")
 	private Label heartBeatLabel;
+
+	@Wire("window > bs-row > hbox > #sensorIdTextbox")
+	private Textbox sensorIdTextbox;
+	private long sensortId = 0;
+
+	@Wire("window > bs-row > hbox > #patientIdTextbox")
+	private Textbox patientIdTextbox;
+	private long patientId = 0;
+
+	@Wire("window > bs-row > hbox > #alertAudio")
+	private Audio alertAudio;
 
 	@Wire("window > bs-row > #devStatHbox > vbox > #connectImg")
 	private Image connectImg;
 
 	private String GRAY_HASH = "#2F2F2F";
-//	private String GREEN_HASH = "#5CE498";
 	private String BLACK_HASH = "#000000";
 	private String RED_HASH = "#FF0000";
 
 	private Double heartRateHigh;
 	private Double heartRateLow;
 
-	private long sensortId = 0;
-
-	private String deviceConnectionErrorNum = "3";
-	private String CONNECT_OK = "resources/image/icon2-connect-b-ok.png";
-	private String CONNECT_NO = "resources/image/icon2-connect-b-no.png";
+	private static String deviceConnectionErrorNum = "3";
+	private static String CONNECT_OK = "resources/image/icon2-connect-b-ok.png";
+	private static String CONNECT_NO = "resources/image/icon2-connect-b-no.png";
+	private static String STATUS_CRITICAL = "C";
+	private static String ALERT_MUSIC = "resources/music/mixkit-home-standard-ding-dong-109.wav";
 
 	OximeterViewDaoHibernateImpl hqe = new OximeterViewDaoHibernateImpl();
 
@@ -62,7 +71,8 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 		super.doAfterCompose(comp);
 
 		// get PatientId & find data by PatientId
-		setSensortId(textboxId.getValue());
+		setSensortId(sensorIdTextbox.getValue());
+		setPatientId(formateStr2Long(patientIdTextbox.getValue()));
 		String dataStr = getHeartBeatValueById(getSensortId());
 		heartBeatLabel.setValue(dataStr);
 
@@ -71,7 +81,7 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 		setHeartRateLow(lowLabel.getValue());
 
 		// Listen spec
-		hightLightLabel(dataStr);
+		hightLightLabel2();
 		getSensorStatus(getSensortId());
 	}
 
@@ -79,24 +89,19 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 	public void updateData() {
 
 		// get PatientId & find data by PatientId
-		setSensortId(textboxId.getValue());
 		String dataStr = getHeartBeatValueById(getSensortId());
 		heartBeatLabel.setValue(dataStr);
 
 		// Listen spec
-		hightLightLabel(dataStr);
+		hightLightLabel2();
 		getSensorStatus(getSensortId());
 	}
 
 	// Set style for Hight Light Label
-	private void hightLightLabel(String dataStr) {
+	private void hightLightLabel2() {
+		Patient patient = hqe.getPatientById(getPatientId());
 
-		double data = Double.valueOf(dataStr);
-		double heightData = getHeartRateHigh();
-		double lowData = getHeartRateLow();
-
-		if (Double.compare(data, heightData) > 0 || Double.compare(data, lowData) < 0) {
-
+		if (patient.getHeartRateStatus().equals(STATUS_CRITICAL)) {
 			heartBeatVbox.setStyle("background-color: " + RED_HASH);
 			hbox.setStyle("background-color: " + RED_HASH + ";text-align: center");
 
@@ -104,6 +109,8 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 			heightLabel.setStyle("color: " + BLACK_HASH);
 			lowLabel.setStyle("color: " + BLACK_HASH);
 			heartBeatLabel.setStyle("color: " + BLACK_HASH);
+
+			alertAudio.play();
 		} else {
 			heartBeatVbox.setStyle("background-color: " + GRAY_HASH);
 			hbox.setStyle("background-color: " + GRAY_HASH + ";text-align: center");
@@ -113,6 +120,10 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 			lowLabel.setStyle("color: " + RED_HASH);
 			heartBeatLabel.setStyle("color: " + RED_HASH);
 		}
+	}
+
+	private long formateStr2Long(String str) {
+		return Long.parseLong(str);
 	}
 
 	private String getHeartBeatValueById(long sensorId) {
@@ -175,6 +186,14 @@ public class HeartBeatCurrentView extends SelectorComposer<Window> {
 			return CONNECT_OK;
 		}
 		return CONNECT_NO;
+	}
+
+	public long getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(long patientId) {
+		this.patientId = patientId;
 	}
 
 }

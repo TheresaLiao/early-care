@@ -1,10 +1,11 @@
 package org.itri.view.humanhealth.detail;
 
-import java.io.ByteArrayInputStream;
+import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.util.media.AMedia;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zul.Audio;
 import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Window;
 
@@ -48,21 +49,17 @@ import com.opencsv.CSVWriter;
 public class PersonInfo {
 
 	private List<PersonState> personStateList;
-	private PersonInfoHibernateImpl hqe;
-	static String NORMAL_PATH = "./resources/image/MapImages/icon_indicator_no_01.png";
-	static String WARNING_PATH = "./resources/image/MapImages/icon_indicator_o_01.png";
-	static String MODIFY_PAGE = "/humanHealthDetail/modifyConnectForm.zul";
+	private PersonInfoHibernateImpl hqe = new PersonInfoHibernateImpl();
+	private static String MODIFY_PAGE = "/humanHealthDetail/modifyConnectForm.zul";
 
 	@Init
 	public void init() {
-		hqe = new PersonInfoHibernateImpl();
 		queryStates();
 	}
 
 	@NotifyChange({ "personStateList" })
 	@GlobalCommand
 	public void refresHumanChartSet() {
-		hqe = new PersonInfoHibernateImpl();
 		queryStates();
 	}
 
@@ -78,12 +75,12 @@ public class PersonInfo {
 		fileNameBuf.append(dateFormat.format(new Date()));
 		fileNameBuf.append(".csv");
 
-//		// For ubuntu
+//		// For server Linux
 		String parentPath = Executions.getCurrent().getDesktop().getWebApp().getRealPath("/resources");
 		File file = writeCsvFile(parentPath + "/" + fileNameBuf.toString(), item);
 		Filedownload.save("resources/" + fileNameBuf.toString(), null);
 
-		// For Window
+		// For server Window
 //		File file = writeCsvFile(fileNameBuf.toString(), item);
 //		byte[] buffer = new byte[(int) file.length()];
 //		FileInputStream fs = new FileInputStream(file);

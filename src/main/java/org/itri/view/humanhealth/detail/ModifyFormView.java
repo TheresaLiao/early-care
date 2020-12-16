@@ -3,6 +3,7 @@ package org.itri.view.humanhealth.detail;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.itri.view.humanhealth.detail.Imp.ModifyDaoHibernateImpl;
@@ -18,17 +19,23 @@ import org.itri.view.humanhealth.hibernate.SensorThreshold;
 import org.itri.view.humanhealth.hibernate.Users;
 import org.itri.view.humanhealth.personal.chart.dao.DateKeyValueSelectBox;
 import org.itri.view.humanhealth.personal.chart.dao.EwsSpecDao;
+import org.itri.view.patientInfo.Mail;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.annotation.Command;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.MouseEvent;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Row;
 import org.zkoss.zul.Selectbox;
 import org.zkoss.zul.Spinner;
 import org.zkoss.zul.Textbox;
@@ -177,10 +184,30 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		}
 	}
 
-	@Command
-	public void removeEwsSpec(@BindingParam("ewsSpecDao") EwsSpecDao item) {
-		getEwsSpecDaoList().remove(item);
+	@Listen("onClick = window > grid > rows > #ewsGridRow > #ewsGrid > rows > row > button")
+	public void removeEwsSpec(Event event) {
+		Clients.showNotification("removeEwsSpec");
+		Button removeEwsBtn = (Button) event.getTarget();
+
+		for (Component component : ewsGrid.getRows().getChildren()) {
+
+			Row row = (Row) component;
+			EwsSpecDao item = row.getValue();
+			System.out.println(item.getValue());
+		}
 	}
+
+//	@Command
+//	public void removeEwsSpec(@BindingParam("ewsSpecDao") EwsSpecDao item) {
+//		System.out.println("removeEwsSpec");
+//
+//		System.out.println("ewsSpecDaoList size: " + getEwsSpecDaoList().size());
+//		getEwsSpecDaoList().remove(item);
+//		System.out.println("ewsSpecDaoList size: " + getEwsSpecDaoList().size());
+//
+//		ListModelList ewsModel = new ListModelList(getEwsSpecDaoList());
+//		ewsGrid.setModel(ewsModel);
+//	}
 
 	@Listen("onClick = #submitButton")
 	public void submit() {

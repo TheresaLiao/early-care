@@ -13,6 +13,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.itri.view.humanhealth.hibernate.HeartRhythmRecord;
 import org.itri.view.humanhealth.hibernate.OximeterRecord;
+import org.itri.view.humanhealth.hibernate.Patient;
 import org.itri.view.humanhealth.hibernate.RtHeartRhythmRecord;
 import org.itri.view.humanhealth.personal.chart.dao.SensorIdTimeDao;
 import org.itri.view.util.HibernateUtil;
@@ -20,6 +21,32 @@ import org.itri.view.util.HibernateUtil;
 public class BreathRateViewDaoHibernateImpl extends CommonViewDaoHibernateImpl {
 
 	private int minusThreeMinit = -3;
+
+	public Patient getPatientById(long patientId) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		List<Patient> tempPatientList = new ArrayList<Patient>();
+		Patient item = new Patient();
+		try {
+			tx = session.beginTransaction();
+
+			Criteria criteria = session.createCriteria(Patient.class);
+			criteria.add(Restrictions.eq("isDeleted", false));
+			criteria.add(Restrictions.eq("patientId", patientId));
+
+			tempPatientList = criteria.list();
+			if (tempPatientList.size() != 0) {
+				item = tempPatientList.get(0);
+			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			session.close();
+		}
+		return item;
+	}
 
 	public RtHeartRhythmRecord getRtHeartRhythmRecord(long sensorId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();

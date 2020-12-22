@@ -1,4 +1,4 @@
-package org.itri.view.humanhealth.detail;
+package org.itri.view.humanhealth.detail2;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,105 +18,78 @@ import org.itri.view.humanhealth.hibernate.SensorThreshold;
 import org.itri.view.humanhealth.hibernate.Users;
 import org.itri.view.humanhealth.personal.chart.dao.DateKeyValueSelectBox;
 import org.itri.view.humanhealth.personal.chart.dao.EwsSpecDao;
+import org.itri.view.humanhealth.personal.chart.dao.PersonState;
 import org.zkoss.bind.BindUtils;
+import org.zkoss.bind.annotation.BindingParam;
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.ExecutionArgParam;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
-import org.zkoss.zk.ui.util.Clients;
-import org.zkoss.zul.Button;
+import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zul.Grid;
+import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.Row;
 import org.zkoss.zul.Selectbox;
 import org.zkoss.zul.Spinner;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
-public class ModifyFormView extends SelectorComposer<Component> {
+public class ModifyFormView extends GenericForwardComposer {
 	private static final long serialVersionUID = 1L;
 	private ModifyDaoHibernateImpl hqeModify;
 
-	@Wire
-	private Window modifyWin;
-
+	// Get org setting value
 	private long roomId = 0;
-	@Wire("#textboxRoomId")
-	private Textbox textboxRoomId;
-
-	// Patient component
 	private long patientIdOrg = 0;
+	private long oximeterSensorIdOrg = 0;
+	private long breathRateSensorIdOrg = 0;
+	private long bodyTempSensorIdOrg = 0;
+	private List<EwsSpecDao> ewsSpecDaoList = new ArrayList<EwsSpecDao>();
+
+	// =============================================================================
+	// Patient component
 	private long patientIdNew = 0;
-	@Wire("#textboxPatientId")
-	private Textbox textboxPatientId;
-	@Wire("#selectboxPatient")
-	private Selectbox selectboxPatient;
-	private ListModelList<DateKeyValueSelectBox> patientModel = new ListModelList<DateKeyValueSelectBox>();
+	private ListModel<DateKeyValueSelectBox> patientModelList = new ListModelList<DateKeyValueSelectBox>();
 	private boolean changePatientFlag = false;
 
 	// HeartRate component
-	@Wire("#textboxHeartRateLow")
-	private Textbox textboxHeartRateLow;
-	@Wire("#textboxHeartRateHight")
-	private Textbox textboxHeartRateHight;
+	private String heartRateLow = new String();
+	private String heartRateHight = new String();
 
 	// Oximeter component
-	@Wire("#textboxOximeterLow")
-	private Textbox textboxOximeterLow;
-	@Wire("#textboxOximeterHight")
-	private Textbox textboxOximeterHight;
-	private long oximeterSensorIdOrg = 0;
+	private String oximeterLow = new String();
+	private String oximeterHight = new String();
 	private long oximeterSensorId = 0;
-	@Wire("#textboxOximeterSensorId")
-	private Textbox textboxOximeterSensorId;
-	@Wire("#selectboxOximeter")
-	private Selectbox selectboxOximeter;
-	private ListModelList<DateKeyValueSelectBox> oximeterModel = new ListModelList<DateKeyValueSelectBox>();
+	private ListModel<DateKeyValueSelectBox> oximeterSensorModelList = new ListModelList<DateKeyValueSelectBox>();
 	private boolean changeOximeterFlag = false;
 
 	// BreathRate component
-	@Wire("#textboxBreathRateLow")
-	private Textbox textboxBreathRateLow;
-	@Wire("#textboxBreathRateHight")
-	private Textbox textboxBreathRateHight;
-	private long breathRateSensorIdOrg = 0;
+	private String breathRateLow = new String();
+	private String breathRateHight = new String();
 	private long breathRateSensorId = 0;
-	@Wire("#textboxBreathRateSensorId")
-	private Textbox textboxBreathRateSensorId;
-	@Wire("#selectboxBreathRate")
-	private Selectbox selectboxBreathRate;
-	private ListModelList<DateKeyValueSelectBox> breathRateModel = new ListModelList<DateKeyValueSelectBox>();
+	private ListModel<DateKeyValueSelectBox> breathRateSensorModelList = new ListModelList<DateKeyValueSelectBox>();
 	private boolean changeBreathRateFlag = false;
 
 	// BodyTemp component
-	@Wire("#textboxBodyTempLow")
-	private Textbox textboxBodyTempLow;
-	@Wire("#textboxBodyTempHight")
-	private Textbox textboxBodyTempHight;
-	private long bodyTempSensorIdOrg = 0;
+	private String bodyTempLow = new String();
+	private String bodyTempHight = new String();
 	private long bodyTempSensorId = 0;
-	@Wire("#textboxBodyTempSensorId")
-	private Textbox textboxBodyTempSensorId;
-	@Wire("#selectboxTemp")
-	private Selectbox selectboxTemp;
-	private ListModelList<DateKeyValueSelectBox> bodyTempModel = new ListModelList<DateKeyValueSelectBox>();
+	private ListModel<DateKeyValueSelectBox> bodyTempSensorModelList = new ListModelList<DateKeyValueSelectBox>();
 	private boolean changeBodyTempFlag = false;
 
 	// EWS component
-	@Wire("#spinnerEwsPoint")
-	private Spinner spinnerEwsPoint;
-	@Wire("#selectboxMathOperator")
-	private Selectbox selectboxMathOperator;
-	private ListModelList<DateKeyValueSelectBox> mathOperatorModel = new ListModelList<DateKeyValueSelectBox>();
-	@Wire("#spinnerEwsTime")
-	private Spinner spinnerEwsTime;
+	private Integer ewsPoint = 0;
+	private Integer ewsTime = 0;
+	private ListModel<DateKeyValueSelectBox> mathOperatorModelList = new ListModelList<DateKeyValueSelectBox>();
 
 	@Wire("#ewsGrid")
 	private Grid ewsGrid;
-	private List<EwsSpecDao> ewsSpecDaoList = new ArrayList<EwsSpecDao>();
 	private boolean changEwsFlag = false;
 
 	private static long heartRateHealthTypeId = 1;
@@ -124,44 +97,70 @@ public class ModifyFormView extends SelectorComposer<Component> {
 	private static long bodyTempHealthTypeId = 3;
 	private static long breathHealthTypeId = 4;
 
+	Window modifyWin;
+
+	@Init
 	@NotifyChange({ "ewsSpecDaoList" })
-	@Override
-	public void doAfterCompose(Component comp) throws Exception {
-		super.doAfterCompose(comp);
+	public void init(@ExecutionArgParam("orderItems") PersonState item,
+			@ContextParam(ContextType.VIEW) Component view) {
 
 		// Connect DB
 		hqeModify = new ModifyDaoHibernateImpl();
+		modifyWin = (Window) view;
 
 		// Get parent pass through parameter
-		setRoomId(Long.parseLong(textboxRoomId.getValue()));
-		setPatientIdOrg(formateStr2Long(textboxPatientId.getValue()));
-		setOximeterSensorIdOrg(formateStr2Long(textboxOximeterSensorId.getValue()));
-		setBreathRateSensorIdOrg(formateStr2Long(textboxBreathRateSensorId.getValue()));
-		setBodyTempSensorIdOrg(formateStr2Long(textboxBodyTempSensorId.getValue()));
+		setRoomId(item.getRoomId());
+		setPatientIdOrg(item.getPatientId());
+		setOximeterSensorIdOrg(item.getOximeterThreshold().getSensorId());
+		setBreathRateSensorIdOrg(item.getBreathRateThreshold().getSensorId());
+		setBodyTempSensorIdOrg(item.getBodyTempThreshold().getSensorId());
+
+		setHeartRateHight(item.getHeartRateThreshold().getSpecHigh());
+		setHeartRateLow(item.getHeartRateThreshold().getSpecLow());
+
+		setOximeterHight(item.getOximeterThreshold().getSpecHigh());
+		setOximeterLow(item.getOximeterThreshold().getSpecLow());
+
+		setBreathRateHight(item.getBreathRateThreshold().getSpecHigh());
+		setBreathRateLow(item.getBreathRateThreshold().getSpecLow());
+
+		setBodyTempHight(item.getBodyTempThreshold().getSpecHigh());
+		setBodyTempLow(item.getBodyTempThreshold().getSpecLow());
 
 		// Get selectBox List
-		getPatientList();
-		getSensorList();
-		getMathList();
+		getPatientSelectList();
+		getSensorSelectList();
+		getMathSelectList();
 
 		// Get org. EWS setting
 		getEwsSpecGrid();
 	}
 
-	@Listen("onClick = #ewsAddbtn")
+	@Command
+	public void close() {
+		modifyWin.detach();
+	}
+
+	@Command
+	@NotifyChange({ "ewsSpecDaoList" })
+	public void ewsRemove(@BindingParam("ewsSpecDao") EwsSpecDao item) {
+		setChangEwsFlag(true);
+		ewsSpecDaoList.remove(item);
+	}
+
+	@Command
+	@NotifyChange({ "ewsSpecDaoList" })
 	public void ewsAdd() {
 		// Check required value
-		if (spinnerEwsPoint.getValue() == null || spinnerEwsTime.getValue() == null) {
-			Messagebox.show("EWS 分數 /EWS 持續時間  的表格都須填值!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+		if (getEwsPoint() == null || getEwsPoint() == 0 || getEwsTime() == null || getEwsTime() == 0) {
+			Messagebox.show("EWS 分數 /EWS 持續時間  的表格都須填值且不可為0!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
 		} else {
 			setChangEwsFlag(true);
-			int ewsPoint = spinnerEwsPoint.getValue();
-			int ewsTime = spinnerEwsTime.getValue();
+			Set<DateKeyValueSelectBox> mathOperatorModel = ((ListModelList<DateKeyValueSelectBox>) getMathOperatorModelList())
+					.getSelection();
+			long mathId = mathOperatorModel.iterator().next().getValue();
+			String mathText = mathOperatorModel.iterator().next().getText();
 
-			long mathId = mathOperatorModel.get(selectboxMathOperator.getSelectedIndex()).getValue();
-			String mathText = mathOperatorModel.get(selectboxMathOperator.getSelectedIndex()).getText();
-
-			List<EwsSpecDao> tempEwsSpecDaoList = getEwsSpecDaoList();
 			EwsSpecDao item = new EwsSpecDao();
 			NewsMathOperator newsMathOperator = new NewsMathOperator();
 			newsMathOperator.setNewsMathOperatorId(mathId);
@@ -170,42 +169,13 @@ public class ModifyFormView extends SelectorComposer<Component> {
 			item.setNewsWarningThreshold(ewsPoint);
 			item.setTimeBeforeWarning(ewsTime * 60);
 			item.setValue(setEwsValue(mathText, ewsPoint, ewsTime * 60));
-			tempEwsSpecDaoList.add(item);
-
-			setEwsSpecDaoList(tempEwsSpecDaoList);
-			System.out.println("ewsSpecDaoList size: " + getEwsSpecDaoList().size());
-			ListModelList ewsModel = new ListModelList(getEwsSpecDaoList());
-			ewsGrid.setModel(ewsModel);
+			ewsSpecDaoList.add(item);
 		}
 	}
 
-	@Listen("onClick = window > grid > rows > #ewsGridRow > #ewsGrid > rows > row > button")
-	public void removeEwsSpec(Event event) {
-		Clients.showNotification("removeEwsSpec");
-		Button removeEwsBtn = (Button) event.getTarget();
-
-		for (Component component : ewsGrid.getRows().getChildren()) {
-
-			Row row = (Row) component;
-			EwsSpecDao item = row.getValue();
-			System.out.println(item.getValue());
-		}
-	}
-
-//	@Command
-//	public void removeEwsSpec(@BindingParam("ewsSpecDao") EwsSpecDao item) {
-//		System.out.println("removeEwsSpec");
-//
-//		System.out.println("ewsSpecDaoList size: " + getEwsSpecDaoList().size());
-//		getEwsSpecDaoList().remove(item);
-//		System.out.println("ewsSpecDaoList size: " + getEwsSpecDaoList().size());
-//
-//		ListModelList ewsModel = new ListModelList(getEwsSpecDaoList());
-//		ewsGrid.setModel(ewsModel);
-//	}
-
-	@Listen("onClick = #submitButton")
+	@Command
 	public void submit() {
+		System.out.println("submit");
 
 		setChangeBodyTempFlag(false);
 		setChangeBreathRateFlag(false);
@@ -213,10 +183,14 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		setChangePatientFlag(false);
 
 		// Get Selected Item
-		setPatientIdNew(patientModel.getSelection().stream().findFirst().get().getValue());
-		setOximeterSensorId(oximeterModel.getSelection().stream().findFirst().get().getValue());
-		setBreathRateSensorId(breathRateModel.getSelection().stream().findFirst().get().getValue());
-		setBodyTempSensorId(bodyTempModel.getSelection().stream().findFirst().get().getValue());
+		setPatientIdNew(((ListModelList<DateKeyValueSelectBox>) getPatientModelList()).getSelection().iterator().next()
+				.getValue());
+		setOximeterSensorId(((ListModelList<DateKeyValueSelectBox>) getOximeterSensorModelList()).getSelection()
+				.iterator().next().getValue());
+		setBreathRateSensorId(((ListModelList<DateKeyValueSelectBox>) getBreathRateSensorModelList()).getSelection()
+				.iterator().next().getValue());
+		setBodyTempSensorId(((ListModelList<DateKeyValueSelectBox>) getBodyTempSensorModelList()).getSelection()
+				.iterator().next().getValue());
 
 		// update Combination
 		updateCombination();
@@ -237,13 +211,9 @@ public class ModifyFormView extends SelectorComposer<Component> {
 				hqeModify.createNewsWarningCondition(deleteEwsSpec.getNewsWarningCondition());
 			}
 		}
-		modifyWin.detach();
-		BindUtils.postGlobalCommand(null, null, "refresHumanChartSet", null);
-	}
 
-	@Listen("onClick = #closeButton")
-	public void close() {
 		modifyWin.detach();
+		BindUtils.postGlobalCommand(null, null, "refresHumanChartSet2", null);
 	}
 
 	private void updateCombination() {
@@ -429,14 +399,14 @@ public class ModifyFormView extends SelectorComposer<Component> {
 	private void updateThreshold() {
 		List<SensorThreshold> thresholdList = new ArrayList<SensorThreshold>();
 
-		SensorThreshold heartRateThreshold = getNewSensorThreshold(textboxHeartRateLow.getValue(),
-				textboxHeartRateHight.getValue(), getOximeterSensorId(), 1L);
-		SensorThreshold oximeterThreshold = getNewSensorThreshold(textboxOximeterLow.getValue(),
-				textboxOximeterHight.getValue(), getOximeterSensorId(), 2L);
-		SensorThreshold bodyTempThreshold = getNewSensorThreshold(textboxBodyTempLow.getValue(),
-				textboxBodyTempHight.getValue(), getBodyTempSensorId(), 3L);
-		SensorThreshold breathRateThreshold = getNewSensorThreshold(textboxBreathRateLow.getValue(),
-				textboxBreathRateHight.getValue(), getBreathRateSensorId(), 4L);
+		SensorThreshold heartRateThreshold = getNewSensorThreshold(getHeartRateLow(), getHeartRateHight(),
+				getOximeterSensorId(), 1L);
+		SensorThreshold oximeterThreshold = getNewSensorThreshold(getOximeterLow(), getOximeterHight(),
+				getOximeterSensorId(), 2L);
+		SensorThreshold bodyTempThreshold = getNewSensorThreshold(getBodyTempLow(), getBodyTempHight(),
+				getBodyTempSensorId(), 3L);
+		SensorThreshold breathRateThreshold = getNewSensorThreshold(getBreathRateLow(), getBreathRateHight(),
+				getBreathRateSensorId(), 4L);
 		thresholdList.add(heartRateThreshold);
 		thresholdList.add(oximeterThreshold);
 		thresholdList.add(bodyTempThreshold);
@@ -476,11 +446,25 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		return item;
 	}
 
+	// Print EWS Spec. datagrid show
+	private String setEwsValue(String mathText, int ewsPoint, int ewsTime) {
+		StringBuffer sbf = new StringBuffer();
+		sbf.append("EWS ");
+		sbf.append(mathText);
+		sbf.append(" ");
+		sbf.append(ewsPoint);
+		sbf.append(" / ");
+		sbf.append(ewsTime);
+		sbf.append(" sec");
+		return sbf.toString();
+	}
+
 	// Get Patient List
-	private void getPatientList() {
+	private void getPatientSelectList() {
+		System.out.println("getPatientSelectList");
 		int selectedItemIndex = 0;
 		boolean flag = false;
-		List<DateKeyValueSelectBox> patientList = new ArrayList<DateKeyValueSelectBox>();
+		List<DateKeyValueSelectBox> resp = new ArrayList<DateKeyValueSelectBox>();
 
 		// Get List
 		Set<Long> usedPatientIdSet = hqeModify.getUsedPatientIdList();
@@ -489,21 +473,21 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		for (PatientInfo patient : dataList) {
 			DateKeyValueSelectBox item = new DateKeyValueSelectBox(patient.getPatient().getPatientId(),
 					patient.getName());
-			patientList.add(item);
+			resp.add(item);
 			if (!flag && getPatientIdOrg() == patient.getPatient().getPatientId()) {
-				selectedItemIndex = patientList.size() - 1;
+				selectedItemIndex = resp.size() - 1;
 				flag = true;
 			}
 		}
 
 		// Set Default selected
-		patientModel = new ListModelList(patientList);
-		patientModel.addToSelection(patientModel.get(selectedItemIndex));
-		selectboxPatient.setModel(patientModel);
+		ListModel<DateKeyValueSelectBox> temp = new ListModelList<DateKeyValueSelectBox>(resp);
+		((ListModelList<DateKeyValueSelectBox>) temp).addToSelection(resp.get(selectedItemIndex));
+		setPatientModelList(temp);
 	}
 
 	// Get Sensor List
-	private void getSensorList() {
+	private void getSensorSelectList() {
 		int oximeterIndex = 0;
 		List<DateKeyValueSelectBox> oximeterList = new ArrayList<DateKeyValueSelectBox>();
 
@@ -541,33 +525,35 @@ public class ModifyFormView extends SelectorComposer<Component> {
 		}
 
 		// Set Default selected
-		oximeterModel = new ListModelList(oximeterList);
-		oximeterModel.addToSelection(oximeterModel.get(oximeterIndex));
-		selectboxOximeter.setModel(oximeterModel);
+		ListModel<DateKeyValueSelectBox> oximeterSensorTemp = new ListModelList<DateKeyValueSelectBox>(oximeterList);
+		((ListModelList<DateKeyValueSelectBox>) oximeterSensorTemp).addToSelection(oximeterList.get(oximeterIndex));
+		setOximeterSensorModelList(oximeterSensorTemp);
 
-		breathRateModel = new ListModelList(breathRateList);
-		breathRateModel.addToSelection(breathRateModel.get(breathRateIndex));
-		selectboxBreathRate.setModel(breathRateModel);
+		ListModel<DateKeyValueSelectBox> breathRateSensorTemp = new ListModelList<DateKeyValueSelectBox>(
+				breathRateList);
+		((ListModelList<DateKeyValueSelectBox>) breathRateSensorTemp).addToSelection(breathRateList.get(bodyTempIndex));
+		setBreathRateSensorModelList(breathRateSensorTemp);
 
-		bodyTempModel = new ListModelList(tempList);
-		bodyTempModel.addToSelection(bodyTempModel.get(bodyTempIndex));
-		selectboxTemp.setModel(bodyTempModel);
+		ListModel<DateKeyValueSelectBox> bodyTempSensorTemp = new ListModelList<DateKeyValueSelectBox>(tempList);
+		((ListModelList<DateKeyValueSelectBox>) bodyTempSensorTemp).addToSelection(tempList.get(bodyTempIndex));
+		setBodyTempSensorModelList(bodyTempSensorTemp);
+
 	}
 
 	// Get EWS-Math List
-	private void getMathList() {
-		List<DateKeyValueSelectBox> mathOperatorList = new ArrayList<DateKeyValueSelectBox>();
+	private void getMathSelectList() {
+		List<DateKeyValueSelectBox> resp = new ArrayList<DateKeyValueSelectBox>();
 		List<NewsMathOperator> dataList = hqeModify.getNewsMathOperatorList();
 		for (NewsMathOperator mathOperator : dataList) {
 			DateKeyValueSelectBox item = new DateKeyValueSelectBox(mathOperator.getNewsMathOperatorId(),
 					mathOperator.getOperator());
-			mathOperatorList.add(item);
+			resp.add(item);
 		}
 
 		// Set Default selected
-		mathOperatorModel = new ListModelList(mathOperatorList);
-		mathOperatorModel.addToSelection(mathOperatorModel.get(0));
-		selectboxMathOperator.setModel(mathOperatorModel);
+		ListModel<DateKeyValueSelectBox> temp = new ListModelList<DateKeyValueSelectBox>(resp);
+		((ListModelList<DateKeyValueSelectBox>) temp).addToSelection(resp.get(0));
+		setMathOperatorModelList(temp);
 	}
 
 	// Get default EWS-Spec.-Grids
@@ -581,22 +567,6 @@ public class ModifyFormView extends SelectorComposer<Component> {
 			tempEwsSpecDaoList.add(item);
 		}
 		setEwsSpecDaoList(tempEwsSpecDaoList);
-		System.out.println("ewsSpecDaoList size: " + getEwsSpecDaoList().size());
-		ListModelList ewsModel = new ListModelList(getEwsSpecDaoList());
-		ewsGrid.setModel(ewsModel);
-	}
-
-	// Print EWS Spec. datagrid show
-	private String setEwsValue(String mathText, int ewsPoint, int ewsTime) {
-		StringBuffer sbf = new StringBuffer();
-		sbf.append("EWS ");
-		sbf.append(mathText);
-		sbf.append(" ");
-		sbf.append(ewsPoint);
-		sbf.append(" / ");
-		sbf.append(ewsTime);
-		sbf.append(" sec");
-		return sbf.toString();
 	}
 
 	private static long formateStr2Long(String str) {
@@ -724,6 +694,126 @@ public class ModifyFormView extends SelectorComposer<Component> {
 
 	public void setChangeBodyTempFlag(boolean changeBodyTempFlag) {
 		this.changeBodyTempFlag = changeBodyTempFlag;
+	}
+
+	public ListModel<DateKeyValueSelectBox> getMathOperatorModelList() {
+		return mathOperatorModelList;
+	}
+
+	public void setMathOperatorModelList(ListModel<DateKeyValueSelectBox> mathOperatorModelList) {
+		this.mathOperatorModelList = mathOperatorModelList;
+	}
+
+	public ListModel<DateKeyValueSelectBox> getPatientModelList() {
+		return patientModelList;
+	}
+
+	public void setPatientModelList(ListModel<DateKeyValueSelectBox> patientModelList) {
+		this.patientModelList = patientModelList;
+	}
+
+	public ListModel<DateKeyValueSelectBox> getOximeterSensorModelList() {
+		return oximeterSensorModelList;
+	}
+
+	public void setOximeterSensorModelList(ListModel<DateKeyValueSelectBox> oximeterSensorModelList) {
+		this.oximeterSensorModelList = oximeterSensorModelList;
+	}
+
+	public ListModel<DateKeyValueSelectBox> getBreathRateSensorModelList() {
+		return breathRateSensorModelList;
+	}
+
+	public void setBreathRateSensorModelList(ListModel<DateKeyValueSelectBox> breathRateSensorModelList) {
+		this.breathRateSensorModelList = breathRateSensorModelList;
+	}
+
+	public ListModel<DateKeyValueSelectBox> getBodyTempSensorModelList() {
+		return bodyTempSensorModelList;
+	}
+
+	public void setBodyTempSensorModelList(ListModel<DateKeyValueSelectBox> bodyTempSensorModelList) {
+		this.bodyTempSensorModelList = bodyTempSensorModelList;
+	}
+
+	public Integer getEwsPoint() {
+		return ewsPoint;
+	}
+
+	public void setEwsPoint(Integer ewsPoint) {
+		this.ewsPoint = ewsPoint;
+	}
+
+	public Integer getEwsTime() {
+		return ewsTime;
+	}
+
+	public void setEwsTime(Integer ewsTime) {
+		this.ewsTime = ewsTime;
+	}
+
+	public String getHeartRateLow() {
+		return heartRateLow;
+	}
+
+	public void setHeartRateLow(String heartRateLow) {
+		this.heartRateLow = heartRateLow;
+	}
+
+	public String getHeartRateHight() {
+		return heartRateHight;
+	}
+
+	public void setHeartRateHight(String heartRateHight) {
+		this.heartRateHight = heartRateHight;
+	}
+
+	public String getOximeterLow() {
+		return oximeterLow;
+	}
+
+	public void setOximeterLow(String oximeterLow) {
+		this.oximeterLow = oximeterLow;
+	}
+
+	public String getOximeterHight() {
+		return oximeterHight;
+	}
+
+	public void setOximeterHight(String oximeterHight) {
+		this.oximeterHight = oximeterHight;
+	}
+
+	public String getBreathRateLow() {
+		return breathRateLow;
+	}
+
+	public void setBreathRateLow(String breathRateLow) {
+		this.breathRateLow = breathRateLow;
+	}
+
+	public String getBreathRateHight() {
+		return breathRateHight;
+	}
+
+	public void setBreathRateHight(String breathRateHight) {
+		this.breathRateHight = breathRateHight;
+	}
+
+	public String getBodyTempLow() {
+		return bodyTempLow;
+	}
+
+	public void setBodyTempLow(String bodyTempLow) {
+		this.bodyTempLow = bodyTempLow;
+	}
+
+	public String getBodyTempHight() {
+		return bodyTempHight;
+	}
+
+	public void setBodyTempHight(String bodyTempHight) {
+		this.bodyTempHight = bodyTempHight;
 	}
 
 }

@@ -19,9 +19,13 @@ public class NavDao {
 		menuCreateRoom.setPath(NavigationMdel.DASHBOARD_CREATEROOM_ZUL);
 		menuList.add(menuCreateRoom);
 
-		Menu menuHuamanChartSet = new Menu("嚴重病床", "z-icon-home");
-		menuHuamanChartSet.setPath(NavigationMdel.DASHBOARD_HUMANCHARTSET_ZUL);
-		menuList.add(menuHuamanChartSet);
+//		Menu menuHuamanChartSet = new Menu("嚴重病床", "z-icon-home");
+//		menuHuamanChartSet.setPath(NavigationMdel.DASHBOARD_HUMANCHARTSET_ZUL);
+//		menuList.add(menuHuamanChartSet);
+
+		Menu menuHuamanChartSet2 = new Menu("嚴重病床", "z-icon-home");
+		menuHuamanChartSet2.setPath(NavigationMdel.DASHBOARD_HUMANCHARTSET_ZUL2);
+		menuList.add(menuHuamanChartSet2);
 	}
 
 	static public List<Menu> queryMenu() {

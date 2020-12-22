@@ -3,14 +3,10 @@
 	String selectedPosition = "before_start";
 ]]></zscript>
 	<nodom
-		viewModel="@id('vm')@init('org.itri.view.humanhealth.detail.PersonInfo')">
+		viewModel="@id('vm')@init('org.itri.view.humanhealth.detail2.PersonInfo')">
 		<button label="refresh"
 			onClick="@global-command('refresHumanChartSet')" />
-		<!-- 
-			<audio id="alertAudio"
-			src="resources/music/mixkit-home-standard-ding-dong-109.wav"
-			controls="true" />
-		-->
+
 		<vlayout children="@bind(vm.personStateList)" spacing="0px">
 			<template name="children">
 

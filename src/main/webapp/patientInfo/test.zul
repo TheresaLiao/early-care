@@ -1,0 +1,27 @@
+<zk>
+	<window apply="org.itri.view.patientInfo.test">
+		<separator />
+		<grid height="350px" id="myGrid"
+			emptyMessage="Nothing in Inbox." mold="paging" pageSize="6">
+			<columns>
+				<column label="Icon" width="50px" />
+				<column label="Subject" />
+				<column label="Received" width="150px" />
+				<column label="Size" width="80px" />
+			</columns>
+			<rows>
+				<template name="model">
+					<row value="${each}">
+						<image
+							src="/img/Centigrade-Widget-Icons/EnvelopeOpen-16x16.png" />
+						<label value="${each.subject}" />
+						<label value="${each.date}" />
+						<label value="${each.size}" />
+					</row>
+				</template>
+
+			</rows>
+		</grid>
+
+	</window>
+</zk>

@@ -120,15 +120,15 @@
 				<grid height="100px" id="ewsGrid">
 					<columns>
 						<column label="" hflex="1" />
-						<column label="" width="60px" />
+						<!-- <column label="" width="60px" /> -->
 					</columns>
 					<rows>
 						<template name="model">
 							<row>
 								<label value="${each.value}" />
-								<button
+								<!-- <button
 									image="resources/image/icon-edit-w.png"
-									onClick="@command('removeEwsSpec', ewsSpecDao=each)" />
+									onClick="@command('removeEwsSpec', ewsSpecDao=each)" /> -->
 							</row>
 						</template>
 					</rows>

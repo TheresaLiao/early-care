@@ -1,0 +1,140 @@
+<window id="modifyWin2" title="編輯" border="normal" width="510px"
+	position="center,center" action="show: slideDown;hide: slideUp"
+	closable="true" onClose="self.detach(); event.stopPropagation();"
+	apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('org.itri.view.humanhealth.detail2.ModifyFormView')">
+
+	<grid>
+		<columns>
+			<column label="" width="110px" />
+			<column label="數值" hflex="1" />
+			<column label="感應器" width="170px" />
+		</columns>
+		<rows>
+			<row>
+				<label style="color:white;">病房編號</label>
+				<label style="color:white;"
+					value="${arg.orderItems.bedRoom}" />
+			</row>
+			<row>
+				<label style="color:white;">追蹤人名</label>
+				<selectbox id="selectboxPatient"
+					model="@load(vm.patientModelList)">
+					<template name="model">
+						<label label="@load(each.value)"
+							value="@load(each.text)" />
+					</template>
+				</selectbox>
+			</row>
+			<row>
+				心跳區間/min
+				<hbox>
+					<textbox width="80px"
+						value="@bind(vm.heartRateLow)" />
+					~
+					<textbox width="80px"
+						value="@bind(vm.heartRateHight)" />
+				</hbox>
+			</row>
+			<row>
+				血氧濃度Spo2%
+				<hbox>
+					<textbox width="80px" value="@bind(vm.oximeterLow)" />
+					~
+					<textbox width="80px"
+						value="@bind(vm.oximeterHight)" />
+				</hbox>
+				<selectbox id="selectboxOximeter"
+					model="@load(vm.oximeterSensorModelList)">
+					<template name="model">
+						<label label="@load(each.value)"
+							value="@load(each.text)" />
+					</template>
+				</selectbox>
+			</row>
+			<row>
+				呼吸區間/min
+				<hbox>
+					<textbox width="80px"
+						value="@bind(vm.breathRateLow)" />
+					~
+					<textbox width="80px"
+						value="@bind(vm.breathRateHight)" />
+				</hbox>
+				<selectbox id="selectboxBreathRate"
+					model="@load(vm.breathRateSensorModelList)">
+					<template name="model">
+						<label label="@load(each.value)"
+							value="@load(each.text)" />
+					</template>
+				</selectbox>
+			</row>
+			<row>
+				體溫區間T°C
+				<hbox>
+					<textbox width="80px" value="@bind(vm.bodyTempLow)" />
+					~
+					<textbox width="80px"
+						value="@bind(vm.bodyTempHight)" />
+				</hbox>
+				<selectbox id="selectboxTemp"
+					model="@load(vm.bodyTempSensorModelList)">
+					<template name="model">
+						<label label="@load(each.value)"
+							value="@load(each.text)" />
+					</template>
+				</selectbox>
+			</row>
+			<!-- EWS Spec. setting -->
+			<row>
+				EWS 分數
+				<hbox>
+					<selectbox id="selectboxMathOperator"
+						model="@load(vm.mathOperatorModelList)">
+						<template name="model">
+							<label label="@load(each.value)"
+								value="@load(each.text)" />
+						</template>
+					</selectbox>
+					<spinner width="80px" format=",###"
+						value="@bind(vm.ewsPoint)" />
+				</hbox>
+
+			</row>
+			<row>
+				EWS 持續時間
+				<hbox>
+					<spinner width="100px" format=",###"
+						value="@bind(vm.ewsTime)" />
+					min
+					<button label="新增" onClick="@command('ewsAdd')" />
+				</hbox>
+			</row>
+			<row id="ewsGridRow">
+				<label visible="false" />
+				<grid id="ewsGrid" height="100px"
+					model="@bind(vm.ewsSpecDaoList)">
+					<columns>
+						<column label="" hflex="1" />
+						<column label="" width="60px" />
+					</columns>
+					<rows>
+						<template name="model">
+							<row>
+								<label value="${each.value}" />
+								<button
+									image="resources/image/icon2-delete.png"
+									onClick="@command('ewsRemove', ewsSpecDao=each)" />
+
+							</row>
+						</template>
+					</rows>
+				</grid>
+			</row>
+			<row>
+				<button label="Submit" onClick="@command('submit')" />
+				<button label="Close" onClick="@command('close')" />
+			</row>
+		</rows>
+	</grid>
+</window>

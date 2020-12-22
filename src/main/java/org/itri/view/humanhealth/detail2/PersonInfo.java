@@ -1,4 +1,4 @@
-package org.itri.view.humanhealth.detail;
+package org.itri.view.humanhealth.detail2;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -46,7 +46,7 @@ public class PersonInfo {
 
 	private List<PersonState> personStateList;
 	private PersonInfoHibernateImpl hqe = new PersonInfoHibernateImpl();
-	private static String MODIFY_PAGE = "/humanHealthDetail/modifyConnectForm.zul";
+	private static String MODIFY_PAGE = "/humanHealthDetail2/modifyConnectForm.zul";
 
 	@Init
 	public void init() {
@@ -55,7 +55,7 @@ public class PersonInfo {
 
 	@NotifyChange({ "personStateList" })
 	@GlobalCommand
-	public void refresHumanChartSet() {
+	public void refresHumanChartSet2() {
 		queryStates();
 	}
 

@@ -4,9 +4,16 @@
 ]]></zscript>
 	<nodom
 		viewModel="@id('vm')@init('org.itri.view.humanhealth.detail2.PersonInfo')">
-		<button label="refresh"
-			onClick="@global-command('refresHumanChartSet')" />
-
+		<hbox>
+			<label class="h6" value="分頁" style="color:white" />
+			<selectbox model="@load(vm.roomGroupModelList)">
+				<template name="model">
+					<label value="${each.text}" />
+				</template>
+			</selectbox>
+			<button label="refresh"
+				onClick="@global-command('refresHumanChartSet2')" />
+		</hbox>
 		<vlayout children="@bind(vm.personStateList)" spacing="0px">
 			<template name="children">
 

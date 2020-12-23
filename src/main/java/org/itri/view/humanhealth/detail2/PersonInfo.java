@@ -27,6 +27,7 @@ import org.itri.view.humanhealth.personal.chart.Imp.BreathRateViewDaoHibernateIm
 import org.itri.view.humanhealth.personal.chart.Imp.EwsViewDaoHibernateImpl;
 import org.itri.view.humanhealth.personal.chart.Imp.OximeterViewDaoHibernateImpl;
 import org.itri.view.humanhealth.personal.chart.Imp.TemperatureViewDaoHibernateImpl;
+import org.itri.view.humanhealth.personal.chart.dao.DateKeyValueSelectBox;
 import org.itri.view.humanhealth.personal.chart.dao.EwsSpecDao;
 import org.itri.view.humanhealth.personal.chart.dao.PersonState;
 import org.itri.view.humanhealth.personal.chart.dao.SensorIdTimeDao;
@@ -38,6 +39,8 @@ import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.Filedownload;
+import org.zkoss.zul.ListModel;
+import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 
 import com.opencsv.CSVWriter;
@@ -48,8 +51,11 @@ public class PersonInfo {
 	private PersonInfoHibernateImpl hqe = new PersonInfoHibernateImpl();
 	private static String MODIFY_PAGE = "/humanHealthDetail2/modifyConnectForm.zul";
 
+	private ListModel<DateKeyValueSelectBox> roomGroupModelList = new ListModelList<DateKeyValueSelectBox>();
+
 	@Init
 	public void init() {
+		getRoomGroupList();
 		queryStates();
 	}
 
@@ -181,8 +187,10 @@ public class PersonInfo {
 		Set<Long> sensorIdSet = new HashSet<Long>();
 
 		// Get patientList
-		List<Long> roomIdList = hqe.getRoomIdListByRoomGroup(1);
-
+		Set<DateKeyValueSelectBox> roomGroupModel = ((ListModelList<DateKeyValueSelectBox>) getRoomGroupModelList())
+				.getSelection();
+		int roomGroupId = (int) roomGroupModel.iterator().next().getValue();
+		List<Long> roomIdList = hqe.getRoomIdListByRoomGroup(roomGroupId);
 		List<Combination> combinationList = hqe.getCombinationEndTimeNullByRoomId(roomIdList);
 		for (Combination item : combinationList) {
 
@@ -270,7 +278,37 @@ public class PersonInfo {
 
 	}
 
+	// Get Room Group List
+	private void getRoomGroupList() {
+		List<DateKeyValueSelectBox> resp = new ArrayList<DateKeyValueSelectBox>();
+
+		// Get List
+		DateKeyValueSelectBox item1 = new DateKeyValueSelectBox(1L, "1");
+		DateKeyValueSelectBox item2 = new DateKeyValueSelectBox(2L, "2");
+		DateKeyValueSelectBox item3 = new DateKeyValueSelectBox(3L, "3");
+		DateKeyValueSelectBox item4 = new DateKeyValueSelectBox(4L, "4");
+		DateKeyValueSelectBox item5 = new DateKeyValueSelectBox(5L, "5");
+		resp.add(item1);
+		resp.add(item2);
+		resp.add(item3);
+		resp.add(item4);
+		resp.add(item5);
+
+		// Set Default selected
+		ListModel<DateKeyValueSelectBox> temp = new ListModelList<DateKeyValueSelectBox>(resp);
+		((ListModelList<DateKeyValueSelectBox>) temp).addToSelection(resp.get(0));
+		setRoomGroupModelList(temp);
+	}
+
 	public List<PersonState> getPersonStateList() {
 		return personStateList;
+	}
+
+	public ListModel<DateKeyValueSelectBox> getRoomGroupModelList() {
+		return roomGroupModelList;
+	}
+
+	public void setRoomGroupModelList(ListModel<DateKeyValueSelectBox> roomGroupModelList) {
+		this.roomGroupModelList = roomGroupModelList;
 	}
 }

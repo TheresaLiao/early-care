@@ -111,21 +111,23 @@ public class ModifyFormView extends GenericForwardComposer {
 		// Get parent pass through parameter
 		setRoomId(item.getRoomId());
 		setPatientIdOrg(item.getPatientId());
-		setOximeterSensorIdOrg(item.getOximeterThreshold().getSensorId());
-		setBreathRateSensorIdOrg(item.getBreathRateThreshold().getSensorId());
-		setBodyTempSensorIdOrg(item.getBodyTempThreshold().getSensorId());
-
-		setHeartRateHight(item.getHeartRateThreshold().getSpecHigh());
-		setHeartRateLow(item.getHeartRateThreshold().getSpecLow());
-
-		setOximeterHight(item.getOximeterThreshold().getSpecHigh());
-		setOximeterLow(item.getOximeterThreshold().getSpecLow());
-
-		setBreathRateHight(item.getBreathRateThreshold().getSpecHigh());
-		setBreathRateLow(item.getBreathRateThreshold().getSpecLow());
-
-		setBodyTempHight(item.getBodyTempThreshold().getSpecHigh());
-		setBodyTempLow(item.getBodyTempThreshold().getSpecLow());
+		if (item.getOximeterThreshold() != null) {
+			setOximeterSensorIdOrg(item.getOximeterThreshold().getSensorId());
+			setOximeterHight(item.getOximeterThreshold().getSpecHigh());
+			setOximeterLow(item.getOximeterThreshold().getSpecLow());
+			setHeartRateHight(item.getHeartRateThreshold().getSpecHigh());
+			setHeartRateLow(item.getHeartRateThreshold().getSpecLow());
+		}
+		if (item.getBreathRateThreshold() != null) {
+			setBreathRateSensorIdOrg(item.getBreathRateThreshold().getSensorId());
+			setBreathRateHight(item.getBreathRateThreshold().getSpecHigh());
+			setBreathRateLow(item.getBreathRateThreshold().getSpecLow());
+		}
+		if (item.getBodyTempThreshold() != null) {
+			setBodyTempSensorIdOrg(item.getBodyTempThreshold().getSensorId());
+			setBodyTempHight(item.getBodyTempThreshold().getSpecHigh());
+			setBodyTempLow(item.getBodyTempThreshold().getSpecLow());
+		}
 
 		// Get selectBox List
 		getPatientSelectList();

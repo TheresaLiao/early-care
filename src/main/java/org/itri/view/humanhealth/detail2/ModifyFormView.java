@@ -533,7 +533,7 @@ public class ModifyFormView extends GenericForwardComposer {
 
 		ListModel<DateKeyValueSelectBox> breathRateSensorTemp = new ListModelList<DateKeyValueSelectBox>(
 				breathRateList);
-		((ListModelList<DateKeyValueSelectBox>) breathRateSensorTemp).addToSelection(breathRateList.get(bodyTempIndex));
+		((ListModelList<DateKeyValueSelectBox>) breathRateSensorTemp).addToSelection(breathRateList.get(breathRateIndex));
 		setBreathRateSensorModelList(breathRateSensorTemp);
 
 		ListModel<DateKeyValueSelectBox> bodyTempSensorTemp = new ListModelList<DateKeyValueSelectBox>(tempList);
